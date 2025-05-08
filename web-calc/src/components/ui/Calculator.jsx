@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-function Calculator() {
+function Calculator({ onClose }) {
   const [display, setDisplay] = useState('0');
   const [equation, setEquation] = useState('');
   const [calculated, setCalculated] = useState(false);
@@ -11,38 +11,74 @@ function Calculator() {
   const dragRef = useRef(null);
   const initialPositionRef = useRef({ x: 0, y: 0 });
 
-  const handleNumber = (num) => {
-    if (display === '0' || calculated) {
-      setDisplay(num);
-      setCalculated(false);
-    } else {
+const handleNumber = (num) => {
+  // Maximum number of digits allowed for input
+  const MAX_DIGITS = 12;
+  
+  if (display === '0' || calculated) {
+    setDisplay(num);
+    setCalculated(false);
+  } else {
+    // Only add the new digit if we're below the maximum length
+    if (display.replace('.', '').length < MAX_DIGITS) {
       setDisplay(display + num);
     }
-  };
-
+  }
+};
   const handleOperator = (op) => {
     setEquation(display + op);
     setDisplay('0');
     setCalculated(false);
   };
 
-  const handleEqual = () => {
-    try {
-      // Using Function constructor to safely evaluate the expression
-      const result = new Function('return ' + equation + display)();
-      setDisplay(String(result));
+const handleEqual = () => {
+  try {
+    // Check for division by zero
+    if (equation.endsWith('/') && display === '0') {
+      setDisplay('Error');
       setEquation('');
       setCalculated(true);
-    } catch (error) {
-      setDisplay('Error');
-      setCalculated(true);
+      return;
     }
-  };
-
-  const handleClear = () => {
-    setDisplay('0');
+    
+    // Using Function constructor to safely evaluate the expression
+    const result = new Function('return ' + equation + display)();
+    
+    // Check if result is Infinity or not a finite number
+    if (!isFinite(result)) {
+      setDisplay('Error');
+    } else {
+      // Format the number to prevent overflow
+      let formattedResult;
+      
+      if (Math.abs(result) >= 1e15) {
+        // Use scientific notation for very large numbers
+        formattedResult = result.toExponential(5);
+      } else if (Math.abs(result) >= 1e9) {
+        // Format billion+ numbers with fewer decimals
+        formattedResult = result.toExponential(4);
+      } else if (String(result).length > 12) {
+        // For numbers with many digits, limit precision
+        formattedResult = Number(result).toPrecision(10);
+      } else {
+        formattedResult = String(result);
+      }
+      
+      setDisplay(formattedResult);
+    }
+    
     setEquation('');
-  };
+    setCalculated(true);
+  } catch (error) {
+    setDisplay('Error');
+    setCalculated(true);
+  }
+};  
+
+    const handleClear = () => {
+        setDisplay('0');
+        setEquation('');
+    };
 
   // Dragging functionality
   const handleMouseDown = (e) => {
@@ -97,15 +133,17 @@ function Calculator() {
       <div className="bg-gray-900 p-4 rounded-lg shadow-2xl w-64 select-none">
         {/* Added draggable header */}
         <div 
-          className="calculator-header bg-gray-700 p-1 mb-2 rounded cursor-grab flex justify-between items-center"
+          className=" calculator-header bg-gray-700 p-2 mb-2 rounded cursor-grab flex justify-between items-center"
           onMouseDown={handleMouseDown}
         >
         
-          <div className="flex gap-1 pr-1">
-            <div className="w-2 h-2 rounded-full bg-red-500"></div>
-            <div className="w-2 h-2 rounded-full bg-yellow-500"></div>
-            <div className="w-2 h-2 rounded-full bg-green-500"></div>
-          </div>
+            <div 
+              className="w-3 h-3 rounded-full bg-red-500 hover:bg-red-400 
+              cursor-pointer transition-colors"
+              onClick={onClose}
+              title="Close calculator"
+            ></div>
+                
         </div>
         
         <div className="bg-gray-800 p-2 mb-4 rounded">
