@@ -124,6 +124,7 @@ function CartesianGame({ onClose }) {
   const handleReset = () => {
     setUserPairs([]);
     setFeedback('');
+    setScore(0);
   };
 
   // Handle alert close
@@ -144,11 +145,11 @@ function CartesianGame({ onClose }) {
     );
     
     if (allPairsCreated) {
-        setFeedback('Parabéns! Você criou todos os pares!');
+        
         setScore(score + 50);
         setIsComplete(true);
       } else {
-        setFeedback('Nem todos os pares foram criados ainda');
+        setIsComplete(false);
       }
       
       // Show alert in both cases
