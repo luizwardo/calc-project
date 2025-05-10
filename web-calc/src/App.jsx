@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Hotbar from './components/ui/Hotbar'
 import CartesianGame from './components/games/CartesianProd'
+import FunctionGame from './components/games/FindFucntion'
 import './App.css'
 
 function App() {
@@ -10,10 +11,12 @@ function App() {
     switch(currentPage) {
       case 'cartesianGame':
         return <CartesianGame onClose={() => setCurrentPage('home')} />;
+        case 'functionGame':
+        return <FunctionGame onClose={() => setCurrentPage('home')} />;
       default:
         return (
           <div className="flex items-center justify-center h-[80vh]">
-            <h1 className="text-2xl">Welcome to Math Learning Tools!</h1>
+            <h1 className="text-2xl">A3 Estruturas matemáticas</h1>
           </div>
         );
     }
