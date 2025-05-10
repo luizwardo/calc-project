@@ -20,6 +20,12 @@ function Hotbar({ onNavigate }) {
           >
             Combine os Pares
           </button>
+          <button 
+            className="px-4 py-2 text-white bg-gray-800 rounded shadow-sm hover:bg-gray-700 hover:scale-110 hover:shadow-md transition-all duration-350 tracking-wider"
+            onClick={() => onNavigate('functionGame')}
+          >
+            Descubra a Função
+          </button>
           <button className="px-4 py-2 text-white bg-gray-800 rounded shadow-sm hover:bg-gray-700 hover:scale-110 hover:shadow-md transition-all duration-350 tracking-wider">
             About
           </button>
@@ -27,7 +33,7 @@ function Hotbar({ onNavigate }) {
             className="px-4 py-2 text-white bg-gray-800 rounded shadow-sm hover:bg-gray-700 hover:scale-110 hover:shadow-md transition-all duration-350 tracking-wider"
             onClick={() => setShowCalculator(!showCalculator)}
           >
-            Calculator
+            Calculadora
           </button>
         </div>
       </div>
