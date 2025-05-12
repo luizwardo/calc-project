@@ -11,20 +11,40 @@ function Calculator({ onClose }) {
   const dragRef = useRef(null);
   const initialPositionRef = useRef({ x: 0, y: 0 });
 
-const handleNumber = (num) => {
-  // Maximum number of digits allowed for input
-  const MAX_DIGITS = 12;
-  
-  if (display === '0' || calculated) {
-    setDisplay(num);
-    setCalculated(false);
-  } else {
-    // Only add the new digit if we're below the maximum length
-    if (display.replace('.', '').length < MAX_DIGITS) {
-      setDisplay(display + num);
+  const handleNumber = (num) => {
+    // Maximum number of digits allowed for input
+    const MAX_DIGITS = 12;
+    
+    // Handle decimal point
+    if (num === '.') {
+      // If the display already contains a decimal point, ignore the input
+      if (display.includes('.')) {
+        return;
+      }
+      
+      if (display === '0' || calculated) {
+        setDisplay('0.');
+        setCalculated(false);
+        return;
+      }
     }
-  }
-};
+    
+    if (display === '0' || calculated) {
+      // For non-decimal digits, replace the zero
+      if (num !== '.') {
+        setDisplay(num);
+      } else {
+        setDisplay('0.');
+      }
+      setCalculated(false);
+    } else {
+      // Only add the new digit if we're below the maximum length
+      if (display.replace('.', '').length < MAX_DIGITS) {
+        setDisplay(display + num);
+      }
+    }
+  };
+
   const handleOperator = (op) => {
     setEquation(display + op);
     setDisplay('0');
