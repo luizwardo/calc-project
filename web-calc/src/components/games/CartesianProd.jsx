@@ -46,7 +46,7 @@ function CartesianGame({ onClose }) {
     }
     
     // Gerar conjunto B (letras ou símbolos)
-    const possibleB = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', '★', '♦', '♥', '♠'];
+    const possibleB = ['A', 'B', 'C', 'D', 'E', 'F',];
     const newSetB = [];
     const sizeB = Math.floor(Math.random() * 2) + 3; // 3 a 4 elementos
     
@@ -91,46 +91,41 @@ function CartesianGame({ onClose }) {
     
     setCorrectPairs(selectedPairs);
     
-    // Criar posições com jitter para os pontos no gráfico
-    const positions = selectedPairs.map(pair => {
-      // Adicionar pequena variação aleatória para espalhar os pontos
-      const jitterX = Math.random() * 0.15 - 0.075;  // Jitter de -0.15 a 0.15
-      const jitterY = Math.random() * 0.15 - 0.075;
-      
-      let yValue;
-      if (typeof pair[1] === 'string') {
-        if (pair[1].length === 1) {
-          const code = pair[1].charCodeAt(0);
-          if (code >= 97 && code <= 122) yValue = code - 96;
-          else if (code >= 65 && code <= 90) yValue = code - 64;
-          else yValue = setB.indexOf(pair[1]) + 1;
-        } else {
-          yValue = setB.indexOf(pair[1]) + 1;
-        }
+  // Criar posições SEM jitter para os pontos no gráfico (exatamente nas interseções)
+  const positions = selectedPairs.map(pair => {
+    let yValue;
+    if (typeof pair[1] === 'string') {
+      if (pair[1].length === 1) {
+        const code = pair[1].charCodeAt(0);
+        if (code >= 97 && code <= 122) yValue = code - 96;
+        else if (code >= 65 && code <= 90) yValue = code - 64;
+        else yValue = setB.indexOf(pair[1]) + 1;
       } else {
-        yValue = pair[1];
+        yValue = setB.indexOf(pair[1]) + 1;
       }
-      
-      return {
-        original: pair,
-        plotPosition: [pair[0] + jitterX, yValue + jitterY]
-      };
-    });
+    } else {
+      yValue = pair[1];
+    }
     
+    return {
+      original: pair,
+      plotPosition: [pair[0], yValue] // Sem jitter
+    };
+  });
+
     setJitteredPositions(positions);
     
-    // Preparar dados para o plano cartesiano com as posições jitteradas
+    // Preparar dados para o plano cartesiano 
     updatePlotData(positions, []);
   }, [setA, setB]);
 
   // Função para atualizar os dados do plano cartesiano com jitter
   // Modificar a função updatePlotData para adicionar textos nos pontos
-const updatePlotData = (positions, userSelectedPairs) => {
-  // Plotar todos os pontos possíveis (em cinza)
-  const allPointsX = positions.map(pos => pos.plotPosition[0]);
-  const allPointsY = positions.map(pos => pos.plotPosition[1]);
-  const hoverTexts = positions.map(pos => `(${pos.original[0]}, ${pos.original[1]})`);
-  
+  const updatePlotData = (positions, userSelectedPairs) => {
+    // Plotar todos os pontos possíveis (em cinza)
+    const allPointsX = positions.map(pos => pos.plotPosition[0]);
+    const allPointsY = positions.map(pos => pos.plotPosition[1]);
+
   // Encontrar posições dos pontos que o usuário selecionou
   const userPositions = userSelectedPairs.map(userPair => 
     positions.find(pos => 
@@ -140,23 +135,16 @@ const updatePlotData = (positions, userSelectedPairs) => {
   
   const userPointsX = userPositions.map(pos => pos.plotPosition[0]);
   const userPointsY = userPositions.map(pos => pos.plotPosition[1]);
-  const userHoverTexts = userPositions.map(pos => `(${pos.original[0]}, ${pos.original[1]})`);
   
-  // Criar layout do gráfico
+
+    // Criar layout do gráfico
   const plotDataArray = [
     {
       x: allPointsX,
       y: allPointsY,
-      mode: 'markers+text',
+      mode: 'markers', // Removido "text" para não mostrar os rótulos
       type: 'scatter',
-      text: positions.map(pos => `(${pos.original[0]},${pos.original[1]})`),
-      textfont: {
-        size: 9,
-        color: 'rgba(100, 100, 100, 0.8)'
-      },
-      textposition: 'bottom',
-      hoverinfo: 'text',
-      hovertext: hoverTexts,
+      hoverinfo: 'none', 
       marker: {
         color: 'rgba(170, 170, 170, 0.6)',
         size: 12,
@@ -176,8 +164,7 @@ const updatePlotData = (positions, userSelectedPairs) => {
       y: userPointsY,
       mode: 'markers',
       type: 'scatter',
-      hoverinfo: 'text',
-      hovertext: userHoverTexts,
+      hoverinfo: 'none', 
       marker: {
         color: 'rgb(50, 168, 82)',
         size: 14,
@@ -309,7 +296,7 @@ const updatePlotData = (positions, userSelectedPairs) => {
           </div>
           
           {/* Plano Cartesiano */}
-          <div className="w-full h-[400px] border-2 border-blue-300 rounded-lg shadow-md mb-6 bg-gray-50">
+          <div className="w-full h-[300px] border-2 border-blue-300 rounded-lg shadow-md mb-6 bg-gray-50">
             <Plot
               data={plotData}
               layout={{
