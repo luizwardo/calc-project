@@ -59,8 +59,8 @@ const functionTemplates = [
   {
     name: "Quadrática",
     generate: () => {
-      const a = getRandomNumber(-3, 3);
-      if (a === 0) a = 1; // Evita a=0
+      let a = getRandomNumber(-3, 3);
+      if (a === 0) a = 1; // Agora funciona
       const b = getRandomNumber(-5, 5);
       const c = getRandomNumber(-10, 10);
       return {
