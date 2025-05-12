@@ -1,45 +1,202 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Calculator from './Calculator';
 
-function Hotbar({ onNavigate }) {
-  const [showCalculator, setShowCalculator] = useState(false);
+function Hotbar({ onNavigate, showCalculator, setShowCalculator }) {
+  const [expanded, setExpanded] = useState(false);
+  const hotbarRef = useRef(null);
+
+  // Button descriptions
+  const buttonDescriptions = {
+    home: "Página inicial",
+    cartesianGame: "Combine os pares",
+    functionGame: "Ache a função",
+    about: "Informações",
+    calculator: "Calculadora"
+  };
+
+  // Handle mouse enter/leave for entire hotbar
+  const handleMouseEnter = () => {
+    setExpanded(true);
+  };
+
+  const handleMouseLeave = () => {
+    setExpanded(false);
+  };
+
+  // Check if mouse is near the hotbar even before hovering
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      if (!hotbarRef.current) return;
+      
+      const rect = hotbarRef.current.getBoundingClientRect();
+      const isNear = 
+        e.clientY < rect.bottom + 15 && 
+        e.clientY > rect.top - 15 &&
+        e.clientX > rect.left - 15 && 
+        e.clientX < rect.right + 15;
+      
+      setExpanded(isNear);
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, []);
+
+  // Detectar a seção atual com base no scroll
+  const [activeSection, setActiveSection] = useState('home');
+  
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY + 100; // Um pouco de offset para melhor detecção
+      
+      // Obter todas as seções
+      const sections = ['home', 'cartesianGame', 'functionGame', 'about'].map(id => {
+        const element = document.getElementById(id);
+        if (!element) return { id, top: 0, bottom: 0 };
+        
+        const rect = element.getBoundingClientRect();
+        return {
+          id,
+          top: rect.top + window.scrollY,
+          bottom: rect.bottom + window.scrollY
+        };
+      });
+      
+      // Determinar qual seção está visível
+      for (const section of sections) {
+        if (scrollPosition >= section.top && scrollPosition < section.bottom) {
+          setActiveSection(section.id);
+          break;
+        }
+      }
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    handleScroll(); // Verificar inicialmente
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   return (
     <>
-      <div className="flex items-center justify-center p-4 bg-white-800">
-        <div className='bg-gray-800 p-4 rounded-2xl shadow-md flex space-x-4 border-3 border-gray-200'>
-          <button 
-            className="px-4 py-2 text-white bg-gray-800 rounded shadow-sm hover:bg-gray-700 hover:scale-110 hover:shadow-md transition-all duration-350 tracking-wider"
-            onClick={() => onNavigate('home')}
-          >
-            Home
-          </button>
-          <button 
-            className="px-4 py-2 text-white bg-gray-800 rounded shadow-sm hover:bg-gray-700 hover:scale-110 hover:shadow-md transition-all duration-350 tracking-wider"
-            onClick={() => onNavigate('cartesianGame')}
-          >
-            Combine os Pares
-          </button>
-          <button 
-            className="px-4 py-2 text-white bg-gray-800 rounded shadow-sm hover:bg-gray-700 hover:scale-110 hover:shadow-md transition-all duration-350 tracking-wider"
-            onClick={() => onNavigate('functionGame')}
-          >
-            Descubra a Função
-          </button>
-          <button className="px-4 py-2 text-white bg-gray-800 rounded shadow-sm hover:bg-gray-700 hover:scale-110 hover:shadow-md transition-all duration-350 tracking-wider">
-            About
-          </button>
-          <button 
-            className="px-4 py-2 text-white bg-gray-800 rounded shadow-sm hover:bg-gray-700 hover:scale-110 hover:shadow-md transition-all duration-350 tracking-wider"
-            onClick={() => setShowCalculator(!showCalculator)}
-          >
-            Calculadora
-          </button>
+      <div 
+        ref={hotbarRef}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-1300 ease-in-out ${
+          expanded ? 'py-5' : 'py-2'
+        }`}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        <div className={`
+          mx-auto bg-gray-800 rounded-2xl shadow-lg 
+          transition-all duration-1000 ease-in-out
+          border-2 border-gray-700
+          flex justify-center items-center
+          ${expanded ? 'max-w-4xl p-4' : 'max-w-md p-2'}
+        `}>
+          <div className={`
+            flex gap-2 sm:gap-3 md:gap-4 items-center justify-center 
+            transition-all duration-1000 ease-in-out
+            ${expanded ? 'scale-100' : 'scale-85'}
+          `}>
+            <HotbarButton 
+              expanded={expanded}
+              onClick={() => onNavigate('home')}
+              icon="🏠"
+              description={buttonDescriptions.home}
+              isActive={activeSection === 'home'}
+            />
+            
+            <HotbarButton 
+              expanded={expanded}
+              onClick={() => onNavigate('cartesianGame')}
+              icon="🔢"
+              description={buttonDescriptions.cartesianGame}
+              isActive={activeSection === 'cartesianGame'}
+            />
+            
+            <HotbarButton 
+              expanded={expanded}
+              onClick={() => onNavigate('functionGame')}
+              icon="📈"
+              description={buttonDescriptions.functionGame}
+              isActive={activeSection === 'functionGame'}
+            />
+            
+            <HotbarButton 
+              expanded={expanded}
+              onClick={() => onNavigate('about')}
+              icon="ℹ️"
+              description={buttonDescriptions.about}
+              isActive={activeSection === 'about'}
+            />
+            
+            <HotbarButton 
+              expanded={expanded}
+              onClick={() => onNavigate('calculator')}
+              icon="🧮"
+              description={buttonDescriptions.calculator}
+            />
+          </div>
         </div>
       </div>
       
       {showCalculator && <Calculator onClose={() => setShowCalculator(false)} />}
     </>
+  );
+}
+
+// Individual button component with hover effects
+function HotbarButton({ expanded, onClick, icon, label, description, isActive }) {
+  const [isHovered, setIsHovered] = useState(false);
+  
+  return (
+    <div className="relative">
+      <button 
+        className={`
+          relative text-white rounded-xl
+          flex flex-col items-center justify-center
+          transition-all duration-1000 ease-in-out
+          ${expanded ? 'px-4 py-2' : 'p-2'}
+          hover:scale-110 hover:shadow-md
+          ${isActive 
+            ? 'bg-blue-600 hover:bg-blue-700' 
+            : 'bg-gray-800 hover:bg-gray-700'}
+        `}
+        onClick={onClick}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <span className={`text-lg transition-all duration-1000 ease-in-out ${expanded ? 'mb-1' : ''}`}>
+          {icon}
+        </span>
+        
+        {/* Usando opacity para uma transição suave em vez de condicional rendering */}
+        <span className={`
+          text-sm whitespace-nowrap overflow-hidden
+          transition-all duration-1000 ease-in-out
+          ${expanded ? 'opacity-100 max-h-10 mt-1' : 'opacity-0 max-h-0 mt-0'}
+        `}>
+          {label}
+        </span>
+      </button>
+      
+      {/* Tooltip com transição */}
+      <div className={`
+        absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 
+        bg-gray-900 text-white px-3 py-1 rounded text-sm whitespace-nowrap
+        shadow-lg z-10 transition-all duration-500 ease-in-out pointer-events-none
+        ${expanded && isHovered ? 'opacity-90 translate-y-0' : 'opacity-0 translate-y-1 invisible'}
+      `}>
+        {description}
+        <div className="absolute top-full left-1/2 transform -translate-x-1/2 
+                      border-8 border-transparent border-t-gray-900"></div>
+      </div>
+    </div>
   );
 }
 
