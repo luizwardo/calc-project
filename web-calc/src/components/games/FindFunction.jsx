@@ -116,7 +116,6 @@ function FunctionGame({ onClose }) {
   const [currentFunction, setCurrentFunction] = useState(null);
   const [options, setOptions] = useState([]);
   const [selectedOption, setSelectedOption] = useState(null);
-  const [score, setScore] = useState(0);
   const [feedback, setFeedback] = useState('');
   const [alertOpen, setAlertOpen] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
@@ -180,9 +179,6 @@ function FunctionGame({ onClose }) {
     const isCorrect = selectedOption.equation === currentFunction.equation;
     
     if (isCorrect) {
-      const pointsGained = difficulty === 'easy' ? 10 : difficulty === 'medium' ? 15 : 20;
-      setScore(score + pointsGained);
-      setFeedback('Correto! +' + pointsGained + ' pontos');
       setIsComplete(true);
       setAlertOpen(true);
     } else {
@@ -209,9 +205,6 @@ function FunctionGame({ onClose }) {
     });
     
     if (isClose) {
-      const pointsGained = 20 - Math.min(15, Math.floor(totalDiff * 5));
-      setScore(score + pointsGained);
-      setFeedback(`Muito bom! Os coeficientes estão corretos. +${pointsGained} pontos`);
       setIsComplete(true);
       setAlertOpen(true);
     } else {
@@ -462,10 +455,6 @@ function FunctionGame({ onClose }) {
       )}
 
       <div className="flex justify-between items-center mb-4">
-        <div>
-          <span className="font-bold">Pontuação: </span>
-          <span className="text-xl">{score}</span>
-        </div>
         
         <div className="space-x-3">
           <button
