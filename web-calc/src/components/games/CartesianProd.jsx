@@ -46,7 +46,7 @@ function CartesianGame({ onClose }) {
     }
     
     // Gerar conjunto B (letras ou símbolos)
-    const possibleB = ['A', 'B', 'C', 'D', 'E', 'F',];
+    const possibleB = ['A', 'B', 'C', 'D', 'E',];
     const newSetB = [];
     const sizeB = Math.floor(Math.random() * 2) + 3; // 3 a 4 elementos
     
@@ -65,121 +65,141 @@ function CartesianGame({ onClose }) {
     setSelectedA(null);
   };
 
-  // Gerar pares corretos quando os conjuntos mudarem
+  // Modificar o useEffect que gera os pares corretos para garantir que o número de pares corresponda às bolinhas visíveis
   useEffect(() => {
     // Criar todos os pares possíveis do produto cartesiano
     const allPairs = [];
+    const uniquePositions = new Map();
+    
+    // Para cada par possível, calcular sua posição no gráfico e verificar se é única
     setA.forEach(a => {
       setB.forEach(b => {
-        allPairs.push([a, b]);
+        // Calcular o valor Y para este elemento do conjunto B
+        let yValue;
+        if (typeof b === 'string') {
+          if (b.length === 1) {
+            const code = b.charCodeAt(0);
+            if (code >= 97 && code <= 122) yValue = code - 96;
+            else if (code >= 65 && code <= 90) yValue = code - 64;
+            else yValue = setB.indexOf(b) + 1;
+          } else {
+            yValue = setB.indexOf(b) + 1;
+          }
+        } else {
+          yValue = b;
+        }
+        
+        // Criar uma chave única para esta posição no plano cartesiano
+        const posKey = `${a},${yValue}`;
+        
+        // Se for uma posição única, adicionar à lista e ao mapa
+        if (!uniquePositions.has(posKey)) {
+          uniquePositions.set(posKey, [a, b]);
+          allPairs.push([a, b]);
+        }
       });
     });
     
-    // Selecionar um subconjunto aleatório de pares (50% a 80% do total)
-    const minPairs = Math.max(3, Math.floor(allPairs.length * 0.5));
-    const maxPairs = Math.max(4, Math.floor(allPairs.length * 0.8));
-    let numPairs = Math.floor(Math.random() * (maxPairs - minPairs + 1)) + minPairs;
-    
-    // Se temos muito poucos pares, usar todos
-    if (allPairs.length <= 4) {
-      numPairs = allPairs.length;
-    }
-    
-    // Embaralhar e pegar um subconjunto
+    // Agora que temos apenas pares com posições únicas, selecionar um subconjunto aleatório
     const shuffled = [...allPairs].sort(() => 0.5 - Math.random());
-    const selectedPairs = shuffled.slice(0, numPairs);
     
+    // Selecionar entre 4 e 8 pares, ou menos se não houver pares suficientes
+    const numPairs = Math.min(
+      allPairs.length, 
+      Math.floor(Math.random() * 5) + 4  // Entre 4 e 8 pares
+    );
+    
+    const selectedPairs = shuffled.slice(0, numPairs);
     setCorrectPairs(selectedPairs);
     
-  // Criar posições SEM jitter para os pontos no gráfico (exatamente nas interseções)
-  const positions = selectedPairs.map(pair => {
-    let yValue;
-    if (typeof pair[1] === 'string') {
-      if (pair[1].length === 1) {
-        const code = pair[1].charCodeAt(0);
-        if (code >= 97 && code <= 122) yValue = code - 96;
-        else if (code >= 65 && code <= 90) yValue = code - 64;
-        else yValue = setB.indexOf(pair[1]) + 1;
-      } else {
+       // Modificar no useEffect onde são calculadas as posições dos pontos
+    const positions = selectedPairs.map(pair => {
+      let yValue;
+      if (typeof pair[1] === 'string') {
+        // Garantir que yValue seja um número entre 1 e o tamanho do conjunto B
         yValue = setB.indexOf(pair[1]) + 1;
+      } else {
+        yValue = pair[1];
       }
-    } else {
-      yValue = pair[1];
-    }
+      
+      // Certificar-se de que yValue esteja nos limites
+      if (yValue < 1) yValue = 1;
+      if (yValue > setB.length) yValue = setB.length;
+      
+      return {
+        original: pair,
+        plotPosition: [pair[0], yValue]
+      };
+    });
     
-    return {
-      original: pair,
-      plotPosition: [pair[0], yValue] // Sem jitter
-    };
-  });
-
+    // Verificar se temos o número correto de posições únicas
+    console.log(`Pares selecionados: ${selectedPairs.length}, Posições únicas: ${positions.length}`);
+    
     setJitteredPositions(positions);
-    
-    // Preparar dados para o plano cartesiano 
     updatePlotData(positions, []);
   }, [setA, setB]);
-
-  // Função para atualizar os dados do plano cartesiano com jitter
-  // Modificar a função updatePlotData para adicionar textos nos pontos
+  
+  // Modifique a função updatePlotData para garantir que as bolinhas apareçam corretamente
   const updatePlotData = (positions, userSelectedPairs) => {
     // Plotar todos os pontos possíveis (em cinza)
     const allPointsX = positions.map(pos => pos.plotPosition[0]);
     const allPointsY = positions.map(pos => pos.plotPosition[1]);
-
-  // Encontrar posições dos pontos que o usuário selecionou
-  const userPositions = userSelectedPairs.map(userPair => 
-    positions.find(pos => 
-      pos.original[0] === userPair[0] && pos.original[1] === userPair[1]
-    )
-  ).filter(Boolean);
-  
-  const userPointsX = userPositions.map(pos => pos.plotPosition[0]);
-  const userPointsY = userPositions.map(pos => pos.plotPosition[1]);
-  
-
+    
+    // Encontrar posições dos pontos que o usuário selecionou
+    const userPositions = userSelectedPairs
+      .map(userPair => positions.find(pos => 
+        pos.original[0] === userPair[0] && pos.original[1] === userPair[1]
+      ))
+      .filter(Boolean);
+    
+    const userPointsX = userPositions.map(pos => pos.plotPosition[0]);
+    const userPointsY = userPositions.map(pos => pos.plotPosition[1]);
+    
+    // Verificar e exibir no console para depuração
+    console.log(`Pontos a exibir: ${allPointsX.length}, Pares corretos: ${correctPairs.length}`);
+    
     // Criar layout do gráfico
-  const plotDataArray = [
-    {
-      x: allPointsX,
-      y: allPointsY,
-      mode: 'markers', // Removido "text" para não mostrar os rótulos
-      type: 'scatter',
-      hoverinfo: 'none', 
-      marker: {
-        color: 'rgba(170, 170, 170, 0.6)',
-        size: 12,
-        line: {
-          color: 'rgba(120, 120, 120, 0.8)',
-          width: 1
-        }
-      },
-      name: 'Pares a coletar'
+    const plotDataArray = [
+      {
+        x: allPointsX,
+        y: allPointsY,
+        mode: 'markers',
+        type: 'scatter',
+        hoverinfo: 'none',
+        marker: {
+          color: 'rgba(170, 170, 170, 0.6)',
+          size: 12,
+          line: {
+            color: 'rgba(120, 120, 120, 0.8)',
+            width: 1
+          }
+        },
+        name: 'Pares a coletar'
+      }
+    ];
+    
+    // Adicionar pontos selecionados pelo usuário se houver
+    if (userPointsX.length > 0) {
+      plotDataArray.push({
+        x: userPointsX,
+        y: userPointsY,
+        mode: 'markers',
+        type: 'scatter',
+        hoverinfo: 'none',
+        marker: {
+          color: 'rgb(50, 168, 82)',
+          size: 14,
+          line: {
+            color: 'rgb(30, 120, 50)',
+            width: 1
+          }
+        },
+        name: 'Seus pares'
+      });
     }
-  ];
-  
-  // Adicionar pontos selecionados pelo usuário se houver
-  if (userPointsX.length > 0) {
-    plotDataArray.push({
-      x: userPointsX,
-      y: userPointsY,
-      mode: 'markers',
-      type: 'scatter',
-      hoverinfo: 'none', 
-      marker: {
-        color: 'rgb(50, 168, 82)',
-        size: 14,
-        line: {
-          color: 'rgb(30, 120, 50)',
-          width: 1
-        }
-      },
-      name: 'Seus pares'
-    });
-  }
-  
-  setPlotData(plotDataArray);
-};
-
+    
+    setPlotData(plotDataArray);
+  };
   // Função para adicionar um par
   const addPair = (a, b) => {
     const newPair = [a, b];
@@ -296,6 +316,7 @@ function CartesianGame({ onClose }) {
           </div>
           
           {/* Plano Cartesiano */}
+                    {/* Plano Cartesiano - Altura fixa */}
           <div className="w-full h-[300px] border-2 border-blue-300 rounded-lg shadow-md mb-6 bg-gray-50">
             <Plot
               data={plotData}
@@ -304,30 +325,31 @@ function CartesianGame({ onClose }) {
                 margin: { l: 40, r: 40, b: 40, t: 40 },
                 xaxis: {
                   title: 'Conjunto A',
-                  range: [0, Math.max(...setA) + 1],
+                  range: [Math.min(...setA) - 1, Math.max(...setA) + 1],
                   tickmode: 'array',
                   tickvals: setA,
                   ticktext: setA.map(String),
                   zeroline: true,
                   gridcolor: '#d0d0d0',
-                  gridwidth: 1
+                  gridwidth: 0.3
                 },
                 yaxis: {
                   title: 'Conjunto B',
                   range: [0, setB.length + 1],
                   tickmode: 'array',
-                  tickvals: setB.map((_, i) => i + 1),
+                  tickvals: Array.from({length: setB.length}, (_, i) => i + 1),
                   ticktext: setB.map(String),
                   zeroline: true,
                   gridcolor: '#d0d0d0',
-                  gridwidth: 1
+                  gridwidth: 0.3
                 },
                 showlegend: true,
                 hovermode: 'closest'
               }}
               config={{ 
                 displayModeBar: false, 
-                responsive: true 
+                responsive: true,
+                staticPlot: true // Isso desabilita eventos de mouse que podem estar causando problemas
               }}
               style={{ width: '100%', height: '100%' }}
               useResizeHandler={true}
