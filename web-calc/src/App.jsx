@@ -1,7 +1,9 @@
 import { useState, useRef } from 'react'
 import Hotbar from './components/ui/Hotbar'
+import Calculator from './components/ui/Calculator'
 import CartesianGame from './components/games/CartesianProd'
 import FunctionGame from './components/games/FindFunction'
+import VectorGame from './components/games/VecMission'
 import './App.css'
 
 function App() {
@@ -9,6 +11,7 @@ function App() {
   const homeRef = useRef(null);
   const cartesianGameRef = useRef(null);
   const functionGameRef = useRef(null);
+  const vectorGameRef = useRef(null);
   const aboutRef = useRef(null);
   
   // Estado para a calculadora
@@ -19,6 +22,7 @@ function App() {
     home: homeRef,
     cartesianGame: cartesianGameRef,
     functionGame: functionGameRef,
+    vectorGame: vectorGameRef,
     about: aboutRef,
     calculator: () => setShowCalculator(true)
   };
@@ -43,6 +47,8 @@ function App() {
     <div className="App">
       <Hotbar onNavigate={scrollToSection} showCalculator={showCalculator} setShowCalculator={setShowCalculator} />
       
+      {showCalculator && <Calculator onClose={() => setShowCalculator(false)} />}
+      
       {/* Seção Home */}
       <section 
         ref={homeRef} 
@@ -64,6 +70,12 @@ function App() {
               className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
             >
               Funções Matemáticas
+            </button>
+            <button 
+              onClick={() => scrollToSection('vectorGame')}
+              className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+            >
+              Missão Vetorial
             </button>
           </div>
         </div>
@@ -87,6 +99,15 @@ function App() {
         <FunctionGame onClose={() => scrollToSection('home')} />
       </section>
       
+      {/* Seção Missão Vetorial */}
+      <section 
+        ref={vectorGameRef} 
+        id="vectorGame"
+        className="min-h-screen p-6 bg-purple-50"
+      >
+        <VectorGame onClose={() => scrollToSection('home')} />
+      </section>
+      
       {/* Seção Sobre */}
       <section 
         ref={aboutRef} 
@@ -106,6 +127,7 @@ function App() {
           <ul className="list-disc pl-6 mb-4">
             <li>Produto Cartesiano - Combinação de elementos de conjuntos</li>
             <li>Descubra a Função - Relação entre equações e seus gráficos</li>
+            <li>Missão Vetorial - Operações e propriedades de vetores</li>
           </ul>
           <p>
             Equipe de desenvolvimento: [Seus nomes aqui]
