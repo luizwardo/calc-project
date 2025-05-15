@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import Plot from 'react-plotly.js';
@@ -14,24 +14,56 @@ import {
 } from "@/components/ui/alert-dialog";
 
 function CartesianGame({ onClose, darkMode }) {
-  // Estados
+  // Estados originais
   const [setA, setSetA] = useState([1, 2, 3]);
-  const [setB, setSetB] = useState(['a', 'b', 'c']);
+  const [setB, setSetB] = useState(['A', 'B', 'C']);
   const [userPairs, setUserPairs] = useState([]);
-  const [correctPairs, setCorrectPairs] = useState([]);
   const [score, setScore] = useState(0);
   const [feedback, setFeedback] = useState('');
   const [alertOpen, setAlertOpen] = useState(false);
-  const [isComplete, setIsComplete] = useState(false);
-  const [alertType, setAlertType] = useState('success'); // 'success', 'incomplete', ou 'incorrect'
+  const [alertType, setAlertType] = useState('success');
   const [selectedA, setSelectedA] = useState(null);
   const [plotData, setPlotData] = useState([]);
-  const [jitteredPositions, setJitteredPositions] = useState([]);
+  
+  // Estados para o jogo com bolinha móvel
+  const [gameStarted, setGameStarted] = useState(false);
+  const [currentBallPosition, setCurrentBallPosition] = useState(null);
+  const [timeLeft, setTimeLeft] = useState(5);
+  const [allPossiblePositions, setAllPossiblePositions] = useState([]);
+  
+  // Novo estado para armazenar o histórico de posições (efeito de arrasto)
+  const [positionHistory, setPositionHistory] = useState([]);
+  const MAX_TRAIL_LENGTH = 1; // Número de posições para o rastro
+  
+  const timerRef = useRef(null);
+  const intervalRef = useRef(null);
+  const animationRef = useRef(null);
 
   // Inicializar o jogo
   useEffect(() => {
     generateNewSets();
+    return () => {
+      clearInterval(timerRef.current);
+      clearInterval(intervalRef.current);
+      cancelAnimationFrame(animationRef.current);
+    };
   }, []);
+
+  // Atualizar todas as posições possíveis quando os conjuntos mudam
+  useEffect(() => {
+    const positions = [];
+    setA.forEach(a => {
+      setB.forEach(b => {
+        // Calcular o valor Y para este elemento do conjunto B
+        const yValue = setB.indexOf(b) + 1;
+        positions.push({
+          original: [a, b],
+          plotPosition: [a, yValue]
+        });
+      });
+    });
+    setAllPossiblePositions(positions);
+  }, [setA, setB]);
 
   // Função para gerar novos conjuntos A e B
   const generateNewSets = () => {
@@ -46,8 +78,8 @@ function CartesianGame({ onClose, darkMode }) {
       }
     }
     
-    // Gerar conjunto B (letras ou símbolos)
-    const possibleB = ['A', 'B', 'C', 'D', 'E',];
+    // Gerar conjunto B (letras)
+    const possibleB = ['A', 'B', 'C', 'D', 'E'];
     const newSetB = [];
     const sizeB = Math.floor(Math.random() * 2) + 3; // 3 a 4 elementos
     
@@ -62,252 +94,262 @@ function CartesianGame({ onClose, darkMode }) {
     setSetB(newSetB);
     setUserPairs([]);
     setFeedback('');
-    setIsComplete(false);
-    setSelectedA(null);
+    stopGame();
   };
 
-  // Modificar o useEffect que gera os pares corretos para garantir que o número de pares corresponda às bolinhas visíveis
-  useEffect(() => {
-    // Criar todos os pares possíveis do produto cartesiano
-    const allPairs = [];
-    const uniquePositions = new Map();
+  // Função para obter uma posição aleatória do conjunto
+  const getRandomPosition = () => {
+    if (allPossiblePositions.length > 0) {
+      const randomIndex = Math.floor(Math.random() * allPossiblePositions.length);
+      return allPossiblePositions[randomIndex];
+    }
+    return null;
+  };
+
+  // Função modificada para mover a bolinha com efeito de arrasto
+  const moveToRandomPosition = () => {
+    // Pegar a posição atual e a nova posição aleatória
+    const startPosition = currentBallPosition || getRandomPosition();
+    if (!startPosition) return;
     
-    // Para cada par possível, calcular sua posição no gráfico e verificar se é única
-    setA.forEach(a => {
-      setB.forEach(b => {
-        // Calcular o valor Y para este elemento do conjunto B
-        let yValue;
-        if (typeof b === 'string') {
-          if (b.length === 1) {
-            const code = b.charCodeAt(0);
-            if (code >= 97 && code <= 122) yValue = code - 96;
-            else if (code >= 65 && code <= 90) yValue = code - 64;
-            else yValue = setB.indexOf(b) + 1;
-          } else {
-            yValue = setB.indexOf(b) + 1;
-          }
-        } else {
-          yValue = b;
-        }
-        
-        // Criar uma chave única para esta posição no plano cartesiano
-        const posKey = `${a},${yValue}`;
-        
-        // Se for uma posição única, adicionar à lista e ao mapa
-        if (!uniquePositions.has(posKey)) {
-          uniquePositions.set(posKey, [a, b]);
-          allPairs.push([a, b]);
-        }
-      });
-    });
+    const endPosition = getRandomPosition();
+    if (!endPosition || 
+        (startPosition.plotPosition[0] === endPosition.plotPosition[0] && 
+         startPosition.plotPosition[1] === endPosition.plotPosition[1])) {
+      // Se a nova posição for a mesma, encontre outra
+      moveToRandomPosition();
+      return;
+    }
     
-    // Agora que temos apenas pares com posições únicas, selecionar um subconjunto aleatório
-    const shuffled = [...allPairs].sort(() => 0.5 - Math.random());
+    // Iniciar a animação entre as duas posições
+    animateBallMovement(startPosition, endPosition);
+  };
+
+  // Nova função para animar o movimento da bolinha
+  const animateBallMovement = (startPos, endPos) => {
+    const startTime = performance.now();
+    const duration = 200; // Duração mais rápida da animação (200ms)
     
-    // Selecionar entre 4 e 8 pares, ou menos se não houver pares suficientes
-    const numPairs = Math.min(
-      allPairs.length, 
-      Math.floor(Math.random() * 5) + 4  // Entre 4 e 8 pares
-    );
+    // Limpar qualquer animação anterior
+    cancelAnimationFrame(animationRef.current);
     
-    const selectedPairs = shuffled.slice(0, numPairs);
-    setCorrectPairs(selectedPairs);
-    
-    // Modificar no useEffect onde são calculadas as posições dos pontos
-    const positions = selectedPairs.map(pair => {
-      let yValue;
-      if (typeof pair[1] === 'string') {
-        // Garantir que yValue seja um número entre 1 e o tamanho do conjunto B
-        yValue = setB.indexOf(pair[1]) + 1;
-      } else {
-        yValue = pair[1];
-      }
+    // Função para calcular e renderizar a posição atual da bolinha
+    const animate = (currentTime) => {
+      // Calcular o progresso da animação (0 a 1)
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
       
-      // Certificar-se de que yValue esteja nos limites
-      if (yValue < 1) yValue = 1;
-      if (yValue > setB.length) yValue = setB.length;
+      // Calcular a posição atual usando interpolação suavizada (easeInOutCubic)
+      const easeProgress = progress < 0.5 
+        ? 4 * progress * progress * progress
+        : 1 - Math.pow(-2 * progress + 2, 3) / 2;
       
-      return {
-        original: pair,
-        plotPosition: [pair[0], yValue]
+      const currentX = startPos.plotPosition[0] + (endPos.plotPosition[0] - startPos.plotPosition[0]) * easeProgress;
+      const currentY = startPos.plotPosition[1] + (endPos.plotPosition[1] - startPos.plotPosition[1]) * easeProgress;
+      
+      // Criar um objeto de posição atual com os valores originais do destino
+      const currentPosition = {
+        original: endPos.original,
+        plotPosition: [currentX, currentY]
       };
-    });
+      
+      // Atualizar a posição atual da bolinha
+      setCurrentBallPosition(currentPosition);
+      
+      // Adicionar a posição ao histórico para criar o efeito de arrasto
+      setPositionHistory(prevHistory => {
+        // Adicionar a nova posição e limitar o tamanho do histórico
+        const newHistory = [...prevHistory, { x: currentX, y: currentY }]
+          .slice(-MAX_TRAIL_LENGTH);
+        return newHistory;
+      });
+      
+      // Atualizar o gráfico
+      updatePlotData(currentPosition);
+      
+      // Continuar a animação se não estiver completa
+      if (progress < 1) {
+        animationRef.current = requestAnimationFrame(animate);
+      } else {
+        // Animação completa - definir a posição final exata
+        setCurrentBallPosition(endPos);
+      }
+    };
     
-    // Verificar se temos o número correto de posições únicas
-    console.log(`Pares selecionados: ${selectedPairs.length}, Posições únicas: ${positions.length}`);
+    // Iniciar a animação
+    animationRef.current = requestAnimationFrame(animate);
+  };
+
+  // Função modificada para atualizar o gráfico com efeito de arrasto e blur
+  const updatePlotData = (position) => {
+    // Dados para o ponto principal (bolinha atual)
+    const mainPoint = {
+      x: [position.plotPosition[0]],
+      y: [position.plotPosition[1]],
+      mode: 'markers',
+      type: 'scatter',
+      hoverinfo: 'none',
+      marker: {
+        color: darkMode ? 'rgba(74, 222, 128, 1)' : 'rgba(50, 168, 82, 1)',
+        size: 18,
+        line: {
+          color: darkMode ? 'rgb(34, 197, 94)' : 'rgb(30, 120, 50)',
+          width: 2
+        }
+      },
+      name: 'Bolinha atual'
+    };
     
-    setJitteredPositions(positions);
-    updatePlotData(positions, []);
-  }, [setA, setB]);
-  
-  // Modifique a função updatePlotData para garantir que as bolinhas apareçam corretamente
-  const updatePlotData = (positions, userSelectedPairs) => {
-    // Plotar todos os pontos possíveis (em cinza)
-    const allPointsX = positions.map(pos => pos.plotPosition[0]);
-    const allPointsY = positions.map(pos => pos.plotPosition[1]);
+    // Plot de dados para o plano cartesiano
+    const plotDataArray = [mainPoint];
     
-    // Encontrar posições dos pontos que o usuário selecionou
-    const userPositions = userSelectedPairs
-      .map(userPair => positions.find(pos => 
-        pos.original[0] === userPair[0] && pos.original[1] === userPair[1]
-      ))
-      .filter(Boolean);
-    
-    const userPointsX = userPositions.map(pos => pos.plotPosition[0]);
-    const userPointsY = userPositions.map(pos => pos.plotPosition[1]);
-    
-    // Verificar e exibir no console para depuração
-    console.log(`Pontos a exibir: ${allPointsX.length}, Pares corretos: ${correctPairs.length}`);
-    
-    // Criar layout do gráfico - ajustado para modo escuro
-    const pointColor = darkMode ? 'rgba(200, 200, 200, 0.6)' : 'rgba(170, 170, 170, 0.6)';
-    const pointBorder = darkMode ? 'rgba(220, 220, 220, 0.8)' : 'rgba(120, 120, 120, 0.8)';
-    const selectedColor = darkMode ? 'rgb(74, 222, 128)' : 'rgb(50, 168, 82)';
-    const selectedBorder = darkMode ? 'rgb(34, 197, 94)' : 'rgb(30, 120, 50)';
-    
-    const plotDataArray = [
-      {
+    // Adicionar linha conectando os pontos para criar efeito de blur
+    if (positionHistory.length > 1) {
+      // Coletar todos os pontos do histórico e o atual para a linha
+      const allPointsX = [...positionHistory.map(pos => pos.x), position.plotPosition[0]];
+      const allPointsY = [...positionHistory.map(pos => pos.y), position.plotPosition[1]];
+      
+      // Adicionar uma linha gradiente para criar efeito de rastro com blur
+      plotDataArray.push({
         x: allPointsX,
         y: allPointsY,
-        mode: 'markers',
+        mode: 'lines',
         type: 'scatter',
         hoverinfo: 'none',
-        marker: {
-          color: pointColor,
-          size: 12,
-          line: {
-            color: pointBorder,
-            width: 1
-          }
+        line: {
+          color: darkMode ? 'rgba(74, 222, 128, 0.3)' : 'rgba(50, 168, 82, 0.3)',
+          width: 5,
+          shape: 'spline',
+          smoothing: 1.3,
         },
-        name: 'Pares a coletar'
-      }
-    ];
-    
-    // Adicionar pontos selecionados pelo usuário se houver
-    if (userPointsX.length > 0) {
-      plotDataArray.push({
-        x: userPointsX,
-        y: userPointsY,
-        mode: 'markers',
-        type: 'scatter',
-        hoverinfo: 'none',
-        marker: {
-          color: selectedColor,
-          size: 14,
-          line: {
-            color: selectedBorder,
-            width: 1
-          }
-        },
-        name: 'Seus pares'
+        showlegend: false
       });
     }
     
     setPlotData(plotDataArray);
   };
-  
-  // Função para adicionar um par
-  const addPair = (a, b) => {
-    const newPair = [a, b];
+
+  // Iniciar o jogo
+  const startGame = () => {
+    setGameStarted(true);
+    setScore(0);
+    setFeedback('Jogo iniciado! Identifique rapidamente as coordenadas da bolinha.');
+    setUserPairs([]);
+    setPositionHistory([]); // Limpar o histórico de posições
     
-    // Verificar se o par já existe nas seleções do usuário
-    const pairExists = userPairs.some(
-      pair => pair[0] === newPair[0] && pair[1] === newPair[1]
-    );
+    // Mover a bolinha para uma posição inicial
+    moveToRandomPosition();
+    setTimeLeft(5);
     
-    // Verificar se o par existe nos pares corretos
-    const isValidPair = correctPairs.some(
-      pair => pair[0] === newPair[0] && pair[1] === newPair[1]
-    );
+    // Configurar o temporizador para mover a bolinha a cada 5 segundos
+    timerRef.current = setInterval(() => {
+      moveToRandomPosition();
+      setTimeLeft(5);
+    }, 5000);
     
-    if (!pairExists && isValidPair) {
-      const newUserPairs = [...userPairs, newPair];
-      setUserPairs(newUserPairs);
-      
-      // Atualizar o gráfico
-      updatePlotData(jitteredPositions, newUserPairs);
-      setFeedback(`Par (${a}, ${b}) adicionado.`);
-    } else if (pairExists) {
-      setFeedback(`Par (${a}, ${b}) já foi adicionado.`);
-    } else if (!isValidPair) {
-      setFeedback(`Par (${a}, ${b}) não faz parte dos pares a serem coletados.`);
-    }
+    // Configurar o intervalo para atualizar o contador regressivo
+    intervalRef.current = setInterval(() => {
+      setTimeLeft(prev => Math.max(prev - 1, 0));
+    }, 1000);
   };
 
-  // Remover um par
-  const removePair = (index) => {
-    const newUserPairs = [...userPairs];
-    const removedPair = newUserPairs[index];
-    newUserPairs.splice(index, 1);
-    setUserPairs(newUserPairs);
-    
-    // Atualizar o gráfico
-    updatePlotData(jitteredPositions, newUserPairs);
-    setFeedback(`Par (${removedPair[0]}, ${removedPair[1]}) removido.`);
+  // Parar o jogo
+  const stopGame = () => {
+    setGameStarted(false);
+    clearInterval(timerRef.current);
+    clearInterval(intervalRef.current);
+    cancelAnimationFrame(animationRef.current);
+    setCurrentBallPosition(null);
+    setPositionHistory([]);
+    setPlotData([]);
   };
 
-  // Verificar resposta
+  // Verificar resposta do usuário
   const checkAnswer = () => {
-    // Verificar se o usuário selecionou todos os pares corretos
-    if (userPairs.length !== correctPairs.length) {
-      setFeedback(`Você precisa selecionar todos os ${correctPairs.length} pares marcados no gráfico.`);
-      setAlertType('incomplete');
-      setAlertOpen(true);
+    if (!gameStarted || !currentBallPosition || userPairs.length === 0) {
+      setFeedback("Selecione um par ordenado antes de verificar!");
       return;
     }
     
-    // Verificar se todos os pares estão corretos (deve incluir todos os pares de correctPairs)
-    const allCorrect = correctPairs.every(correctPair => 
-      userPairs.some(
-        userPair => 
-          userPair[0] === correctPair[0] && 
-          userPair[1] === correctPair[1]
-      )
-    );
-  
-    if (allCorrect) {
+    const userPair = userPairs[0]; // Pegar apenas o primeiro par, já que agora temos apenas um
+    const correctPair = currentBallPosition.original;
+    
+    if (userPair[0] === correctPair[0] && userPair[1] === correctPair[1]) {
+      // Resposta correta
       const newScore = score + 10;
       setScore(newScore);
-      setFeedback('Parabéns! Você encontrou todos os pares corretos!');
-      setIsComplete(true);
-      setAlertType('success');
-      setAlertOpen(true);
+      setFeedback(`Correto! Par (${userPair[0]}, ${userPair[1]}) corresponde à posição da bolinha.`);
+      setUserPairs([]);
+      
+      // Mover imediatamente para uma nova posição e reiniciar o timer
+      clearInterval(timerRef.current);
+      clearInterval(intervalRef.current);
+      cancelAnimationFrame(animationRef.current);
+      
+      moveToRandomPosition();
+      setTimeLeft(5);
+      
+      timerRef.current = setInterval(() => {
+        moveToRandomPosition();
+        setTimeLeft(5);
+      }, 5000);
+      
+      intervalRef.current = setInterval(() => {
+        setTimeLeft(prev => Math.max(prev - 1, 0));
+      }, 1000);
     } else {
-      setFeedback('Alguns pares não estão corretos. Verifique sua resposta!');
-      setAlertType('incorrect');
-      setAlertOpen(true);
+      // Resposta incorreta
+      setFeedback(`Incorreto! A posição correta era (${correctPair[0]}, ${correctPair[1]})`);
+      setUserPairs([]);
     }
   };
 
   // Função para lidar com cliques nos elementos A
   const handleClickA = (value) => {
+    if (!gameStarted) {
+      setFeedback("Inicie o jogo primeiro!");
+      return;
+    }
     setSelectedA(value);
     setFeedback(`Elemento ${value} selecionado. Agora selecione um elemento do conjunto B.`);
   };
 
   // Função para lidar com cliques nos elementos B
   const handleClickB = (value) => {
+    if (!gameStarted) {
+      setFeedback("Inicie o jogo primeiro!");
+      return;
+    }
+    
     if (selectedA !== null) {
-      addPair(selectedA, value);
+      setUserPairs([[selectedA, value]]);
+      setFeedback(`Par (${selectedA}, ${value}) selecionado. Verifique se está correto!`);
       setSelectedA(null);
     } else {
       setFeedback("Selecione primeiro um elemento do conjunto A.");
     }
   };
 
+  // Função para finalizar o jogo
+  const endGame = () => {
+    stopGame();
+    setAlertType('gameOver');
+    setAlertOpen(true);
+    setScore(0);
+  };
+
   return (
     <DndProvider backend={HTML5Backend}>
       <div className={`p-6 max-w-4xl mx-auto ${darkMode ? 'bg-gray-800 text-white' : 'bg-white'} rounded-lg shadow-lg transition-colors`}>
         <div 
-          className="top-2 left-2 w-8 h-8 rounded-full bg-red-500 hover:bg-red-600 cursor-pointer transition-colors flex items-center justify-center"
+          className="absolute top-2 left-2 w-8 h-8 rounded-full bg-red-500 hover:bg-red-600 cursor-pointer transition-colors flex items-center justify-center"
           onClick={onClose}
           title="Fechar jogo"
         >
           <span className="text-white text-lg font-bold">×</span>
         </div>
         
-        <h1 className="text-2xl font-bold mb-4 text-center">Produto Cartesiano: Colete os Pares Marcados</h1>
+        <h1 className="text-2xl font-bold mb-4 text-center">Produto Cartesiano: Capture a Bolinha!</h1>
         
         <div className="mb-6">
           <div className="flex justify-between items-center mb-4">
@@ -323,12 +365,12 @@ function CartesianGame({ onClose, darkMode }) {
           </div>
           
           {/* Plano Cartesiano */}
-          <div className={`w-full h-[300px] border-2 ${darkMode ? 'border-blue-600 bg-gray-700' : 'border-blue-300 bg-gray-50'} rounded-lg shadow-md mb-6 transition-colors overflow-hidden`}>
+          <div className={`w-full h-[300px] border-2 ${darkMode ? 'border-blue-600 bg-gray-700' : 'border-blue-300 bg-gray-50'} rounded-lg shadow-md mb-6 transition-colors overflow-hidden relative`}>
             <Plot
               data={plotData}
               layout={{
                 autosize: true,
-                margin: { l: 40, r: 40, b: 40, t: 40 },
+                margin: { l: 50, r: 50, b: 50, t: 50 },
                 paper_bgcolor: darkMode ? '#374151' : '#f9fafb',
                 plot_bgcolor: darkMode ? '#374151' : '#f9fafb',
                 font: {
@@ -354,17 +396,28 @@ function CartesianGame({ onClose, darkMode }) {
                   gridcolor: darkMode ? '#4b5563' : '#d0d0d0',
                   gridwidth: 0.3
                 },
-                showlegend: true,
+                showlegend: false,
                 hovermode: 'closest'
               }}
               config={{ 
                 displayModeBar: false, 
                 responsive: true,
-                staticPlot: true // Isso desabilita eventos de mouse que podem estar causando problemas
+                staticPlot: true
               }}
-              style={{ width: '100%', height: '100%' }}
+              style={{ 
+                width: '100%', 
+                height: '100%',
+                borderRadius: '0.5rem'
+              }}
               useResizeHandler={true}
             />
+            
+            {/* Temporizador sobreposto ao gráfico */}
+            {gameStarted && (
+              <div className="absolute top-2 right-2 bg-opacity-70 bg-black text-white px-3 py-1 rounded-full">
+                {timeLeft}s
+              </div>
+            )}
           </div>
           
           <div className="flex justify-between mb-6">
@@ -419,30 +472,27 @@ function CartesianGame({ onClose, darkMode }) {
           
           <div className="mb-6">
             <h2 className="text-lg font-medium mb-2">Produto Cartesiano A × B</h2>
-            <p className="mb-2">Selecione um elemento de A e depois um de B para formar os pares marcados no gráfico.</p>
-            <div className="mb-4">
-            <div className="flex justify-between items-center mb-2">
-              <span className={`font-medium ${
-                userPairs.length === correctPairs.length 
-                  ? (darkMode ? 'text-green-400' : 'text-green-600') 
-                  : (darkMode ? 'text-orange-400' : 'text-orange-500')
-              }`}>
-              </span>
-            </div>
-            <Progress 
-              value={(userPairs.length / correctPairs.length) * 100} 
-              className={`h-2 ${
-                userPairs.length === correctPairs.length
-                  ? (darkMode ? 'bg-green-900' : 'bg-green-200')
-                  : (darkMode ? 'bg-gray-700' : 'bg-gray-200')
-              }`}
-              indicatorClassName={
-                userPairs.length === correctPairs.length
-                  ? (darkMode ? 'bg-green-400' : 'bg-green-600')
-                  : (darkMode ? 'bg-blue-400' : 'bg-blue-600')
-              }
-            />
-          </div>
+            <p className="mb-2">Identifique o par ordenado onde a bolinha está antes que ela se mova!</p>
+            
+            {/* Temporizador como barra de progresso */}
+            {gameStarted && (
+              <div className="mb-4">
+                <div className="flex justify-between items-center mb-2">
+                  <span className={`font-medium text-blue-500`}>
+                    Tempo restante: {timeLeft}s
+                  </span>
+                </div>
+                <Progress 
+                  value={(timeLeft / 5) * 100} 
+                  className={`h-2 ${darkMode ? 'bg-gray-700' : 'bg-gray-200'}`}
+                  indicatorClassName={
+                    timeLeft > 2 
+                      ? (darkMode ? 'bg-green-400' : 'bg-green-600')
+                      : (darkMode ? 'bg-red-400' : 'bg-red-600')
+                  }
+                />
+              </div>
+            )}
 
             <div className="flex flex-wrap gap-2 mb-4 min-h-[60px]">
               {userPairs.map((pair, index) => (
@@ -459,7 +509,7 @@ function CartesianGame({ onClose, darkMode }) {
                     className={`ml-2 ${
                       darkMode ? 'text-red-400 hover:text-red-300' : 'text-red-500 hover:text-red-700'
                     }`}
-                    onClick={() => removePair(index)}
+                    onClick={() => setUserPairs([])}
                   >
                     ×
                   </button>
@@ -470,33 +520,42 @@ function CartesianGame({ onClose, darkMode }) {
         </div>
         
         <div className="flex justify-between items-center mb-4">
-          <button
-            onClick={generateNewSets}
-            className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition-colors"
-          >
-            Nova Questão
-          </button>
+          {!gameStarted ? (
+            <button
+              onClick={startGame}
+              className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+            >
+              Iniciar Jogo
+            </button>
+          ) : (
+            <button
+              onClick={endGame}
+              className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+            >
+              Encerrar Jogo
+            </button>
+          )}
           
           <button
             onClick={checkAnswer}
-            disabled={userPairs.length !== correctPairs.length}
+            disabled={!gameStarted || userPairs.length === 0}
             className={`px-4 py-2 text-white rounded transition-colors ${
-              userPairs.length === correctPairs.length 
+              gameStarted && userPairs.length > 0
                 ? 'bg-blue-600 hover:bg-blue-700' 
                 : (darkMode ? 'bg-blue-800 opacity-50' : 'bg-blue-300')
-            } ${userPairs.length !== correctPairs.length ? 'cursor-not-allowed' : ''}`}
+            } ${!gameStarted || userPairs.length === 0 ? 'cursor-not-allowed' : ''}`}
           >
-            Verificar Resposta
+            Verificar Par
           </button>
         </div>
         
         {feedback && (
           <div className={`p-3 rounded text-center mb-4 ${
-            feedback.includes('Parabéns') || feedback.includes('adicionado')
+            feedback.includes('Correto') 
               ? (darkMode ? 'bg-green-900 text-green-100' : 'bg-green-100 text-green-800')
-              : feedback.includes('Selecione') || feedback.includes('selecionado')
-                ? (darkMode ? 'bg-blue-900 text-blue-100' : 'bg-blue-100 text-blue-800')
-                : (darkMode ? 'bg-red-900 text-red-100' : 'bg-red-100 text-red-800')
+              : feedback.includes('Incorreto')
+                ? (darkMode ? 'bg-red-900 text-red-100' : 'bg-red-100 text-red-800')
+                : (darkMode ? 'bg-blue-900 text-blue-100' : 'bg-blue-100 text-blue-800')
           } transition-colors`}>
             {feedback}
           </div>
@@ -506,31 +565,25 @@ function CartesianGame({ onClose, darkMode }) {
           <AlertDialogContent className={darkMode ? 'bg-gray-800 text-white border border-gray-700' : ''}>
             <AlertDialogHeader>
               <AlertDialogTitle className={darkMode ? 'text-white' : ''}>
-                {alertType === 'success' 
-                  ? 'Parabéns!' 
-                  : alertType === 'incomplete' 
-                    ? 'Resposta Incompleta' 
-                    : 'Resposta Incorreta'}
+                {alertType === 'gameOver' ? 'Jogo Encerrado' : 'Parabéns!'}
               </AlertDialogTitle>
               <AlertDialogDescription className={darkMode ? 'text-gray-300' : ''}>
-                {alertType === 'success' 
-                  ? 'Você coletou corretamente todos os pares marcados no gráfico.' 
-                  : alertType === 'incomplete'
-                    ? `Você precisa coletar todos os ${correctPairs.length} pares marcados no gráfico.`
-                    : 'Alguns dos pares selecionados não correspondem aos pares a serem coletados.'}
+                {alertType === 'gameOver' 
+                  ? `Você fez ${score} pontos!` 
+                  : 'Você identificou corretamente o par ordenado!'}
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogAction 
                 onClick={() => {
                   setAlertOpen(false);
-                  if (alertType === 'success') {
+                  if (alertType === 'gameOver') {
                     generateNewSets();
                   }
                 }}
                 className={darkMode ? 'bg-blue-600 hover:bg-blue-700' : ''}
               >
-                {alertType === 'success' ? 'Próxima questão' : 'Tentar novamente'}
+                {alertType === 'gameOver' ? 'Novo Jogo' : 'Continuar'}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
