@@ -12,7 +12,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-function VectorGame({ onClose }) {
+function VectorGame({ onClose, darkMode }) {
   // Estados para o jogo
   const [level, setLevel] = useState(1);
   const [feedback, setFeedback] = useState('');
@@ -107,12 +107,15 @@ function VectorGame({ onClose }) {
   const getPlotData = () => {
     const plotData = [];
     
+    // Cores adaptadas ao tema
+    const axisColor = darkMode ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.3)';
+    
     // Configuração do plano cartesiano
     plotData.push({
       x: [-10, 10],
       y: [0, 0],
       mode: 'lines',
-      line: { color: 'rgba(0, 0, 0, 0.3)', width: 1 },
+      line: { color: axisColor, width: 1 },
       hoverinfo: 'none',
       showlegend: false
     });
@@ -121,7 +124,7 @@ function VectorGame({ onClose }) {
       x: [0, 0],
       y: [-10, 10],
       mode: 'lines',
-      line: { color: 'rgba(0, 0, 0, 0.3)', width: 1 },
+      line: { color: axisColor, width: 1 },
       hoverinfo: 'none',
       showlegend: false
     });
@@ -131,7 +134,7 @@ function VectorGame({ onClose }) {
       x: [0, vectorToDecompose.x],
       y: [0, vectorToDecompose.y],
       mode: 'lines+markers',
-      line: { color: 'purple', width: 3 },
+      line: { color: darkMode ? '#d8b4fe' : 'purple', width: 3 },
       marker: { size: 8, symbol: 'circle' },
       name: `Vetor (${vectorToDecompose.x}, ${vectorToDecompose.y})`,
       hoverinfo: 'name'
@@ -142,7 +145,7 @@ function VectorGame({ onClose }) {
       x: [0, userComponents.x],
       y: [0, 0],
       mode: 'lines+markers',
-      line: { color: 'red', width: 2 },
+      line: { color: darkMode ? '#fca5a5' : 'red', width: 2 },
       marker: { size: 6, symbol: 'circle' },
       name: `Componente X: ${round2Decimals(userComponents.x)}`,
       hoverinfo: 'name'
@@ -152,7 +155,7 @@ function VectorGame({ onClose }) {
       x: [userComponents.x, userComponents.x],
       y: [0, userComponents.y],
       mode: 'lines+markers',
-      line: { color: 'blue', width: 2 },
+      line: { color: darkMode ? '#93c5fd' : 'blue', width: 2 },
       marker: { size: 6, symbol: 'circle' },
       name: `Componente Y: ${round2Decimals(userComponents.y)}`,
       hoverinfo: 'name'
@@ -163,7 +166,7 @@ function VectorGame({ onClose }) {
       x: [0, userComponents.x],
       y: [0, userComponents.y],
       mode: 'lines',
-      line: { color: 'green', width: 2, dash: 'dash' },
+      line: { color: darkMode ? '#86efac' : 'green', width: 2, dash: 'dash' },
       name: `Vetor Resultante: (${round2Decimals(userComponents.x)}, ${round2Decimals(userComponents.y)})`,
       hoverinfo: 'name'
     });
@@ -177,7 +180,7 @@ function VectorGame({ onClose }) {
   };
 
   return (
-    <div className="p-6 max-w-4xl mx-auto bg-white rounded-lg shadow-lg">
+    <div className={`p-6 max-w-4xl mx-auto ${darkMode ? 'bg-gray-800 text-white' : 'bg-white'} rounded-lg shadow-lg transition-colors`}>
       <div 
         className="top-2 left-2 w-8 h-8 rounded-full bg-red-500 hover:bg-red-600 cursor-pointer transition-colors flex items-center justify-center"
         onClick={onClose}
@@ -196,25 +199,30 @@ function VectorGame({ onClose }) {
       </div>
       
       {/* Plano Cartesiano */}
-      <div className="w-full h-[350px] border-2 border-blue-300 rounded-lg shadow-md mb-6 bg-gray-50">
+      <div className={`w-full h-[350px] border-2 ${darkMode ? 'border-purple-600 bg-gray-700' : 'border-blue-300 bg-gray-50'} rounded-lg shadow-md mb-6 transition-colors`}>
         <Plot
           ref={plotRef}
           data={getPlotData()}
           layout={{
             autosize: true,
             margin: { l: 40, r: 40, b: 40, t: 40 },
+            paper_bgcolor: darkMode ? '#374151' : '#f9fafb',
+            plot_bgcolor: darkMode ? '#374151' : '#f9fafb',
+            font: {
+              color: darkMode ? '#f9fafb' : '#111827'
+            },
             xaxis: {
               title: 'x',
               range: [-10, 10],
               zeroline: true,
-              gridcolor: '#d0d0d0',
+              gridcolor: darkMode ? '#4b5563' : '#d0d0d0',
               gridwidth: 1
             },
             yaxis: {
               title: 'y',
               range: [-10, 10],
               zeroline: true,
-              gridcolor: '#d0d0d0',
+              gridcolor: darkMode ? '#4b5563' : '#d0d0d0',
               gridwidth: 1,
               scaleanchor: 'x',
               scaleratio: 1
@@ -239,10 +247,16 @@ function VectorGame({ onClose }) {
       <div className="space-y-4">
         <h2 className="text-lg font-medium">Decomponha o vetor em suas componentes x e y</h2>
         
-        <div className="p-3 bg-gray-100 rounded mb-4">
-          <p><strong>Vetor a decompor:</strong> ({round2Decimals(userComponents.x)}, {round2Decimals(userComponents.y)}) </p>
+        <div className={`p-3 ${darkMode ? 'bg-gray-700' : 'bg-gray-100'} rounded mb-4 transition-colors`}>
+          <p><strong>Vetor a decompor:</strong> ({round2Decimals(vectorToDecompose.x)}, {round2Decimals(vectorToDecompose.y)})</p>
           <p><strong>Módulo:</strong> {round2Decimals(calculateMagnitude(vectorToDecompose))}</p>
           <p><strong>Ângulo:</strong> {round2Decimals(calculateAngle(vectorToDecompose))}°</p>
+          
+          <div className={`mt-3 pt-2 border-t ${darkMode ? 'border-gray-600' : 'border-gray-300'} transition-colors`}>
+            <p><strong>Seu vetor atual:</strong> ({round2Decimals(userComponents.x)}, {round2Decimals(userComponents.y)})</p>
+            <p><strong>Seu módulo:</strong> {round2Decimals(calculateMagnitude(userComponents))}</p>
+            <p><strong>Seu ângulo:</strong> {round2Decimals(calculateAngle(userComponents))}°</p>
+          </div>
         </div>
         
         <div className="space-y-4">
@@ -273,14 +287,14 @@ function VectorGame({ onClose }) {
       <div className="flex justify-between items-center mt-6 mb-4">
         <button
           onClick={() => generateLevel(level)}
-          className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600"
+          className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition-colors"
         >
           Novo Problema
         </button>
         
         <button
           onClick={checkAnswer}
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
         >
           Verificar Decomposição
         </button>
@@ -289,28 +303,31 @@ function VectorGame({ onClose }) {
       {feedback && (
         <div className={`p-3 rounded text-center mb-4 ${
           feedback.includes('Parabéns') 
-            ? 'bg-green-100 text-green-800'
+            ? (darkMode ? 'bg-green-900 text-green-100' : 'bg-green-100 text-green-800')
             : feedback.includes('Quase')
-              ? 'bg-yellow-100 text-yellow-800'
-              : 'bg-blue-100 text-blue-800'
-        }`}>
+              ? (darkMode ? 'bg-yellow-900 text-yellow-100' : 'bg-yellow-100 text-yellow-800')
+              : (darkMode ? 'bg-blue-900 text-blue-100' : 'bg-blue-100 text-blue-800')
+        } transition-colors`}>
           {feedback}
         </div>
       )}
 
       <AlertDialog open={alertOpen} onOpenChange={setAlertOpen}>
-        <AlertDialogContent>
+        <AlertDialogContent className={darkMode ? 'bg-gray-800 text-white border border-gray-700' : ''}>
           <AlertDialogHeader>
-            <AlertDialogTitle>Parabéns!</AlertDialogTitle>
-            <AlertDialogDescription>
+            <AlertDialogTitle className={darkMode ? 'text-white' : ''}>Parabéns!</AlertDialogTitle>
+            <AlertDialogDescription className={darkMode ? 'text-gray-300' : ''}>
               Você decompôs o vetor corretamente!
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogAction onClick={() => {
-              setAlertOpen(false);
-              handleNextLevel();
-            }}>
+            <AlertDialogAction 
+              onClick={() => {
+                setAlertOpen(false);
+                handleNextLevel();
+              }}
+              className={darkMode ? 'bg-purple-600 hover:bg-purple-700' : ''}
+            >
               Próximo nível
             </AlertDialogAction>
           </AlertDialogFooter>
