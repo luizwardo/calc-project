@@ -113,9 +113,9 @@ function Hotbar({ onNavigate, showCalculator, setShowCalculator }) {
         onMouseLeave={handleMouseLeave}
       >
         <div className={`
-          mx-auto bg-gray-800 rounded-2xl shadow-lg 
+          mx-auto bg-gray-800/70 backdrop-blur-sm rounded-2xl shadow-lg 
           transition-all duration-1000 ease-in-out
-          border-2 border-gray-700
+          border-2 border-gray-700/50
           flex justify-center items-center
           ${expanded ? 'max-w-4xl p-4' : 'max-w-md p-2'}
         `}>
@@ -185,8 +185,8 @@ function HotbarButton({ expanded, onClick, icon, label, description, isActive })
           ${expanded ? 'px-4 py-2' : 'p-2'}
           hover:scale-110 hover:shadow-md
           ${isActive 
-            ? 'bg-blue-600 hover:bg-blue-700' 
-            : 'bg-gray-800 hover:bg-gray-700'}
+            ? 'bg-blue-600/80 hover:bg-blue-700/90' 
+            : 'bg-gray-800/80 hover:bg-gray-700/90'}
         `}
         onClick={onClick}
         onMouseEnter={() => setIsHovered(true)}
@@ -209,13 +209,13 @@ function HotbarButton({ expanded, onClick, icon, label, description, isActive })
       {/* Tooltip com transição */}
       <div className={`
         absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 
-        bg-gray-900 text-white px-3 py-1 rounded text-sm whitespace-nowrap
+        bg-gray-900/90 backdrop-blur-sm text-white px-3 py-1 rounded text-sm whitespace-nowrap
         shadow-lg z-10 transition-all duration-500 ease-in-out pointer-events-none
         ${expanded && isHovered ? 'opacity-90 translate-y-0' : 'opacity-0 translate-y-1 invisible'}
       `}>
         {description}
         <div className="absolute top-full left-1/2 transform -translate-x-1/2 
-                      border-8 border-transparent border-t-gray-900"></div>
+                      border-8 border-transparent border-t-gray-900/90"></div>
       </div>
     </div>
   );
