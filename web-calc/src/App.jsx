@@ -67,7 +67,21 @@ function App() {
   };
 
   return (
-    <div className={`App ${darkMode ? 'dark' : ''}`}>
+    <div 
+      className={`App ${darkMode ? 'dark' : ''}`}
+      style={{
+        backgroundImage: darkMode 
+          ? `
+            linear-gradient(to right, #1f2937 1px, transparent 1px),
+            linear-gradient(to bottom, #1f2937 1px, transparent 1px)
+          `
+          : `
+            linear-gradient(to right, #e5e7eb 1px, transparent 1px),
+            linear-gradient(to bottom, #e5e7eb 1px, transparent 1px)
+          `,
+        backgroundSize: '20px 20px'
+      }}
+    >
       <Hotbar 
         onNavigate={scrollToSection} 
         showCalculator={showCalculator} 
@@ -94,7 +108,7 @@ function App() {
       <section 
         ref={homeRef} 
         id="home"
-        className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800 p-6 transition-colors"
+        className="min-h-screen flex flex-col items-center justify-center  p-6 transition-colors"
       >
         
         {/* Carrossel com os jogos */}
@@ -169,7 +183,7 @@ function App() {
       <section 
         ref={cartesianGameRef} 
         id="cartesianGame"
-        className="min-h-screen p-6 bg-blue-50 dark:bg-blue-950 transition-colors"
+        className="min-h-screen p-6 transition-colors"
       >
         <CartesianGame onClose={() => scrollToSection('home')} darkMode={darkMode} />
       </section>
@@ -178,7 +192,7 @@ function App() {
       <section 
         ref={functionGameRef} 
         id="functionGame"
-        className="min-h-screen p-6 bg-green-50 dark:bg-green-950 transition-colors"
+        className="min-h-screen p-6 transition-colors"
       >
         <FunctionGame onClose={() => scrollToSection('home')} darkMode={darkMode} />
       </section>
@@ -187,7 +201,7 @@ function App() {
       <section 
         ref={vectorGameRef} 
         id="vectorGame"
-        className="min-h-screen p-6 bg-purple-50 dark:bg-purple-950 transition-colors"
+        className="min-h-screen p-6transition-colors"
       >
         <VectorGame onClose={() => scrollToSection('home')} darkMode={darkMode} />
       </section>
@@ -196,7 +210,7 @@ function App() {
       <section 
         ref={aboutRef} 
         id="about"
-        className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900 p-6 transition-colors"
+        className="min-h-screen flex items-center justify-center p-6 transition-colors"
       >
         <div className="max-w-2xl bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg transition-colors">
           <h2 className="text-3xl font-bold mb-4 dark:text-white transition-colors">Sobre o Projeto</h2>
