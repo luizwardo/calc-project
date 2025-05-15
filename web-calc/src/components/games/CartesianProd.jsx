@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import Plot from 'react-plotly.js';
+import { Progress } from "@/components/ui/progress"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -12,7 +13,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-function CartesianGame({ onClose }) {
+function CartesianGame({ onClose, darkMode }) {
   // Estados
   const [setA, setSetA] = useState([1, 2, 3]);
   const [setB, setSetB] = useState(['a', 'b', 'c']);
@@ -112,7 +113,7 @@ function CartesianGame({ onClose }) {
     const selectedPairs = shuffled.slice(0, numPairs);
     setCorrectPairs(selectedPairs);
     
-       // Modificar no useEffect onde são calculadas as posições dos pontos
+    // Modificar no useEffect onde são calculadas as posições dos pontos
     const positions = selectedPairs.map(pair => {
       let yValue;
       if (typeof pair[1] === 'string') {
@@ -158,7 +159,12 @@ function CartesianGame({ onClose }) {
     // Verificar e exibir no console para depuração
     console.log(`Pontos a exibir: ${allPointsX.length}, Pares corretos: ${correctPairs.length}`);
     
-    // Criar layout do gráfico
+    // Criar layout do gráfico - ajustado para modo escuro
+    const pointColor = darkMode ? 'rgba(200, 200, 200, 0.6)' : 'rgba(170, 170, 170, 0.6)';
+    const pointBorder = darkMode ? 'rgba(220, 220, 220, 0.8)' : 'rgba(120, 120, 120, 0.8)';
+    const selectedColor = darkMode ? 'rgb(74, 222, 128)' : 'rgb(50, 168, 82)';
+    const selectedBorder = darkMode ? 'rgb(34, 197, 94)' : 'rgb(30, 120, 50)';
+    
     const plotDataArray = [
       {
         x: allPointsX,
@@ -167,10 +173,10 @@ function CartesianGame({ onClose }) {
         type: 'scatter',
         hoverinfo: 'none',
         marker: {
-          color: 'rgba(170, 170, 170, 0.6)',
+          color: pointColor,
           size: 12,
           line: {
-            color: 'rgba(120, 120, 120, 0.8)',
+            color: pointBorder,
             width: 1
           }
         },
@@ -187,10 +193,10 @@ function CartesianGame({ onClose }) {
         type: 'scatter',
         hoverinfo: 'none',
         marker: {
-          color: 'rgb(50, 168, 82)',
+          color: selectedColor,
           size: 14,
           line: {
-            color: 'rgb(30, 120, 50)',
+            color: selectedBorder,
             width: 1
           }
         },
@@ -200,6 +206,7 @@ function CartesianGame({ onClose }) {
     
     setPlotData(plotDataArray);
   };
+  
   // Função para adicionar um par
   const addPair = (a, b) => {
     const newPair = [a, b];
@@ -291,7 +298,7 @@ function CartesianGame({ onClose }) {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className="p-6 max-w-4xl mx-auto bg-white rounded-lg shadow-lg">
+      <div className={`p-6 max-w-4xl mx-auto ${darkMode ? 'bg-gray-800 text-white' : 'bg-white'} rounded-lg shadow-lg transition-colors`}>
         <div 
           className="top-2 left-2 w-8 h-8 rounded-full bg-red-500 hover:bg-red-600 cursor-pointer transition-colors flex items-center justify-center"
           onClick={onClose}
@@ -316,13 +323,17 @@ function CartesianGame({ onClose }) {
           </div>
           
           {/* Plano Cartesiano */}
-                    {/* Plano Cartesiano - Altura fixa */}
-          <div className="w-full h-[300px] border-2 border-blue-300 rounded-lg shadow-md mb-6 bg-gray-50">
+          <div className={`w-full h-[300px] border-2 ${darkMode ? 'border-blue-600 bg-gray-700' : 'border-blue-300 bg-gray-50'} rounded-lg shadow-md mb-6 transition-colors`}>
             <Plot
               data={plotData}
               layout={{
                 autosize: true,
                 margin: { l: 40, r: 40, b: 40, t: 40 },
+                paper_bgcolor: darkMode ? '#374151' : '#f9fafb',
+                plot_bgcolor: darkMode ? '#374151' : '#f9fafb',
+                font: {
+                  color: darkMode ? '#f9fafb' : '#111827'
+                },
                 xaxis: {
                   title: 'Conjunto A',
                   range: [Math.min(...setA) - 1, Math.max(...setA) + 1],
@@ -330,7 +341,7 @@ function CartesianGame({ onClose }) {
                   tickvals: setA,
                   ticktext: setA.map(String),
                   zeroline: true,
-                  gridcolor: '#d0d0d0',
+                  gridcolor: darkMode ? '#4b5563' : '#d0d0d0',
                   gridwidth: 0.3
                 },
                 yaxis: {
@@ -340,7 +351,7 @@ function CartesianGame({ onClose }) {
                   tickvals: Array.from({length: setB.length}, (_, i) => i + 1),
                   ticktext: setB.map(String),
                   zeroline: true,
-                  gridcolor: '#d0d0d0',
+                  gridcolor: darkMode ? '#4b5563' : '#d0d0d0',
                   gridwidth: 0.3
                 },
                 showlegend: true,
@@ -365,8 +376,15 @@ function CartesianGame({ onClose }) {
                     key={`a-${a}`}
                     className={`
                       px-3 py-2 border rounded cursor-pointer
-                      ${selectedA === a ? 'bg-blue-300 border-blue-500' : 'bg-blue-100 border-blue-300'}
-                      hover:bg-blue-200 transition-colors
+                      ${selectedA === a 
+                        ? (darkMode ? 'bg-blue-700 border-blue-500' : 'bg-blue-300 border-blue-500')
+                        : (darkMode ? 'bg-blue-900 border-blue-700' : 'bg-blue-100 border-blue-300')
+                      }
+                      ${darkMode 
+                        ? 'hover:bg-blue-800 text-white' 
+                        : 'hover:bg-blue-200 text-black'
+                      }
+                      transition-colors
                     `}
                     onClick={() => handleClickA(a)}
                   >
@@ -384,7 +402,10 @@ function CartesianGame({ onClose }) {
                     key={`b-${b}`}
                     className={`
                       px-3 py-2 border rounded cursor-pointer
-                      bg-purple-100 border-purple-300 hover:bg-purple-200 
+                      ${darkMode 
+                        ? 'bg-purple-900 border-purple-700 hover:bg-purple-800 text-white' 
+                        : 'bg-purple-100 border-purple-300 hover:bg-purple-200 text-black'
+                      }
                       transition-colors
                     `}
                     onClick={() => handleClickB(b)}
@@ -399,20 +420,45 @@ function CartesianGame({ onClose }) {
           <div className="mb-6">
             <h2 className="text-lg font-medium mb-2">Produto Cartesiano A × B</h2>
             <p className="mb-2">Selecione um elemento de A e depois um de B para formar os pares marcados no gráfico.</p>
-            <p className={`font-medium mb-4 ${userPairs.length === correctPairs.length ? 'text-green-600' : 'text-orange-500'}`}>
-              Pares selecionados: {userPairs.length} / {correctPairs.length}
-              {userPairs.length === correctPairs.length && ' ✓'}
-            </p>
+            <div className="mb-4">
+            <div className="flex justify-between items-center mb-2">
+              <span className={`font-medium ${
+                userPairs.length === correctPairs.length 
+                  ? (darkMode ? 'text-green-400' : 'text-green-600') 
+                  : (darkMode ? 'text-orange-400' : 'text-orange-500')
+              }`}>
+              </span>
+            </div>
+            <Progress 
+              value={(userPairs.length / correctPairs.length) * 100} 
+              className={`h-2 ${
+                userPairs.length === correctPairs.length
+                  ? (darkMode ? 'bg-green-900' : 'bg-green-200')
+                  : (darkMode ? 'bg-gray-700' : 'bg-gray-200')
+              }`}
+              indicatorClassName={
+                userPairs.length === correctPairs.length
+                  ? (darkMode ? 'bg-green-400' : 'bg-green-600')
+                  : (darkMode ? 'bg-blue-400' : 'bg-blue-600')
+              }
+            />
+          </div>
 
             <div className="flex flex-wrap gap-2 mb-4 min-h-[60px]">
               {userPairs.map((pair, index) => (
                 <div 
                   key={index}
-                  className="px-3 py-2 bg-green-100 border border-green-300 rounded flex items-center"
+                  className={`px-3 py-2 rounded flex items-center ${
+                    darkMode 
+                      ? 'bg-green-900 border border-green-700' 
+                      : 'bg-green-100 border border-green-300'
+                  }`}
                 >
                   <span>({pair[0]}, {pair[1]})</span>
                   <button 
-                    className="ml-2 text-red-500 hover:text-red-700" 
+                    className={`ml-2 ${
+                      darkMode ? 'text-red-400 hover:text-red-300' : 'text-red-500 hover:text-red-700'
+                    }`}
                     onClick={() => removePair(index)}
                   >
                     ×
@@ -426,7 +472,7 @@ function CartesianGame({ onClose }) {
         <div className="flex justify-between items-center mb-4">
           <button
             onClick={generateNewSets}
-            className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600"
+            className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition-colors"
           >
             Nova Questão
           </button>
@@ -434,10 +480,11 @@ function CartesianGame({ onClose }) {
           <button
             onClick={checkAnswer}
             disabled={userPairs.length !== correctPairs.length}
-            className={`px-4 py-2 text-white rounded 
-              ${userPairs.length === correctPairs.length 
+            className={`px-4 py-2 text-white rounded transition-colors ${
+              userPairs.length === correctPairs.length 
                 ? 'bg-blue-600 hover:bg-blue-700' 
-                : 'bg-blue-300 cursor-not-allowed'}`}
+                : (darkMode ? 'bg-blue-800 opacity-50' : 'bg-blue-300')
+            } ${userPairs.length !== correctPairs.length ? 'cursor-not-allowed' : ''}`}
           >
             Verificar Resposta
           </button>
@@ -446,26 +493,26 @@ function CartesianGame({ onClose }) {
         {feedback && (
           <div className={`p-3 rounded text-center mb-4 ${
             feedback.includes('Parabéns') || feedback.includes('adicionado')
-              ? 'bg-green-100 text-green-800' 
+              ? (darkMode ? 'bg-green-900 text-green-100' : 'bg-green-100 text-green-800')
               : feedback.includes('Selecione') || feedback.includes('selecionado')
-                ? 'bg-blue-100 text-blue-800'
-                : 'bg-red-100 text-red-800'
-          }`}>
+                ? (darkMode ? 'bg-blue-900 text-blue-100' : 'bg-blue-100 text-blue-800')
+                : (darkMode ? 'bg-red-900 text-red-100' : 'bg-red-100 text-red-800')
+          } transition-colors`}>
             {feedback}
           </div>
         )}
 
         <AlertDialog open={alertOpen} onOpenChange={setAlertOpen}>
-          <AlertDialogContent>
+          <AlertDialogContent className={darkMode ? 'bg-gray-800 text-white border border-gray-700' : ''}>
             <AlertDialogHeader>
-              <AlertDialogTitle>
+              <AlertDialogTitle className={darkMode ? 'text-white' : ''}>
                 {alertType === 'success' 
                   ? 'Parabéns!' 
                   : alertType === 'incomplete' 
                     ? 'Resposta Incompleta' 
                     : 'Resposta Incorreta'}
               </AlertDialogTitle>
-              <AlertDialogDescription>
+              <AlertDialogDescription className={darkMode ? 'text-gray-300' : ''}>
                 {alertType === 'success' 
                   ? 'Você coletou corretamente todos os pares marcados no gráfico.' 
                   : alertType === 'incomplete'
@@ -474,12 +521,15 @@ function CartesianGame({ onClose }) {
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogAction onClick={() => {
-                setAlertOpen(false);
-                if (alertType === 'success') {
-                  generateNewSets();
-                }
-              }}>
+              <AlertDialogAction 
+                onClick={() => {
+                  setAlertOpen(false);
+                  if (alertType === 'success') {
+                    generateNewSets();
+                  }
+                }}
+                className={darkMode ? 'bg-blue-600 hover:bg-blue-700' : ''}
+              >
                 {alertType === 'success' ? 'Próxima questão' : 'Tentar novamente'}
               </AlertDialogAction>
             </AlertDialogFooter>
