@@ -323,7 +323,7 @@ function CartesianGame({ onClose, darkMode }) {
           </div>
           
           {/* Plano Cartesiano */}
-          <div className={`w-full h-[300px] border-2 ${darkMode ? 'border-blue-600 bg-gray-700' : 'border-blue-300 bg-gray-50'} rounded-lg shadow-md mb-6 transition-colors`}>
+          <div className={`w-full h-[300px] border-2 ${darkMode ? 'border-blue-600 bg-gray-700' : 'border-blue-300 bg-gray-50'} rounded-lg shadow-md mb-6 transition-colors overflow-hidden`}>
             <Plot
               data={plotData}
               layout={{

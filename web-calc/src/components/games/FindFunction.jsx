@@ -305,7 +305,7 @@ function FunctionGame({ onClose, darkMode }) {
 
       {currentFunction && (
         <div className="mb-6">
-          <div className={`w-full border-2 ${darkMode ? 'border-green-600 bg-gray-700' : 'border-green-300 bg-gray-50'} rounded-lg shadow-md mb-6 transition-colors`}>
+          <div className={`w-full border-2 ${darkMode ? 'border-green-600 bg-gray-700' : 'border-green-300 bg-gray-50'} rounded-lg shadow-md mb-6 transition-colors overflow-hidden`}>
             <Plot
               data={[
                 gameMode === 'quiz' ? {

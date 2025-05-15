@@ -199,7 +199,7 @@ function VectorGame({ onClose, darkMode }) {
       </div>
       
       {/* Plano Cartesiano */}
-      <div className={`w-full h-[350px] border-2 ${darkMode ? 'border-purple-600 bg-gray-700' : 'border-blue-300 bg-gray-50'} rounded-lg shadow-md mb-6 transition-colors`}>
+      <div className={`w-full h-[350px] border-2 ${darkMode ? 'border-purple-600 bg-gray-700' : 'border-blue-300 bg-gray-50'} rounded-lg shadow-md mb-6 transition-colors overflow-hidden`}>
         <Plot
           ref={plotRef}
           data={getPlotData()}
