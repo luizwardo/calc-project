@@ -3,6 +3,8 @@ import Calculator from './Calculator';
 
 function Hotbar({ onNavigate, showCalculator, setShowCalculator }) {
   const [expanded, setExpanded] = useState(false);
+  const [visible, setVisible] = useState(true); // Estado para controlar a visibilidade da hotbar
+  const [lastScrollY, setLastScrollY] = useState(0); // Estado para rastrear a última posição do scroll
   const hotbarRef = useRef(null);
 
   // Button descriptions
@@ -44,12 +46,27 @@ function Hotbar({ onNavigate, showCalculator, setShowCalculator }) {
     };
   }, []);
 
-  // Detectar a seção atual com base no scroll
+  // Detectar a seção atual com base no scroll e controlar visibilidade da hotbar
   const [activeSection, setActiveSection] = useState('home');
   
   useEffect(() => {
     const handleScroll = () => {
-      const scrollPosition = window.scrollY + 100; // Um pouco de offset para melhor detecção
+      const scrollPosition = window.scrollY;
+      
+      // Determinar a direção do scroll
+      if (scrollPosition > lastScrollY) {
+        // Rolando para baixo - esconder a hotbar
+        setVisible(false);
+      } else if (scrollPosition < lastScrollY) {
+        // Rolando para cima - mostrar a hotbar
+        setVisible(true);
+      }
+      
+      // Atualizar a última posição de scroll
+      setLastScrollY(scrollPosition);
+      
+      // Código existente para detectar a seção ativa
+      const scrollPositionWithOffset = scrollPosition + 100;
       
       // Obter todas as seções
       const sections = ['home', 'cartesianGame', 'functionGame', 'about'].map(id => {
@@ -66,7 +83,7 @@ function Hotbar({ onNavigate, showCalculator, setShowCalculator }) {
       
       // Determinar qual seção está visível
       for (const section of sections) {
-        if (scrollPosition >= section.top && scrollPosition < section.bottom) {
+        if (scrollPositionWithOffset >= section.top && scrollPositionWithOffset < section.bottom) {
           setActiveSection(section.id);
           break;
         }
@@ -79,14 +96,18 @@ function Hotbar({ onNavigate, showCalculator, setShowCalculator }) {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, []);
+  }, [lastScrollY]); // Adicionamos lastScrollY como dependência
 
   return (
     <>
       <div 
         ref={hotbarRef}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-1300 ease-in-out ${
+        className={`fixed left-0 right-0 z-50 transition-all duration-300 ease-in-out ${
           expanded ? 'py-5' : 'py-2'
+        } ${
+          visible 
+            ? 'top-0 translate-y-0' 
+            : '-top-full translate-y-0'
         }`}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
