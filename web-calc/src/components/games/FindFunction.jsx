@@ -111,7 +111,7 @@ const functionTemplates = [
   }
 ];
 
-function FunctionGame({ onClose }) {
+function FunctionGame({ onClose, darkMode }) {
   // Estados para controle do jogo
   const [currentFunction, setCurrentFunction] = useState(null);
   const [options, setOptions] = useState([]);
@@ -182,7 +182,6 @@ function FunctionGame({ onClose }) {
       setIsComplete(true);
       setAlertOpen(true);
     } else {
-      setScore(Math.max(0, score - 5));
       setFeedback('Incorreto. Tente novamente!');
     }
   };
@@ -192,12 +191,11 @@ function FunctionGame({ onClose }) {
     // Compara os coeficientes do usuário com os da função original
     const correctCoeffs = currentFunction.coefficients;
     let isClose = true;
-    let totalDiff = 0;
+    
     
     Object.keys(correctCoeffs).forEach(key => {
       if (userCoefficients[key] !== undefined) {
         const diff = Math.abs(userCoefficients[key] - correctCoeffs[key]);
-        totalDiff += diff;
         if (diff > 0.5) { // Tolerância para considerar "próximo"
           isClose = false;
         }
@@ -265,7 +263,7 @@ function FunctionGame({ onClose }) {
   };
 
   return (
-    <div className="p-6 max-w-4xl mx-auto bg-white rounded-lg shadow-lg">
+    <div className={`p-6 max-w-4xl mx-auto ${darkMode ? 'bg-gray-800 text-white' : 'bg-white'} rounded-lg shadow-lg transition-colors`}>
       <div 
         className="top-2 left-2 w-8 h-8 rounded-full bg-red-500 hover:bg-red-600 cursor-pointer transition-colors flex items-center justify-center"
         onClick={onClose}
@@ -307,7 +305,7 @@ function FunctionGame({ onClose }) {
 
       {currentFunction && (
         <div className="mb-6">
-          <div className="w-full h-[300px] border border-gray-300 rounded">
+          <div className={`w-full border-2 ${darkMode ? 'border-green-600 bg-gray-700' : 'border-green-300 bg-gray-50'} rounded-lg shadow-md mb-6 transition-colors`}>
             <Plot
               data={[
                 gameMode === 'quiz' ? {
@@ -338,21 +336,25 @@ function FunctionGame({ onClose }) {
               ]}
               layout={{
                 margin: { l: 40, r: 40, b: 40, t: 40 },
+                paper_bgcolor: darkMode ? '#374151' : '#f9fafb',
+                plot_bgcolor: darkMode ? '#374151' : '#f9fafb',
+                font: {
+                  color: darkMode ? '#f9fafb' : '#111827'
+                },
                 xaxis: { 
                   title: 'x',
                   range: [-10, 10],
                   zeroline: true,
-                  gridcolor: '#e5e5e5'
+                  gridcolor: darkMode ? '#4b5563' : '#e5e5e5'
                 },
                 yaxis: { 
                   title: 'y',
                   range: [-10, 10],
                   zeroline: true,
-                  gridcolor: '#e5e5e5'
+                  gridcolor: darkMode ? '#4b5563' : '#e5e5e5'
                 },
                 showlegend: gameMode === 'construct' && isComplete
-              }}
-              config={{ displayModeBar: false }}
+              }}              config={{ displayModeBar: false }}
               style={{ width: '100%', height: '100%' }}
             />
           </div>
