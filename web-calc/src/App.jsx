@@ -4,6 +4,13 @@ import Calculator from './components/ui/Calculator'
 import CartesianGame from './components/games/CartesianProd'
 import FunctionGame from './components/games/FindFunction'
 import VectorGame from './components/games/VecMission'
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel"
 import './App.css'
 
 function App() {
@@ -53,33 +60,76 @@ function App() {
       <section 
         ref={homeRef} 
         id="home"
-        className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-100 to-gray-200 p-6"
+        className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-gray-100 to-gray-200 p-6"
       >
-        <div className="text-center">
-          <h1 className="text-4xl font-bold mb-6">Estruturas Matemáticas</h1>
-          <p className="text-xl mb-8">Explore diferentes conceitos e jogos matemáticos</p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <button 
-              onClick={() => scrollToSection('cartesianGame')}
-              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              Produtos Cartesianos
-            </button>
-            <button 
-              onClick={() => scrollToSection('functionGame')}
-              className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-            >
-              Funções Matemáticas
-            </button>
-            <button 
-              onClick={() => scrollToSection('vectorGame')}
-              className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
-            >
-              Missão Vetorial
-            </button>
-          </div>
-        </div>
-      </section>
+        
+        {/* Carrossel com os jogos */}
+        <div className="w-xl max-w-5xl">
+          <h2 className="text-2xl font-semibold text-center mb-6">Nossos Jogos</h2>
+          <Carousel className="w-full" opts={{ align: "center" }}>
+            <CarouselContent>
+              {/* Cartão do Produto Cartesiano */}
+              <CarouselItem className="basis-full">
+                <div 
+                  onClick={() => scrollToSection('cartesianGame')}
+                  className="h-[300px] bg-white rounded-lg shadow-lg overflow-hidden border-2 border-blue-300 hover:border-blue-500 transition-all cursor-pointer"
+                >
+                  <div className="h-1/2 bg-blue-100 flex items-center justify-center">
+                    <div className="text-6xl text-blue-600 font-bold">A×B</div>
+                  </div>
+                  <div className="p-4">
+                    <h3 className="text-xl font-bold text-blue-700 mb-2">Produto Cartesiano</h3>
+                    <p className="text-gray-700">
+                      Explore a combinação de conjuntos e colete os pares ordenados no plano cartesiano.
+                    </p>
+                  </div>
+                </div>
+              </CarouselItem>
+              
+              {/* Cartão da Função Matemática */}
+              <CarouselItem className="basis-full">
+                <div 
+                  onClick={() => scrollToSection('functionGame')}
+                  className="h-[300px] bg-white rounded-lg shadow-lg overflow-hidden border-2 border-gray-300 hover:border-gray-500 transition-all cursor-pointer"
+                >
+                  <div className="h-1/2 bg-gray-100 flex items-center justify-center">
+                    <div className="text-4xl text-gray-black font-bold">f(x)=ax²+bx+c</div>
+                  </div>
+                  <div className="p-4">
+                    <h3 className="text-xl font-bold text-black-300 mb-2">Descubra a Função</h3>
+                    <p className="text-gray-700">
+                      Deduza a função matemática a partir de seu gráfico e comportamento.
+                    </p>
+                  </div>
+                </div>
+              </CarouselItem>
+              
+              {/* Cartão do Vetor */}
+              <CarouselItem className="basis-full">
+                <div 
+                  onClick={() => scrollToSection('vectorGame')}
+                  className="h-[300px] bg-white rounded-lg shadow-lg overflow-hidden border-2 border-gray-300 hover:border-gray-500 transition-all cursor-pointer"
+                >
+                  <div className="h-1/2 bg-gray-100 flex items-center justify-center">
+                    <div className="text-4xl text-black-300 font-bold">
+                      <span className="inline-block transform -translate-y-2">→</span>
+                      <span className="ml-1">v = (x,y)</span>
+                    </div>
+                  </div>
+                  <div className="p-4">
+                    <h3 className="text-xl font-bold text-black-300 mb-2">Decomposição Vetorial</h3>
+                    <p className="text-gray-700">
+                      Aprenda a decompor vetores em suas componentes x e y no plano cartesiano.
+                    </p>
+                  </div>
+                </div>
+              </CarouselItem>
+            </CarouselContent>
+            <CarouselPrevious className="left-4" />
+            <CarouselNext className="right-4" />
+          </Carousel>
+        </div>     
+        </section>
       
       {/* Seção Produto Cartesiano */}
       <section 
@@ -127,7 +177,7 @@ function App() {
           <ul className="list-disc pl-6 mb-4">
             <li>Produto Cartesiano - Combinação de elementos de conjuntos</li>
             <li>Descubra a Função - Relação entre equações e seus gráficos</li>
-            <li>Missão Vetorial - Operações e propriedades de vetores</li>
+            <li>Decomposição Vetorial - Operações e propriedades de vetores</li>
           </ul>
           <p>
             Equipe de desenvolvimento: [Seus nomes aqui]
