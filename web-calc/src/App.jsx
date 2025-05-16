@@ -14,6 +14,11 @@ import {
 } from "@/components/ui/carousel"
 import './App.css'
 
+// Importação da fonte caligráfica
+const fontStyles = `
+  @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap');
+`;
+
 function App() {
   const homeRef = useRef(null);
   const cartesianGameRef = useRef(null);
@@ -106,6 +111,9 @@ function App() {
         backgroundSize: '20px 20px'
       }}
     >
+      {/* Incluir estilos da fonte */}
+      <style>{fontStyles}</style>
+      
       <Hotbar 
         onNavigate={scrollToSection} 
         showCalculator={showCalculator} 
@@ -138,11 +146,17 @@ function App() {
         className="min-h-screen flex flex-col items-center justify-center px-4 py-16 md:p-6 transition-colors"
       >
         <div className="w-full max-w-5xl">
-          <h1 className="text-2xl md:text-4xl font-bold text-center mb-6 dark:text-white transition-colors">
+          <h1 
+            className="text-3xl md:text-5xl font-bold text-center mb-8 dark:text-white transition-colors"
+            style={{ fontFamily: "'Dancing Script', cursive" }}
+          >
             Explorando Matemática Interativa
           </h1>
           
-          <h2 className="text-xl md:text-2xl font-semibold text-center mb-8 dark:text-white transition-colors">
+          <h2 
+            className="text-2xl md:text-3xl font-semibold text-center mb-8 dark:text-white transition-colors"
+            style={{ fontFamily: "'Dancing Script', cursive" }}
+          >
             Nossos Jogos
           </h2>
           
@@ -155,10 +169,20 @@ function App() {
                 className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden border-2 border-blue-300 hover:border-blue-500 dark:border-blue-600 dark:hover:border-blue-400 transition-all cursor-pointer"
               >
                 <div className="h-28 bg-blue-100 dark:bg-blue-900 flex items-center justify-center transition-colors">
-                  <div className="text-5xl text-blue-600 dark:text-blue-300 font-bold">A×B</div>
+                  <div 
+                    className="text-5xl text-blue-600 dark:text-blue-300 font-bold"
+                    style={{ fontFamily: "'Dancing Script', cursive" }}
+                  >
+                    A×B
+                  </div>
                 </div>
                 <div className="p-4">
-                  <h3 className="text-lg font-bold text-blue-700 dark:text-blue-300 mb-2 transition-colors">Produto Cartesiano</h3>
+                  <h3 
+                    className="text-lg font-bold text-blue-700 dark:text-blue-300 mb-2 transition-colors"
+                    style={{ fontFamily: "'Dancing Script', cursive" }}
+                  >
+                    Produto Cartesiano
+                  </h3>
                   <p className="text-sm text-gray-700 dark:text-gray-300 transition-colors">
                     Explore a combinação de conjuntos no plano cartesiano.
                   </p>
@@ -171,10 +195,20 @@ function App() {
                 className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden border-2 border-gray-300 hover:border-gray-500 dark:border-gray-600 dark:hover:border-gray-400 transition-all cursor-pointer"
               >
                 <div className="h-28 bg-gray-100 dark:bg-gray-700 flex items-center justify-center transition-colors">
-                  <div className="text-3xl text-gray-800 dark:text-gray-200 font-bold transition-colors">f(x)=ax²+bx+c</div>
+                  <div 
+                    className="text-3xl text-gray-800 dark:text-gray-200 font-bold transition-colors"
+                    style={{ fontFamily: "'Dancing Script', cursive" }}
+                  >
+                    f(x)=ax²+bx+c
+                  </div>
                 </div>
                 <div className="p-4">
-                  <h3 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-2 transition-colors">Descubra a Função</h3>
+                  <h3 
+                    className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-2 transition-colors"
+                    style={{ fontFamily: "'Dancing Script', cursive" }}
+                  >
+                    Descubra a Função
+                  </h3>
                   <p className="text-sm text-gray-700 dark:text-gray-300 transition-colors">
                     Deduza a função a partir de seu gráfico.
                   </p>
@@ -187,13 +221,21 @@ function App() {
                 className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden border-2 border-gray-300 hover:border-gray-500 dark:border-purple-700 dark:hover:border-purple-500 transition-all cursor-pointer"
               >
                 <div className="h-28 bg-gray-100 dark:bg-purple-900 flex items-center justify-center transition-colors">
-                  <div className="text-3xl text-gray-800 dark:text-purple-200 font-bold transition-colors">
+                  <div 
+                    className="text-3xl text-gray-800 dark:text-purple-200 font-bold transition-colors"
+                    style={{ fontFamily: "'Dancing Script', cursive" }}
+                  >
                     <span className="inline-block transform -translate-y-2">→</span>
                     <span className="ml-1">v = (x,y)</span>
                   </div>
                 </div>
                 <div className="p-4">
-                  <h3 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-2 transition-colors">Decomposição Vetorial</h3>
+                  <h3 
+                    className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-2 transition-colors"
+                    style={{ fontFamily: "'Dancing Script', cursive" }}
+                  >
+                    Decomposição Vetorial
+                  </h3>
                   <p className="text-sm text-gray-700 dark:text-gray-300 transition-colors">
                     Decomponha vetores no plano cartesiano.
                   </p>
@@ -211,10 +253,20 @@ function App() {
                     className="h-[300px] bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden border-2 border-blue-300 hover:border-blue-500 dark:border-blue-600 dark:hover:border-blue-400 transition-all cursor-pointer"
                   >
                     <div className="h-1/2 bg-blue-100 dark:bg-blue-900 flex items-center justify-center transition-colors">
-                      <div className="text-6xl text-blue-600 dark:text-blue-300 font-bold">A×B</div>
+                      <div 
+                        className="text-6xl text-blue-600 dark:text-blue-300 font-bold"
+                        style={{ fontFamily: "'Dancing Script', cursive" }}
+                      >
+                        A×B
+                      </div>
                     </div>
                     <div className="p-4">
-                      <h3 className="text-xl font-bold text-blue-700 dark:text-blue-300 mb-2 transition-colors">Produto Cartesiano</h3>
+                      <h3 
+                        className="text-2xl font-bold text-blue-700 dark:text-blue-300 mb-2 transition-colors"
+                        style={{ fontFamily: "'Dancing Script', cursive" }}
+                      >
+                        Produto Cartesiano
+                      </h3>
                       <p className="text-gray-700 dark:text-gray-300 transition-colors">
                         Explore a combinação de conjuntos e colete os pares ordenados no plano cartesiano.
                       </p>
@@ -229,10 +281,20 @@ function App() {
                     className="h-[300px] bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden border-2 border-gray-300 hover:border-gray-500 dark:border-gray-600 dark:hover:border-gray-400 transition-all cursor-pointer"
                   >
                     <div className="h-1/2 bg-gray-100 dark:bg-gray-700 flex items-center justify-center transition-colors">
-                      <div className="text-4xl text-gray-800 dark:text-gray-200 font-bold transition-colors">f(x)=ax²+bx+c</div>
+                      <div 
+                        className="text-4xl text-gray-800 dark:text-gray-200 font-bold transition-colors"
+                        style={{ fontFamily: "'Dancing Script', cursive" }}
+                      >
+                        f(x)=ax²+bx+c
+                      </div>
                     </div>
                     <div className="p-4">
-                      <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200 mb-2 transition-colors">Descubra a Função</h3>
+                      <h3 
+                        className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-2 transition-colors"
+                        style={{ fontFamily: "'Dancing Script', cursive" }}
+                      >
+                        Descubra a Função
+                      </h3>
                       <p className="text-gray-700 dark:text-gray-300 transition-colors">
                         Deduza a função matemática a partir de seu gráfico e comportamento.
                       </p>
@@ -246,13 +308,21 @@ function App() {
                     className="h-[300px] bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden border-2 border-gray-300 hover:border-gray-500 dark:border-purple-700 dark:hover:border-purple-500 transition-all cursor-pointer"
                   >
                     <div className="h-1/2 bg-gray-100 dark:bg-purple-900 flex items-center justify-center transition-colors">
-                      <div className="text-4xl text-gray-800 dark:text-purple-200 font-bold transition-colors">
+                      <div 
+                        className="text-4xl text-gray-800 dark:text-purple-200 font-bold transition-colors"
+                        style={{ fontFamily: "'Dancing Script', cursive" }}
+                      >
                         <span className="inline-block transform -translate-y-2">→</span>
                         <span className="ml-1">v = (x,y)</span>
                       </div>
                     </div>
                     <div className="p-4">
-                      <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200 mb-2 transition-colors">Decomposição Vetorial</h3>
+                      <h3 
+                        className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-2 transition-colors"
+                        style={{ fontFamily: "'Dancing Script', cursive" }}
+                      >
+                        Decomposição Vetorial
+                      </h3>
                       <p className="text-gray-700 dark:text-gray-300 transition-colors">
                         Aprenda a decompor vetores em suas componentes x e y no plano cartesiano.
                       </p>
@@ -299,7 +369,12 @@ function App() {
         className="min-h-screen flex items-center justify-center px-4 py-16 md:p-6 transition-colors"
       >
         <div className="w-full max-w-2xl bg-white dark:bg-gray-800 p-4 md:p-8 rounded-lg shadow-lg transition-colors">
-          <h2 className="text-2xl md:text-3xl font-bold mb-4 dark:text-white transition-colors">Sobre o Projeto</h2>
+          <h2 
+            className="text-3xl md:text-4xl font-bold mb-6 dark:text-white transition-colors"
+            style={{ fontFamily: "'Dancing Script', cursive" }}
+          >
+            Sobre o Projeto
+          </h2>
           <p className="mb-4 text-sm md:text-base text-gray-700 dark:text-gray-300 transition-colors">
             Este projeto foi desenvolvido como parte do trabalho de Estruturas Matemáticas,
             com o objetivo de criar ferramentas interativas para ensino e aprendizagem de
@@ -313,7 +388,10 @@ function App() {
             <li>Descubra a Função - Relação entre equações e seus gráficos</li>
             <li>Decomposição Vetorial - Operações e propriedades de vetores</li>
           </ul>
-          <p className="text-sm md:text-base text-gray-700 dark:text-gray-300 transition-colors">
+          <p 
+            className="text-xl md:text-2xl mt-6 text-gray-700 dark:text-gray-300 transition-colors"
+            style={{ fontFamily: "'Dancing Script', cursive" }}
+          >
             Equipe de desenvolvimento: [Seus nomes aqui]
           </p>
         </div>
