@@ -148,13 +148,13 @@ function Calculator({ onClose, darkMode, isMobile = false }) {
         {/* Teclado */}
         <div className="grid grid-cols-4 gap-1 p-2">
           {/* Linha 1 */}
-          <button onClick={handleClear} className="col-span-2 calc-button bg-red-50 dark:bg-red-900 text-red-600 dark:text-red-300">
+          <button onClick={handleClear} className="col-span-2 calc-button bg-transparent dark:transparent text-red-600 dark:text-red-300">
             AC
           </button>
-          <button onClick={handleDelete} className="calc-button bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
+          <button onClick={handleDelete} className="calc-button bg-transparent dark:bg-transparent text-gray-700 dark:text-gray-300">
             DEL
           </button>
-          <button onClick={() => handleOperation('/')} className="calc-button bg-gray-100 dark:bg-gray-700 text-blue-600 dark:text-blue-300">
+          <button onClick={() => handleOperation('/')} className="calc-button bg-transparent dark:bg-transparent text-blue-600 dark:text-blue-300">
             ÷
           </button>
           
@@ -162,7 +162,7 @@ function Calculator({ onClose, darkMode, isMobile = false }) {
           <button onClick={() => handleNumber('7')} className="calc-button">7</button>
           <button onClick={() => handleNumber('8')} className="calc-button">8</button>
           <button onClick={() => handleNumber('9')} className="calc-button">9</button>
-          <button onClick={() => handleOperation('*')} className="calc-button bg-gray-100 dark:bg-gray-700 text-blue-600 dark:text-blue-300">
+          <button onClick={() => handleOperation('*')} className="calc-button bg-transparent dark:bg-transparent text-blue-600 dark:text-blue-300">
             ×
           </button>
           
@@ -170,7 +170,7 @@ function Calculator({ onClose, darkMode, isMobile = false }) {
           <button onClick={() => handleNumber('4')} className="calc-button">4</button>
           <button onClick={() => handleNumber('5')} className="calc-button">5</button>
           <button onClick={() => handleNumber('6')} className="calc-button">6</button>
-          <button onClick={() => handleOperation('-')} className="calc-button bg-gray-100 dark:bg-gray-700 text-blue-600 dark:text-blue-300">
+          <button onClick={() => handleOperation('-')} className="calc-button bg-transparent dark:bg-transparent text-blue-600 dark:text-blue-300">
             -
           </button>
           
@@ -178,7 +178,7 @@ function Calculator({ onClose, darkMode, isMobile = false }) {
           <button onClick={() => handleNumber('1')} className="calc-button">1</button>
           <button onClick={() => handleNumber('2')} className="calc-button">2</button>
           <button onClick={() => handleNumber('3')} className="calc-button">3</button>
-          <button onClick={() => handleOperation('+')} className="calc-button bg-gray-100 dark:bg-gray-700 text-blue-600 dark:text-blue-300">
+          <button onClick={() => handleOperation('+')} className="calc-button bg-transparent dark:bg-transparent text-blue-600 dark:text-blue-300">
             +
           </button>
           
