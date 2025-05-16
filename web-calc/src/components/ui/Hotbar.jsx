@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Calculator from './Calculator';
+import { Sun, Moon } from "lucide-react"; // Importar os ícones
 
 function Hotbar({ onNavigate, showCalculator, setShowCalculator, darkMode, toggleTheme, isMobile = false }) {
   const [expanded, setExpanded] = useState(false);
@@ -14,7 +15,8 @@ function Hotbar({ onNavigate, showCalculator, setShowCalculator, darkMode, toggl
     functionGame: "Ache a função",
     vectorGame: "Vetores",
     about: "Informações",
-    calculator: "Calculadora"
+    calculator: "Calculadora",
+    theme: darkMode ? "Modo claro" : "Modo escuro"
   };
 
   // Handle mouse enter/leave for entire hotbar
@@ -185,15 +187,17 @@ function Hotbar({ onNavigate, showCalculator, setShowCalculator, darkMode, toggl
                 darkMode={darkMode}
               />
               
-              {toggleTheme && (
-                <HotbarButton 
-                  expanded={expanded}
-                  onClick={toggleTheme}
-                  icon={darkMode ? "☀️" : "🌙"}
-                  description={darkMode ? "Modo claro" : "Modo escuro"}
-                  darkMode={darkMode}
-                />
-              )}
+              <HotbarButton 
+                expanded={expanded}
+                onClick={toggleTheme}
+                icon={
+                  darkMode ? 
+                    <Sun className="h-5 w-5 text-gray-100" /> : 
+                    <Moon className="h-5 w-5 text-gray-100" />
+                }
+                description={buttonDescriptions.theme}
+                darkMode={darkMode}
+              />             
             </div>
           </div>
         </div>
@@ -243,13 +247,15 @@ function Hotbar({ onNavigate, showCalculator, setShowCalculator, darkMode, toggl
               darkMode={darkMode}
             />
             
-            {toggleTheme && (
-              <MobileHotbarButton 
-                onClick={toggleTheme}
-                icon={darkMode ? "☀️" : "🌙"}
-                darkMode={darkMode}
-              />
-            )}
+            <MobileHotbarButton 
+              onClick={toggleTheme}
+              icon={
+                darkMode ? 
+                  <Sun className="h-5 w-5 text-gray-100" /> : 
+                  <Moon className="h-5 w-5 text-gray-100" />
+              }
+              darkMode={darkMode}
+            />
           </div>
         </div>
       )}
@@ -259,12 +265,12 @@ function Hotbar({ onNavigate, showCalculator, setShowCalculator, darkMode, toggl
   );
 }
 
-// Individual button component with hover effects for desktop
+// Modificar o componente HotbarButton para aceitar componentes React como ícones
 function HotbarButton({ expanded, onClick, icon, description, isActive, darkMode }) {
   const [isHovered, setIsHovered] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
-  const hoverTimer = useRef(null);
-  
+  const hoverTimer = useRef(null);  
+
   // Gerenciamento do delay para mostrar o tooltip
   useEffect(() => {
     if (isHovered) {
@@ -306,9 +312,12 @@ function HotbarButton({ expanded, onClick, icon, description, isActive, darkMode
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <span className="text-lg">
-          {icon}
-        </span>
+        {/* Renderizar o ícone como string ou componente React */}
+        {typeof icon === 'string' ? (
+          <span className="text-lg">{icon}</span>
+        ) : (
+          icon
+        )}
       </button>
       
       {/* Tooltip ao lado do botão */}
@@ -335,27 +344,30 @@ function HotbarButton({ expanded, onClick, icon, description, isActive, darkMode
   );
 }
 
-// Versão simplificada do botão para mobile
-function MobileHotbarButton({ onClick, icon, isActive, darkMode }) {  
-  return (
-    <button 
-      className={`
-        relative text-white rounded-xl
-        flex items-center justify-center bg-transparent
-        transition-all duration-300 ease-in-out
-        p-2
-        active:scale-95
-        ${isActive 
-          ? 'bg-blue-800/80' 
-          : 'bg-gray-800/50'}
-      `}
-      onClick={onClick}
-    >
-      <span className="text-base">
-        {icon}
-      </span>
-    </button>
-  );
-}
+  // Modificar o MobileHotbarButton para aceitar componentes React como ícones
+  function MobileHotbarButton({ onClick, icon, isActive, darkMode }) {  
+    return (
+      <button 
+        className={`
+          relative text-white rounded-xl
+          flex items-center justify-center bg-transparent
+          transition-all duration-300 ease-in-out
+          p-2
+          active:scale-95
+          ${isActive 
+            ? 'bg-blue-800/80' 
+            : 'bg-gray-800/50'}
+        `}
+        onClick={onClick}
+      >
+        {/* Renderizar o ícone como string ou componente React */}
+        {typeof icon === 'string' ? (
+          <span className="text-base">{icon}</span>
+        ) : (
+          icon
+        )}
+      </button>
+    );
+  }
 
 export default Hotbar;
