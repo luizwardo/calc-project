@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Calculator from './Calculator';
 
-function Hotbar({ onNavigate, showCalculator, setShowCalculator }) {
+function Hotbar({ onNavigate, showCalculator, setShowCalculator, darkMode, }) {
   const [expanded, setExpanded] = useState(false);
-  const [visible, setVisible] = useState(true); // Estado para controlar a visibilidade da hotbar
-  const [lastScrollY, setLastScrollY] = useState(0); // Estado para rastrear a última posição do scroll
+  const [visible, setVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
   const hotbarRef = useRef(null);
 
   // Button descriptions
@@ -96,14 +96,14 @@ function Hotbar({ onNavigate, showCalculator, setShowCalculator }) {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [lastScrollY]); // Adicionamos lastScrollY como dependência
+  }, [lastScrollY]);
 
   return (
     <>
       <div 
         ref={hotbarRef}
         className={`fixed left-0 right-0 z-50 transition-all duration-300 ease-in-out ${
-          expanded ? 'py-5' : 'py-2'
+          expanded ? 'py-3' : 'py-2'
         } ${
           visible 
             ? 'top-0 translate-y-0' 
@@ -113,16 +113,16 @@ function Hotbar({ onNavigate, showCalculator, setShowCalculator }) {
         onMouseLeave={handleMouseLeave}
       >
         <div className={`
-          mx-auto bg-gray-800/70 backdrop-blur-sm rounded-2xl shadow-lg 
-          transition-all duration-1000 ease-in-out
-          border-2 border-gray-700/50
+          mx-auto bg-transparent backdrop-blur-md rounded-2xl shadow-lg
+          transition-all duration-300 ease-in-out 
+          border border-gray-500/20
           flex justify-center items-center
-          ${expanded ? 'max-w-4xl p-4' : 'max-w-md p-2'}
+          ${expanded ? 'max-w-xl p-2' : 'max-w-md p-1'}
         `}>
           <div className={`
-            flex gap-2 sm:gap-3 md:gap-4 items-center justify-center 
-            transition-all duration-1000 ease-in-out
-            ${expanded ? 'scale-100' : 'scale-85'}
+            flex gap-2 sm:gap-2 md:gap-3 items-center justify-center
+            transition-all duration-300 ease-in-out
+            ${expanded ? 'scale-100' : 'scale-[0.85]'}
           `}>
             <HotbarButton 
               expanded={expanded}
@@ -130,6 +130,7 @@ function Hotbar({ onNavigate, showCalculator, setShowCalculator }) {
               icon="🏠"
               description={buttonDescriptions.home}
               isActive={activeSection === 'home'}
+              darkMode={darkMode}
             />
             
             <HotbarButton 
@@ -138,6 +139,7 @@ function Hotbar({ onNavigate, showCalculator, setShowCalculator }) {
               icon="🔢"
               description={buttonDescriptions.cartesianGame}
               isActive={activeSection === 'cartesianGame'}
+              darkMode={darkMode}
             />
             
             <HotbarButton 
@@ -146,6 +148,7 @@ function Hotbar({ onNavigate, showCalculator, setShowCalculator }) {
               icon="📈"
               description={buttonDescriptions.functionGame}
               isActive={activeSection === 'functionGame'}
+              darkMode={darkMode}
             />
             
             <HotbarButton 
@@ -154,6 +157,7 @@ function Hotbar({ onNavigate, showCalculator, setShowCalculator }) {
               icon="ℹ️"
               description={buttonDescriptions.about}
               isActive={activeSection === 'about'}
+              darkMode={darkMode}
             />
             
             <HotbarButton 
@@ -161,6 +165,7 @@ function Hotbar({ onNavigate, showCalculator, setShowCalculator }) {
               onClick={() => onNavigate('calculator')}
               icon="🧮"
               description={buttonDescriptions.calculator}
+              darkMode={darkMode}
             />
           </div>
         </div>
@@ -172,7 +177,7 @@ function Hotbar({ onNavigate, showCalculator, setShowCalculator }) {
 }
 
 // Individual button component with hover effects
-function HotbarButton({ expanded, onClick, icon, label, description, isActive }) {
+function HotbarButton({ expanded, onClick, icon, description, isActive, darkMode }) {
   const [isHovered, setIsHovered] = useState(false);
   
   return (
@@ -180,45 +185,44 @@ function HotbarButton({ expanded, onClick, icon, label, description, isActive })
       <button 
         className={`
           relative text-white rounded-xl
-          flex flex-col items-center justify-center
-          transition-all duration-1000 ease-in-out
-          ${expanded ? 'px-4 py-2' : 'p-2'}
+          flex items-center justify-center bg-transparent
+          transition-all duration-300 ease-in-out
+          ${expanded ? 'p-3' : 'p-2'}
           hover:scale-110 hover:shadow-md
           ${isActive 
-            ? 'bg-blue-600/80 hover:bg-blue-700/90' 
-            : 'bg-gray-800/80 hover:bg-gray-700/90'}
+            ? 'bg-blue-800/80 hover:bg-blue-700/70'
+            : 'bg-gray-800/80 hover:bg-gray-700/70'}
         `}
         onClick={onClick}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <span className={`text-lg transition-all duration-1000 ease-in-out ${expanded ? 'mb-1' : ''}`}>
+        <span className="text-lg">
           {icon}
-        </span>
-        
-        {/* Usando opacity para uma transição suave em vez de condicional rendering */}
-        <span className={`
-          text-sm whitespace-nowrap overflow-hidden
-          transition-all duration-1000 ease-in-out
-          ${expanded ? 'opacity-100 max-h-10 mt-1' : 'opacity-0 max-h-0 mt-0'}
-        `}>
-          {label}
         </span>
       </button>
       
-      {/* Tooltip com transição */}
+      {/* Tooltip como popup */}
       <div className={`
-        absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 
-        bg-gray-900/90 backdrop-blur-sm text-white px-3 py-1 rounded text-sm whitespace-nowrap
-        shadow-lg z-10 transition-all duration-500 ease-in-out pointer-events-none
-        ${expanded && isHovered ? 'opacity-90 translate-y-0' : 'opacity-0 translate-y-1 invisible'}
+        absolute top-full left-1/2 transform -translate-x-1/2 mt-2
+        ${darkMode 
+          ? 'bg-gray-800/90 text-gray-100' 
+          : 'bg-white/90 text-gray-800'} 
+        backdrop-blur-sm px-3 py-1.5 rounded text-sm whitespace-nowrap
+        shadow-lg z-10 transition-all duration-200 ease-in-out pointer-events-none
+        border ${darkMode ? 'border-gray-700/50' : 'border-gray-300/50'}
+        ${isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-1 invisible'}
       `}>
         {description}
-        <div className="absolute top-full left-1/2 transform -translate-x-1/2 
-                      border-8 border-transparent border-t-gray-900/90"></div>
+        <div className={`
+          absolute bottom-full left-1/2 transform -translate-x-1/2
+          border-8 border-transparent 
+          ${darkMode 
+            ? 'border-b-gray-800/90' 
+            : 'border-b-white/90'}
+        `}></div>
       </div>
     </div>
   );
 }
-
 export default Hotbar;
