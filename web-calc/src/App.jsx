@@ -4,7 +4,7 @@ import Calculator from './components/ui/Calculator'
 import CartesianGame from './components/games/CartesianProd'
 import FunctionGame from './components/games/FindFunction'
 import VectorGame from './components/games/VecMission'
-import { Moon, Sun } from "lucide-react" // Importar ícones
+import { Moon, Sun } from "lucide-react" 
 import {
   Carousel,
   CarouselContent,
@@ -72,8 +72,8 @@ function App() {
       style={{
         backgroundImage: darkMode 
           ? `
-            linear-gradient(to right, #1f2937 1px, transparent 1px),
-            linear-gradient(to bottom, #1f2937 1px, transparent 1px)
+            linear-gradient(to right, #696969 0.1px, transparent 1px),
+            linear-gradient(to bottom, #696969 0.1px, transparent 1px)
           `
           : `
             linear-gradient(to right, #e5e7eb 1px, transparent 1px),
