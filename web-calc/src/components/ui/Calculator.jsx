@@ -1,198 +1,193 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
-function Calculator({ onClose }) {
+function Calculator({ onClose, darkMode, isMobile = false }) {
   const [display, setDisplay] = useState('0');
-  const [equation, setEquation] = useState('');
-  const [calculated, setCalculated] = useState(false);
+  const [operation, setOperation] = useState(null);
+  const [prevValue, setPrevValue] = useState(null);
+  const [resetDisplay, setResetDisplay] = useState(false);
   
-  // Dragging state
-  const [isDragging, setIsDragging] = useState(false);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const dragRef = useRef(null);
-  const initialPositionRef = useRef({ x: 0, y: 0 });
+  // Detectar teclas para cálculos
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key.match(/[0-9]/) || e.key === '.') {
+        handleNumber(e.key);
+      } else if (e.key === '+' || e.key === '-' || e.key === '*' || e.key === '/') {
+        handleOperation(e.key);
+      } else if (e.key === 'Enter' || e.key === '=') {
+        handleEquals();
+      } else if (e.key === 'Escape') {
+        handleClear();
+      } else if (e.key === 'Backspace') {
+        handleDelete();
+      }
+    };
+    
+    document.addEventListener('keydown', handleKeyDown);
+    
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [display, operation, prevValue, resetDisplay]);
 
+  // Funções da calculadora
   const handleNumber = (num) => {
-    // Maximum number of digits allowed for input
-    const MAX_DIGITS = 12;
-    
-    // Handle decimal point
-    if (num === '.') {
-      // If the display already contains a decimal point, ignore the input
-      if (display.includes('.')) {
-        return;
-      }
-      
-      if (display === '0' || calculated) {
-        setDisplay('0.');
-        setCalculated(false);
-        return;
-      }
-    }
-    
-    if (display === '0' || calculated) {
-      // For non-decimal digits, replace the zero
-      if (num !== '.') {
-        setDisplay(num);
-      } else {
-        setDisplay('0.');
-      }
-      setCalculated(false);
+    if (display === '0' || resetDisplay) {
+      setDisplay(num);
+      setResetDisplay(false);
     } else {
-      // Only add the new digit if we're below the maximum length
-      if (display.replace('.', '').length < MAX_DIGITS) {
+      if (display.length < 12) { // Limitar o número de dígitos
         setDisplay(display + num);
       }
     }
   };
-
-  const handleOperator = (op) => {
-    setEquation(display + op);
+  
+  const handleDecimal = () => {
+    if (resetDisplay) {
+      setDisplay('0.');
+      setResetDisplay(false);
+    } else if (!display.includes('.')) {
+      setDisplay(display + '.');
+    }
+  };
+  
+  const handleOperation = (op) => {
+    const current = parseFloat(display);
+    
+    if (prevValue === null) {
+      setPrevValue(current);
+    } else if (operation) {
+      const result = calculate(prevValue, current, operation);
+      setPrevValue(result);
+      setDisplay(String(result));
+    }
+    
+    setOperation(op);
+    setResetDisplay(true);
+  };
+  
+  const handleEquals = () => {
+    if (!operation || prevValue === null) return;
+    
+    const current = parseFloat(display);
+    const result = calculate(prevValue, current, operation);
+    
+    setDisplay(String(result));
+    setPrevValue(null);
+    setOperation(null);
+    setResetDisplay(true);
+  };
+  
+  const handleClear = () => {
     setDisplay('0');
-    setCalculated(false);
+    setPrevValue(null);
+    setOperation(null);
+    setResetDisplay(false);
   };
-
-const handleEqual = () => {
-  try {
-    // Check for division by zero
-    if (equation.endsWith('/') && display === '0') {
-      setDisplay('Error');
-      setEquation('');
-      setCalculated(true);
-      return;
-    }
-    
-    // Using Function constructor to safely evaluate the expression
-    const result = new Function('return ' + equation + display)();
-    
-    // Check if result is Infinity or not a finite number
-    if (!isFinite(result)) {
-      setDisplay('Error');
+  
+  const handleDelete = () => {
+    if (display.length > 1) {
+      setDisplay(display.slice(0, -1));
     } else {
-      // Format the number to prevent overflow
-      let formattedResult;
-      
-      if (Math.abs(result) >= 1e15) {
-        // Use scientific notation for very large numbers
-        formattedResult = result.toExponential(5);
-      } else if (Math.abs(result) >= 1e9) {
-        // Format billion+ numbers with fewer decimals
-        formattedResult = result.toExponential(4);
-      } else if (String(result).length > 12) {
-        // For numbers with many digits, limit precision
-        formattedResult = Number(result).toPrecision(10);
-      } else {
-        formattedResult = String(result);
-      }
-      
-      setDisplay(formattedResult);
-    }
-    
-    setEquation('');
-    setCalculated(true);
-  } catch (error) {
-    setDisplay('Error');
-    setCalculated(true);
-  }
-};  
-
-    const handleClear = () => {
-        setDisplay('0');
-        setEquation('');
-    };
-
-  // Dragging functionality
-  const handleMouseDown = (e) => {
-    if (e.target.closest('.calculator-header')) {
-      setIsDragging(true);
-      initialPositionRef.current = {
-        x: e.clientX - position.x,
-        y: e.clientY - position.y
-      };
+      setDisplay('0');
     }
   };
 
-  const handleMouseMove = (e) => {
-    if (isDragging) {
-      setPosition({
-        x: e.clientX - initialPositionRef.current.x,
-        y: e.clientY - initialPositionRef.current.y
-      });
+  const calculate = (a, b, op) => {
+    switch(op) {
+      case '+': return a + b;
+      case '-': return a - b;
+      case '*': return a * b;
+      case '/': return b !== 0 ? a / b : 'Error';
+      default: return b;
     }
   };
 
-  const handleMouseUp = () => {
-    setIsDragging(false);
-  };
-
-  // Set up event listeners
-  useEffect(() => {
-    if (isDragging) {
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
-    } else {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
-    }
-    return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
-    };
-  }, [isDragging]);
-
+  // Renderização
   return (
     <div 
-      ref={dragRef}
-      className="fixed z-50"
-      style={{ 
-        left: `calc(50% + ${position.x}px)`, 
-        top: `calc(50% + ${position.y}px)`,
-        transform: 'translate(-50%, -50%)',
-        cursor: isDragging ? 'grabbing' : 'default'
-      }}
+      className={`
+        fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm
+        transition-all duration-300 ease-in-out
+      `}
+      onClick={(e) => e.target === e.currentTarget && onClose()}
     >
-      <div className="bg-gray-900 p-4 rounded-lg shadow-2xl w-64 select-none">
-        {/* Added draggable header */}
-        <div 
-          className=" calculator-header bg-gray-700 p-2 mb-2 rounded cursor-grab flex justify-between items-center"
-          onMouseDown={handleMouseDown}
-        >
-        
-            <div 
-              className="w-3 h-3 rounded-full bg-red-500 hover:bg-red-400 
-              cursor-pointer transition-colors"
-              onClick={onClose}
-              title="Close calculator"
-            ></div>
-                
+      <div 
+        className={`
+          ${isMobile ? 'w-full max-w-[320px] mx-4' : 'w-[350px]'}
+          bg-white dark:bg-gray-800 rounded-xl shadow-2xl overflow-hidden
+          border border-gray-200 dark:border-gray-700
+          transition-all duration-300 ease-in-out
+        `}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Cabeçalho da Calculadora */}
+        <div className="flex justify-between items-center px-4 py-3 bg-gray-100 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+          <h3 className="font-medium text-gray-800 dark:text-gray-200">Calculadora</h3>
+          <button 
+            className="w-6 h-6 flex items-center justify-center rounded-full bg-red-100 hover:bg-red-200 dark:bg-red-900 dark:hover:bg-red-800"
+            onClick={onClose}
+          >
+            <span className="text-red-600 dark:text-red-400 text-sm">✕</span>
+          </button>
         </div>
         
-        <div className="bg-gray-800 p-2 mb-4 rounded">
-          <div className="text-gray-400 text-xs h-4">{equation}</div>
-          <div className="text-white text-right text-2xl font-mono">{display}</div>
+        {/* Display */}
+        <div className={`
+          px-4 py-6 bg-gray-50 dark:bg-gray-900
+          border-b border-gray-200 dark:border-gray-700
+          text-right overflow-hidden
+        `}>
+          <div className="text-gray-500 dark:text-gray-400 text-sm h-4 mb-1">
+            {prevValue !== null ? `${prevValue} ${operation || ''}` : ''}
+          </div>
+          <div className="text-3xl font-semibold text-gray-900 dark:text-gray-100 truncate">
+            {display}
+          </div>
         </div>
         
-        <div className="grid grid-cols-4 gap-2">
-          <button onClick={handleClear} className="col-span-2 bg-gray-700 text-white p-3 rounded hover:bg-gray-600">C</button>
-          <button onClick={() => handleOperator('/')} className="bg-gray-700 text-white p-3 rounded hover:bg-gray-600">/</button>
-          <button onClick={() => handleOperator('*')} className="bg-gray-700 text-white p-3 rounded hover:bg-gray-600">×</button>
+        {/* Teclado */}
+        <div className="grid grid-cols-4 gap-1 p-2">
+          {/* Linha 1 */}
+          <button onClick={handleClear} className="col-span-2 calc-button bg-red-50 dark:bg-red-900 text-red-600 dark:text-red-300">
+            AC
+          </button>
+          <button onClick={handleDelete} className="calc-button bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
+            DEL
+          </button>
+          <button onClick={() => handleOperation('/')} className="calc-button bg-gray-100 dark:bg-gray-700 text-blue-600 dark:text-blue-300">
+            ÷
+          </button>
           
-          <button onClick={() => handleNumber('7')} className="bg-gray-800 text-white p-3 rounded hover:bg-gray-700">7</button>
-          <button onClick={() => handleNumber('8')} className="bg-gray-800 text-white p-3 rounded hover:bg-gray-700">8</button>
-          <button onClick={() => handleNumber('9')} className="bg-gray-800 text-white p-3 rounded hover:bg-gray-700">9</button>
-          <button onClick={() => handleOperator('-')} className="bg-gray-700 text-white p-3 rounded hover:bg-gray-600">-</button>
+          {/* Linha 2 */}
+          <button onClick={() => handleNumber('7')} className="calc-button">7</button>
+          <button onClick={() => handleNumber('8')} className="calc-button">8</button>
+          <button onClick={() => handleNumber('9')} className="calc-button">9</button>
+          <button onClick={() => handleOperation('*')} className="calc-button bg-gray-100 dark:bg-gray-700 text-blue-600 dark:text-blue-300">
+            ×
+          </button>
           
-          <button onClick={() => handleNumber('4')} className="bg-gray-800 text-white p-3 rounded hover:bg-gray-700">4</button>
-          <button onClick={() => handleNumber('5')} className="bg-gray-800 text-white p-3 rounded hover:bg-gray-700">5</button>
-          <button onClick={() => handleNumber('6')} className="bg-gray-800 text-white p-3 rounded hover:bg-gray-700">6</button>
-          <button onClick={() => handleOperator('+')} className="bg-gray-700 text-white p-3 rounded hover:bg-gray-600">+</button>
+          {/* Linha 3 */}
+          <button onClick={() => handleNumber('4')} className="calc-button">4</button>
+          <button onClick={() => handleNumber('5')} className="calc-button">5</button>
+          <button onClick={() => handleNumber('6')} className="calc-button">6</button>
+          <button onClick={() => handleOperation('-')} className="calc-button bg-gray-100 dark:bg-gray-700 text-blue-600 dark:text-blue-300">
+            -
+          </button>
           
-          <button onClick={() => handleNumber('1')} className="bg-gray-800 text-white p-3 rounded hover:bg-gray-700">1</button>
-          <button onClick={() => handleNumber('2')} className="bg-gray-800 text-white p-3 rounded hover:bg-gray-700">2</button>
-          <button onClick={() => handleNumber('3')} className="bg-gray-800 text-white p-3 rounded hover:bg-gray-700">3</button>
-          <button onClick={handleEqual} className="bg-blue-600 text-white p-3 rounded hover:bg-blue-500 row-span-2">=</button>
+          {/* Linha 4 */}
+          <button onClick={() => handleNumber('1')} className="calc-button">1</button>
+          <button onClick={() => handleNumber('2')} className="calc-button">2</button>
+          <button onClick={() => handleNumber('3')} className="calc-button">3</button>
+          <button onClick={() => handleOperation('+')} className="calc-button bg-gray-100 dark:bg-gray-700 text-blue-600 dark:text-blue-300">
+            +
+          </button>
           
-          <button onClick={() => handleNumber('0')} className="col-span-2 bg-gray-800 text-white p-3 rounded hover:bg-gray-700">0</button>
-          <button onClick={() => handleNumber('.')} className="bg-gray-800 text-white p-3 rounded hover:bg-gray-700">.</button>
+          {/* Linha 5 */}
+          <button onClick={() => handleNumber('0')} className="calc-button col-span-2">0</button>
+          <button onClick={handleDecimal} className="calc-button">.</button>
+          <button onClick={handleEquals} className="calc-button bg-blue-500 dark:bg-blue-600 text-white">
+            =
+          </button>
         </div>
       </div>
     </div>

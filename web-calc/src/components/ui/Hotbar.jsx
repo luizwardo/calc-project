@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Calculator from './Calculator';
 
-function Hotbar({ onNavigate, showCalculator, setShowCalculator, darkMode, toggleTheme }) {
+function Hotbar({ onNavigate, showCalculator, setShowCalculator, darkMode, toggleTheme, isMobile = false }) {
   const [expanded, setExpanded] = useState(false);
   const [visible, setVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -12,6 +12,7 @@ function Hotbar({ onNavigate, showCalculator, setShowCalculator, darkMode, toggl
     home: "Página inicial",
     cartesianGame: "Combine os pares",
     functionGame: "Ache a função",
+    vectorGame: "Vetores",
     about: "Informações",
     calculator: "Calculadora"
   };
@@ -27,6 +28,9 @@ function Hotbar({ onNavigate, showCalculator, setShowCalculator, darkMode, toggl
 
   // Check if mouse is near the hotbar even before hovering
   useEffect(() => {
+    // Só ativar o detector de proximidade em desktops
+    if (isMobile) return;
+    
     const handleMouseMove = (e) => {
       if (!hotbarRef.current) return;
       
@@ -44,32 +48,34 @@ function Hotbar({ onNavigate, showCalculator, setShowCalculator, darkMode, toggl
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
     };
-  }, []);
+  }, [isMobile]);
 
-  // Detectar a seção atual com base no scroll e controlar visibilidade da hotbar
+  // Detectar a seção atual com base no scroll
   const [activeSection, setActiveSection] = useState('home');
   
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
       
-      // Determinar a direção do scroll
-      if (scrollPosition > lastScrollY + 100) {
-        // Rolando para baixo - esconder a hotbar
-        setVisible(false);
-      } else if (scrollPosition < lastScrollY - 20) {
-        // Rolando para cima - mostrar a hotbar
-        setVisible(true);
+      // Determinar a direção do scroll para mobile
+      if (!isMobile) {
+        if (scrollPosition > lastScrollY + 50) {
+          // Rolando para baixo - esconder a hotbar
+          setVisible(false);
+        } else if (scrollPosition < lastScrollY - 20) {
+          // Rolando para cima - mostrar a hotbar
+          setVisible(true);
+        }
       }
       
       // Atualizar a última posição de scroll
       setLastScrollY(scrollPosition);
       
-      // Código existente para detectar a seção ativa
+      // Código para detectar a seção ativa
       const scrollPositionWithOffset = scrollPosition + 100;
       
       // Obter todas as seções
-      const sections = ['home', 'cartesianGame', 'functionGame', 'about'].map(id => {
+      const sections = ['home', 'cartesianGame', 'functionGame', 'vectorGame', 'about'].map(id => {
         const element = document.getElementById(id);
         if (!element) return { id, top: 0, bottom: 0 };
         
@@ -96,97 +102,164 @@ function Hotbar({ onNavigate, showCalculator, setShowCalculator, darkMode, toggl
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [lastScrollY]);
+  }, [lastScrollY, isMobile]);
 
   return (
     <>
-      <div 
-        ref={hotbarRef}
-        className={`fixed top-1/2 -translate-y-1/2 z-50 transition-all duration-300 ease-in-out ${
-          expanded ? 'px-3' : 'px-2'
-        } ${
-          visible 
-            ? 'left-0 translate-x-0' 
-            : '-left-20 translate-x-0'
-        }`}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-      >
-        <div className={`
-          bg-black/40 backdrop-blur-md rounded-r-2xl shadow-lg 
-          transition-all duration-300 ease-in-out
-          border border-gray-500/20
-          flex flex-col justify-center items-center
-          ${expanded ? 'py-4 px-3' : 'py-3 px-2'}
-        `}>
+      {/* Hotbar para Desktop (vertical à esquerda) */}
+      {!isMobile ? (
+        <div 
+          ref={hotbarRef}
+          className={`fixed top-1/2 -translate-y-1/2 z-50 transition-all duration-300 ease-in-out ${
+            expanded ? 'px-3' : 'px-2'
+          } ${
+            visible 
+              ? 'left-0 translate-x-0' 
+              : '-left-20 translate-x-0'
+          }`}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
           <div className={`
-            flex flex-col gap-4 items-center justify-center
+            bg-black/40 backdrop-blur-md rounded-r-2xl shadow-lg 
             transition-all duration-300 ease-in-out
-            ${expanded ? 'scale-100' : 'scale-90'}
+            border border-gray-500/20
+            flex flex-col justify-center items-center
+            ${expanded ? 'py-4 px-3' : 'py-3 px-2'}
           `}>
-            <HotbarButton 
-              expanded={expanded}
+            <div className={`
+              flex flex-col gap-4 items-center justify-center
+              transition-all duration-300 ease-in-out
+              ${expanded ? 'scale-100' : 'scale-90'}
+            `}>
+              <HotbarButton 
+                expanded={expanded}
+                onClick={() => onNavigate('home')}
+                icon="🏠"
+                description={buttonDescriptions.home}
+                isActive={activeSection === 'home'}
+                darkMode={darkMode}
+              />
+              
+              <HotbarButton 
+                expanded={expanded}
+                onClick={() => onNavigate('cartesianGame')}
+                icon="🔢"
+                description={buttonDescriptions.cartesianGame}
+                isActive={activeSection === 'cartesianGame'}
+                darkMode={darkMode}
+              />
+              
+              <HotbarButton 
+                expanded={expanded}
+                onClick={() => onNavigate('functionGame')}
+                icon="📈"
+                description={buttonDescriptions.functionGame}
+                isActive={activeSection === 'functionGame'}
+                darkMode={darkMode}
+              />
+              
+              <HotbarButton 
+                expanded={expanded}
+                onClick={() => onNavigate('vectorGame')}
+                icon="➡️"
+                description={buttonDescriptions.vectorGame}
+                isActive={activeSection === 'vectorGame'}
+                darkMode={darkMode}
+              />
+              
+              <HotbarButton 
+                expanded={expanded}
+                onClick={() => onNavigate('about')}
+                icon="ℹ️"
+                description={buttonDescriptions.about}
+                isActive={activeSection === 'about'}
+                darkMode={darkMode}
+              />
+              
+              <HotbarButton 
+                expanded={expanded}
+                onClick={() => onNavigate('calculator')}
+                icon="🧮"
+                description={buttonDescriptions.calculator}
+                darkMode={darkMode}
+              />
+              
+              {toggleTheme && (
+                <HotbarButton 
+                  expanded={expanded}
+                  onClick={toggleTheme}
+                  icon={darkMode ? "☀️" : "🌙"}
+                  description={darkMode ? "Modo claro" : "Modo escuro"}
+                  darkMode={darkMode}
+                />
+              )}
+            </div>
+          </div>
+        </div>
+      ) : (
+        // Hotbar para Mobile (fixa na parte inferior, horizontal)
+        <div 
+          ref={hotbarRef}
+          className="fixed bottom-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out px-2 py-2"
+        >
+          <div className="
+            bg-black/70 backdrop-blur-md rounded-t-xl shadow-lg 
+            transition-all duration-300 ease-in-out
+            border-t border-x border-gray-500/20
+            flex justify-around items-center py-2 px-1
+          ">
+            <MobileHotbarButton 
               onClick={() => onNavigate('home')}
               icon="🏠"
-              description={buttonDescriptions.home}
               isActive={activeSection === 'home'}
               darkMode={darkMode}
             />
             
-            <HotbarButton 
-              expanded={expanded}
+            <MobileHotbarButton 
               onClick={() => onNavigate('cartesianGame')}
               icon="🔢"
-              description={buttonDescriptions.cartesianGame}
               isActive={activeSection === 'cartesianGame'}
               darkMode={darkMode}
             />
             
-            <HotbarButton 
-              expanded={expanded}
+            <MobileHotbarButton 
               onClick={() => onNavigate('functionGame')}
               icon="📈"
-              description={buttonDescriptions.functionGame}
               isActive={activeSection === 'functionGame'}
               darkMode={darkMode}
             />
             
-            <HotbarButton 
-              expanded={expanded}
-              onClick={() => onNavigate('about')}
-              icon="ℹ️"
-              description={buttonDescriptions.about}
-              isActive={activeSection === 'about'}
+            <MobileHotbarButton 
+              onClick={() => onNavigate('vectorGame')}
+              icon="➡️"
+              isActive={activeSection === 'vectorGame'}
               darkMode={darkMode}
             />
             
-            <HotbarButton 
-              expanded={expanded}
+            <MobileHotbarButton 
               onClick={() => onNavigate('calculator')}
               icon="🧮"
-              description={buttonDescriptions.calculator}
               darkMode={darkMode}
             />
             
             {toggleTheme && (
-              <HotbarButton 
-                expanded={expanded}
+              <MobileHotbarButton 
                 onClick={toggleTheme}
                 icon={darkMode ? "☀️" : "🌙"}
-                description={darkMode ? "Modo claro" : "Modo escuro"}
                 darkMode={darkMode}
               />
             )}
           </div>
         </div>
-      </div>
+      )}
       
-      {showCalculator && <Calculator onClose={() => setShowCalculator(false)} />}
+      {showCalculator && <Calculator onClose={() => setShowCalculator(false)} darkMode={darkMode} isMobile={isMobile} />}
     </>
   );
 }
 
-// Individual button component with hover effects
+// Individual button component with hover effects for desktop
 function HotbarButton({ expanded, onClick, icon, description, isActive, darkMode }) {
   const [isHovered, setIsHovered] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
@@ -259,6 +332,29 @@ function HotbarButton({ expanded, onClick, icon, description, isActive, darkMode
         `}></div>
       </div>
     </div>
+  );
+}
+
+// Versão simplificada do botão para mobile
+function MobileHotbarButton({ onClick, icon, isActive, darkMode }) {  
+  return (
+    <button 
+      className={`
+        relative text-white rounded-xl
+        flex items-center justify-center bg-transparent
+        transition-all duration-300 ease-in-out
+        p-2
+        active:scale-95
+        ${isActive 
+          ? 'bg-blue-800/80' 
+          : 'bg-gray-800/50'}
+      `}
+      onClick={onClick}
+    >
+      <span className="text-base">
+        {icon}
+      </span>
+    </button>
   );
 }
 
