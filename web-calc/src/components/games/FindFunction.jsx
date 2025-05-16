@@ -263,11 +263,25 @@ function FunctionGame({ onClose, darkMode }) {
   };
 
   return (
-    <div className={`p-6 max-w-4xl mx-auto ${darkMode ? 'bg-gray-800 text-white' : 'bg-white'} rounded-lg shadow-lg transition-colors`}>
-      <div 
-      >
-        <span className="text-white text-lg font-bold">×</span>
-      </div>
+    <div className={`p-6 max-w-4xl mx-auto ${darkMode ? 'bg-gray-800 text-white' : 'bg-white'} rounded-lg shadow-lg transition-colors relative`}>
+      {/* Botão de fechar no canto superior direito */}
+      {onClose && (
+        <button
+          onClick={onClose}
+          className={`
+            absolute top-4 right-4 w-8 h-8 flex items-center justify-center
+            rounded-full transition-colors
+            bg-transparent border
+            ${darkMode 
+              ? 'border-gray-600 text-gray-300 hover:bg-gray-700/50 hover:border-gray-500' 
+              : 'border-gray-400 text-gray-600 hover:bg-gray-100 hover:border-gray-500'
+            }
+          `}
+          aria-label="Fechar"
+        >
+          <span className={`text-lg font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>×</span>
+        </button>
+      )}
 
       <h1 className="text-2xl font-bold mb-4 text-center">Descubra a Função</h1>
       
@@ -290,11 +304,18 @@ function FunctionGame({ onClose, darkMode }) {
             <select 
               value={difficulty}
               onChange={(e) => setDifficulty(e.target.value)}
-              className="p-2 border rounded"
+              className={`
+                p-2 rounded transition-colors
+                bg-transparent border
+                ${darkMode 
+                  ? 'border-gray-600 text-gray-300 hover:bg-gray-700/50' 
+                  : 'border-gray-400 text-gray-700 hover:bg-gray-100'
+                }
+              `}
             >
-              <option value="easy">Fácil</option>
-              <option value="medium">Médio</option>
-              <option value="hard">Difícil</option>
+              <option value="easy" className={darkMode ? 'bg-gray-800' : 'bg-white'}>Fácil</option>
+              <option value="medium" className={darkMode ? 'bg-gray-800' : 'bg-white'}>Médio</option>
+              <option value="hard" className={darkMode ? 'bg-gray-800' : 'bg-white'}>Difícil</option>
             </select>
           </div>
         )}
@@ -302,7 +323,7 @@ function FunctionGame({ onClose, darkMode }) {
 
       {currentFunction && (
         <div className="mb-6">
-          <div className={`w-full border-2 ${darkMode ? 'border-green-600 bg-gray-700' : 'border-green-300 bg-gray-50'} rounded-lg shadow-md mb-6 transition-colors overflow-hidden`}>
+          <div className={`w-full h-[300px] border-2 ${darkMode ? 'border-green-600 bg-gray-700' : 'border-green-300 bg-gray-50'} rounded-lg shadow-md mb-6 transition-colors overflow-hidden`}>
             <Plot
               data={[
                 gameMode === 'quiz' ? {
@@ -311,14 +332,14 @@ function FunctionGame({ onClose, darkMode }) {
                   y: generatePoints(currentFunction.func, -10, 10, 100).y,
                   type: 'scatter',
                   mode: 'lines',
-                  line: { color: 'blue', width: 2 }
+                  line: { color: darkMode ? '#3b82f6' : '#1d4ed8', width: 2 }
                 } : {
                   // No modo construção, mostra a função que o usuário está construindo
                   x: getUserFunction().x,
                   y: getUserFunction().y,
                   type: 'scatter',
                   mode: 'lines',
-                  line: { color: 'blue', width: 2 }
+                  line: { color: darkMode ? '#3b82f6' : '#1d4ed8', width: 2 }
                 },
                 // Para comparação no modo de construção, mostra a função alvo em pontilhado
                 gameMode === 'construct' ? {
@@ -326,12 +347,13 @@ function FunctionGame({ onClose, darkMode }) {
                   y: generatePoints(currentFunction.func, -10, 10, 100).y,
                   type: 'scatter',
                   mode: 'lines',
-                  line: { color: 'red', width: 2, dash: 'dash' },
+                  line: { color: darkMode ? '#ef4444' : '#dc2626', width: 2, dash: 'dash' },
                   visible: isComplete ? true : 'legendonly',
                   name: 'Função alvo'
                 } : {}
               ]}
               layout={{
+                autosize: true,
                 margin: { l: 40, r: 40, b: 40, t: 40 },
                 paper_bgcolor: darkMode ? '#374151' : '#f9fafb',
                 plot_bgcolor: darkMode ? '#374151' : '#f9fafb',
@@ -351,8 +373,15 @@ function FunctionGame({ onClose, darkMode }) {
                   gridcolor: darkMode ? '#4b5563' : '#e5e5e5'
                 },
                 showlegend: gameMode === 'construct' && isComplete
-              }}              config={{ displayModeBar: false }}
-              style={{ width: '100%', height: '100%' }}
+              }}
+              config={{ 
+                displayModeBar: false,
+                responsive: true
+              }}
+              style={{ 
+                width: '100%', 
+                height: '100%'
+              }}
             />
           </div>
 
@@ -360,15 +389,22 @@ function FunctionGame({ onClose, darkMode }) {
             // MODO QUIZ: Mostra opções de equações
             <div className="mt-4">
               <h2 className="text-xl font-semibold mb-2">Qual é a equação deste gráfico?</h2>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {options.map((option, index) => (
                   <button
                     key={index}
-                    className={`p-3 border-2 text-lg rounded-lg ${
-                      selectedOption === option 
-                        ? 'border-blue-500 bg-blue-50' 
-                        : 'border-gray-300 hover:border-blue-300'
-                    }`}
+                    className={`
+                      p-3 border-2 text-lg rounded-lg transition-colors
+                      bg-transparent
+                      ${selectedOption === option 
+                        ? (darkMode 
+                            ? 'border-blue-500 text-blue-300 bg-blue-900/20' 
+                            : 'border-blue-500 text-blue-700 bg-blue-50')
+                        : (darkMode 
+                            ? 'border-gray-600 text-gray-300 hover:border-blue-400 hover:bg-blue-900/10' 
+                            : 'border-gray-300 text-gray-700 hover:border-blue-300 hover:bg-blue-50/50')
+                      }
+                    `}
                     onClick={() => setSelectedOption(option)}
                   >
                     {option.equation}
@@ -384,12 +420,19 @@ function FunctionGame({ onClose, darkMode }) {
                 <select
                   value={functionType}
                   onChange={(e) => setFunctionType(e.target.value)}
-                  className="p-2 border rounded"
+                  className={`
+                    p-2 rounded transition-colors
+                    bg-transparent border
+                    ${darkMode 
+                      ? 'border-gray-600 text-gray-300 hover:bg-gray-700/50' 
+                      : 'border-gray-400 text-gray-700 hover:bg-gray-100'
+                    }
+                  `}
                 >
-                  <option value="linear">Linear</option>
-                  <option value="quadratic">Quadrática</option>
-                  <option value="sine">Seno</option>
-                  <option value="exponential">Exponencial</option>
+                  <option value="linear" className={darkMode ? 'bg-gray-800' : 'bg-white'}>Linear</option>
+                  <option value="quadratic" className={darkMode ? 'bg-gray-800' : 'bg-white'}>Quadrática</option>
+                  <option value="sine" className={darkMode ? 'bg-gray-800' : 'bg-white'}>Seno</option>
+                  <option value="exponential" className={darkMode ? 'bg-gray-800' : 'bg-white'}>Exponencial</option>
                 </select>
               </div>
 
@@ -443,7 +486,13 @@ function FunctionGame({ onClose, darkMode }) {
                 )}
               </div>
 
-              <div className="mt-3 p-2 bg-gray-100 rounded">
+              <div className={`
+                mt-3 p-2 rounded text-center
+                ${darkMode 
+                  ? 'bg-gray-700/50 border border-gray-600' 
+                  : 'bg-gray-100 border border-gray-200'
+                }
+              `}>
                 <p className="text-center text-lg font-medium">
                   {getUserFunction().equation}
                 </p>
@@ -454,17 +503,45 @@ function FunctionGame({ onClose, darkMode }) {
       )}
 
       <div className="flex justify-between items-center mb-4">
+        <button
+          onClick={onClose}
+          className={`
+            px-4 py-2 rounded border transition-colors
+            bg-transparent 
+            ${darkMode 
+              ? 'border-gray-600 text-gray-300 hover:bg-gray-700/50 hover:border-gray-500' 
+              : 'border-gray-400 text-gray-600 hover:bg-gray-100 hover:border-gray-500'
+            }
+          `}
+        >
+          Voltar
+        </button>
         
         <div className="space-x-3">
           <button
             onClick={generateNewProblem}
-            className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600"
+            className={`
+              px-4 py-2 rounded border transition-colors
+              bg-transparent 
+              ${darkMode 
+                ? 'border-yellow-700 text-yellow-400 hover:bg-yellow-900/30 hover:border-yellow-600' 
+                : 'border-yellow-500 text-yellow-600 hover:bg-yellow-50 hover:border-yellow-600'
+              }
+            `}
           >
             Novo Problema
           </button>
+          
           <button
             onClick={gameMode === 'quiz' ? checkAnswer : checkConstruction}
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            className={`
+              px-4 py-2 rounded border transition-colors
+              bg-transparent
+              ${darkMode 
+                ? 'border-blue-500 text-blue-300 hover:bg-blue-900/30 hover:border-blue-400' 
+                : 'border-blue-600 text-blue-700 hover:bg-blue-50 hover:border-blue-700'
+              }
+            `}
           >
             {gameMode === 'quiz' ? 'Verificar Resposta' : 'Verificar Construção'}
           </button>
@@ -472,29 +549,56 @@ function FunctionGame({ onClose, darkMode }) {
       </div>
       
       {feedback && (
-        <div className={`p-3 rounded text-center mb-4 ${
+        <div className={`p-3 rounded text-center mb-4 transition-colors ${
           feedback.includes('Correto') || feedback.includes('bom') 
-            ? 'bg-green-100 text-green-800' 
-            : 'bg-red-100 text-red-800'
+            ? (darkMode ? 'bg-green-900/50 text-green-300' : 'bg-green-100 text-green-800')
+            : (darkMode ? 'bg-red-900/50 text-red-300' : 'bg-red-100 text-red-800')
         }`}>
           {feedback}
         </div>
       )}
 
       <AlertDialog open={alertOpen} onOpenChange={setAlertOpen}>
-        <AlertDialogContent>
+        <AlertDialogContent className={darkMode ? 'bg-gray-800 text-white border border-gray-700' : ''}>
           <AlertDialogHeader>
-            <AlertDialogTitle>Parabéns!</AlertDialogTitle>
-            <AlertDialogDescription>
+            <AlertDialogTitle className={darkMode ? 'text-white' : ''}>
+              Parabéns!
+            </AlertDialogTitle>
+            <AlertDialogDescription className={darkMode ? 'text-gray-300' : ''}>
               {gameMode === 'quiz' 
                 ? 'Você identificou a função corretamente!' 
                 : 'Você construiu a função corretamente!'}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogAction onClick={handleAlertClose}>
+            <AlertDialogAction 
+              onClick={handleAlertClose}
+              className={`
+                bg-transparent border 
+                ${darkMode 
+                  ? 'border-blue-600 text-blue-400 hover:bg-blue-900/30' 
+                  : 'border-blue-500 text-blue-600 hover:bg-blue-50'
+                }
+              `}
+            >
               Próximo desafio
             </AlertDialogAction>
+            
+            {onClose && (
+              <button
+                onClick={onClose}
+                className={`
+                  ml-2 px-4 py-2 rounded border transition-colors
+                  bg-transparent 
+                  ${darkMode 
+                    ? 'border-gray-600 text-gray-300 hover:bg-gray-700/50 hover:border-gray-500' 
+                    : 'border-gray-400 text-gray-600 hover:bg-gray-100 hover:border-gray-500'
+                  }
+                `}
+              >
+                Sair
+              </button>
+            )}
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

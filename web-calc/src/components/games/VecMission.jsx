@@ -180,12 +180,25 @@ function VectorGame({ onClose, darkMode }) {
   };
 
   return (
-    <div className={`p-6 max-w-4xl mx-auto ${darkMode ? 'bg-gray-800 text-white' : 'bg-white'} rounded-lg shadow-lg transition-colors`}>
-      <div 
-
-      >
-        <span className="text-white text-lg font-bold">×</span>
-      </div>
+    <div className={`p-6 max-w-4xl mx-auto ${darkMode ? 'bg-gray-800 text-white' : 'bg-white'} rounded-lg shadow-lg transition-colors relative`}>
+      {/* Botão de fechar no canto superior direito */}
+      {onClose && (
+        <button
+          onClick={onClose}
+          className={`
+            absolute top-4 right-4 w-8 h-8 flex items-center justify-center
+            rounded-full transition-colors
+            bg-transparent border
+            ${darkMode 
+              ? 'border-gray-600 text-gray-300 hover:bg-gray-700/50 hover:border-gray-500' 
+              : 'border-gray-400 text-gray-600 hover:bg-gray-100 hover:border-gray-500'
+            }
+          `}
+          aria-label="Fechar"
+        >
+          <span className={`text-lg font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>×</span>
+        </button>
+      )}
       
       <h1 className="text-2xl font-bold mb-4 text-center">Decomposição Vetorial</h1>
       
@@ -284,27 +297,57 @@ function VectorGame({ onClose, darkMode }) {
       
       <div className="flex justify-between items-center mt-6 mb-4">
         <button
-          onClick={() => generateLevel(level)}
-          className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition-colors"
+          onClick={onClose}
+          className={`
+            px-4 py-2 rounded border transition-colors
+            bg-transparent 
+            ${darkMode 
+              ? 'border-gray-600 text-gray-300 hover:bg-gray-700/50 hover:border-gray-500' 
+              : 'border-gray-400 text-gray-600 hover:bg-gray-100 hover:border-gray-500'
+            }
+          `}
         >
-          Novo Problema
+          Voltar
         </button>
         
-        <button
-          onClick={checkAnswer}
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
-        >
-          Verificar Decomposição
-        </button>
+        <div className="space-x-3">
+          <button
+            onClick={() => generateLevel(level)}
+            className={`
+              px-4 py-2 rounded border transition-colors
+              bg-transparent 
+              ${darkMode 
+                ? 'border-yellow-700 text-yellow-400 hover:bg-yellow-900/30 hover:border-yellow-600' 
+                : 'border-yellow-500 text-yellow-600 hover:bg-yellow-50 hover:border-yellow-600'
+              }
+            `}
+          >
+            Novo Problema
+          </button>
+          
+          <button
+            onClick={checkAnswer}
+            className={`
+              px-4 py-2 rounded border transition-colors
+              bg-transparent
+              ${darkMode 
+                ? 'border-purple-500 text-purple-300 hover:bg-purple-900/30 hover:border-purple-400' 
+                : 'border-purple-600 text-purple-700 hover:bg-purple-50 hover:border-purple-700'
+              }
+            `}
+          >
+            Verificar Decomposição
+          </button>
+        </div>
       </div>
       
       {feedback && (
         <div className={`p-3 rounded text-center mb-4 ${
           feedback.includes('Parabéns') 
-            ? (darkMode ? 'bg-green-900 text-green-100' : 'bg-green-100 text-green-800')
+            ? (darkMode ? 'bg-green-900/50 text-green-300' : 'bg-green-100 text-green-800')
             : feedback.includes('Quase')
-              ? (darkMode ? 'bg-yellow-900 text-yellow-100' : 'bg-yellow-100 text-yellow-800')
-              : (darkMode ? 'bg-blue-900 text-blue-100' : 'bg-blue-100 text-blue-800')
+              ? (darkMode ? 'bg-yellow-900/50 text-yellow-300' : 'bg-yellow-100 text-yellow-800')
+              : (darkMode ? 'bg-blue-900/50 text-blue-300' : 'bg-blue-100 text-blue-800')
         } transition-colors`}>
           {feedback}
         </div>
@@ -324,10 +367,32 @@ function VectorGame({ onClose, darkMode }) {
                 setAlertOpen(false);
                 handleNextLevel();
               }}
-              className={darkMode ? 'bg-purple-600 hover:bg-purple-700' : ''}
+              className={`
+                bg-transparent border 
+                ${darkMode 
+                  ? 'border-purple-600 text-purple-400 hover:bg-purple-900/30' 
+                  : 'border-purple-500 text-purple-600 hover:bg-purple-50'
+                }
+              `}
             >
               Próximo nível
             </AlertDialogAction>
+            
+            {onClose && (
+              <button
+                onClick={onClose}
+                className={`
+                  ml-2 px-4 py-2 rounded border transition-colors
+                  bg-transparent 
+                  ${darkMode 
+                    ? 'border-gray-600 text-gray-300 hover:bg-gray-700/50 hover:border-gray-500' 
+                    : 'border-gray-400 text-gray-600 hover:bg-gray-100 hover:border-gray-500'
+                  }
+                `}
+              >
+                Sair
+              </button>
+            )}
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
