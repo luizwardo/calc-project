@@ -33,8 +33,22 @@ function App() {
     } else {
       document.documentElement.classList.remove('dark');
     }
+    
+    // Remover elementos de debugging que podem estar sendo injetados
+    const removeDebugElements = () => {
+      const debugButtons = document.querySelectorAll('.debug-button, .close-button');
+      debugButtons.forEach(button => {
+        if (button.parentNode) {
+          button.parentNode.removeChild(button);
+        }
+      });
+    };
+    
+    // Executar após o DOM ser atualizado
+    setTimeout(removeDebugElements, 100);
+    
   }, [darkMode]);
-
+  
   // Mapeamento de seções e seus refs
   const sections = {
     home: homeRef,
@@ -99,7 +113,7 @@ function App() {
         aria-label="Alternar tema"
       >
         {darkMode ? 
-          <Sun className="h-5 w-5 text-yellow-400" /> : 
+          <Sun className="h-5 w-5 text-gray-400" /> : 
           <Moon className="h-5 w-5 text-gray-800" />
         }
       </button>
