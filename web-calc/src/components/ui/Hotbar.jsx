@@ -123,7 +123,7 @@ function Hotbar({ onNavigate, showCalculator, setShowCalculator, darkMode, toggl
           onMouseLeave={handleMouseLeave}
         >
           <div className={`
-            bg-black/40 backdrop-blur-md rounded-r-2xl shadow-lg 
+            bg-transparent backdrop-blur-md rounded-r-2xl shadow-lg 
             transition-all duration-300 ease-in-out
             border border-gray-500/20
             flex flex-col justify-center items-center
@@ -193,7 +193,7 @@ function Hotbar({ onNavigate, showCalculator, setShowCalculator, darkMode, toggl
                 icon={
                   darkMode ? 
                     <Sun className="h-5 w-5 text-gray-100" /> : 
-                    <Moon className="h-5 w-5 text-gray-100" />
+                    <Moon className="h-5 w-5 text-gray-800" />
                 }
                 description={buttonDescriptions.theme}
                 darkMode={darkMode}
@@ -252,7 +252,7 @@ function Hotbar({ onNavigate, showCalculator, setShowCalculator, darkMode, toggl
               icon={
                 darkMode ? 
                   <Sun className="h-5 w-5 text-gray-100" /> : 
-                  <Moon className="h-5 w-5 text-gray-100" />
+                  <Moon className="h-5 w-5 text-gray-800" />
               }
               darkMode={darkMode}
             />
