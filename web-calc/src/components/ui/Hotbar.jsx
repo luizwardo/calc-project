@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Calculator from './Calculator';
 
-function Hotbar({ onNavigate, showCalculator, setShowCalculator, darkMode, }) {
+function Hotbar({ onNavigate, showCalculator, setShowCalculator, darkMode, toggleTheme }) {
   const [expanded, setExpanded] = useState(false);
   const [visible, setVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -32,10 +32,10 @@ function Hotbar({ onNavigate, showCalculator, setShowCalculator, darkMode, }) {
       
       const rect = hotbarRef.current.getBoundingClientRect();
       const isNear = 
-        e.clientY < rect.bottom + 15 && 
-        e.clientY > rect.top - 15 &&
-        e.clientX > rect.left - 15 && 
-        e.clientX < rect.right + 15;
+        e.clientX < rect.right + 15 && 
+        e.clientX > rect.left - 15 &&
+        e.clientY > rect.top - 15 && 
+        e.clientY < rect.bottom + 15;
       
       setExpanded(isNear);
     };
@@ -54,10 +54,10 @@ function Hotbar({ onNavigate, showCalculator, setShowCalculator, darkMode, }) {
       const scrollPosition = window.scrollY;
       
       // Determinar a direção do scroll
-      if (scrollPosition > lastScrollY) {
+      if (scrollPosition > lastScrollY + 100) {
         // Rolando para baixo - esconder a hotbar
         setVisible(false);
-      } else if (scrollPosition < lastScrollY) {
+      } else if (scrollPosition < lastScrollY - 20) {
         // Rolando para cima - mostrar a hotbar
         setVisible(true);
       }
@@ -102,27 +102,27 @@ function Hotbar({ onNavigate, showCalculator, setShowCalculator, darkMode, }) {
     <>
       <div 
         ref={hotbarRef}
-        className={`fixed left-0 right-0 z-50 transition-all duration-300 ease-in-out ${
-          expanded ? 'py-3' : 'py-2'
+        className={`fixed top-1/2 -translate-y-1/2 z-50 transition-all duration-300 ease-in-out ${
+          expanded ? 'px-3' : 'px-2'
         } ${
           visible 
-            ? 'top-0 translate-y-0' 
-            : '-top-full translate-y-0'
+            ? 'left-0 translate-x-0' 
+            : '-left-20 translate-x-0'
         }`}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
         <div className={`
-          mx-auto bg-transparent backdrop-blur-md rounded-2xl shadow-lg
-          transition-all duration-300 ease-in-out 
+          bg-black/40 backdrop-blur-md rounded-r-2xl shadow-lg 
+          transition-all duration-300 ease-in-out
           border border-gray-500/20
-          flex justify-center items-center
-          ${expanded ? 'max-w-xl p-2' : 'max-w-md p-1'}
+          flex flex-col justify-center items-center
+          ${expanded ? 'py-4 px-3' : 'py-3 px-2'}
         `}>
           <div className={`
-            flex gap-2 sm:gap-2 md:gap-3 items-center justify-center
+            flex flex-col gap-4 items-center justify-center
             transition-all duration-300 ease-in-out
-            ${expanded ? 'scale-100' : 'scale-[0.85]'}
+            ${expanded ? 'scale-100' : 'scale-90'}
           `}>
             <HotbarButton 
               expanded={expanded}
@@ -167,6 +167,16 @@ function Hotbar({ onNavigate, showCalculator, setShowCalculator, darkMode, }) {
               description={buttonDescriptions.calculator}
               darkMode={darkMode}
             />
+            
+            {toggleTheme && (
+              <HotbarButton 
+                expanded={expanded}
+                onClick={toggleTheme}
+                icon={darkMode ? "☀️" : "🌙"}
+                description={darkMode ? "Modo claro" : "Modo escuro"}
+                darkMode={darkMode}
+              />
+            )}
           </div>
         </div>
       </div>
@@ -179,6 +189,32 @@ function Hotbar({ onNavigate, showCalculator, setShowCalculator, darkMode, }) {
 // Individual button component with hover effects
 function HotbarButton({ expanded, onClick, icon, description, isActive, darkMode }) {
   const [isHovered, setIsHovered] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
+  const hoverTimer = useRef(null);
+  
+  // Gerenciamento do delay para mostrar o tooltip
+  useEffect(() => {
+    if (isHovered) {
+      // Configurar um delay de 500ms (0.5s) antes de mostrar o tooltip
+      hoverTimer.current = setTimeout(() => {
+        setShowTooltip(true);
+      }, 500);
+    } else {
+      // Limpar o timeout e esconder o tooltip imediatamente quando o mouse sair
+      if (hoverTimer.current) {
+        clearTimeout(hoverTimer.current);
+        hoverTimer.current = null;
+      }
+      setShowTooltip(false);
+    }
+    
+    // Cleanup ao desmontar o componente
+    return () => {
+      if (hoverTimer.current) {
+        clearTimeout(hoverTimer.current);
+      }
+    };
+  }, [isHovered]);
   
   return (
     <div className="relative">
@@ -187,7 +223,7 @@ function HotbarButton({ expanded, onClick, icon, description, isActive, darkMode
           relative text-white rounded-xl
           flex items-center justify-center bg-transparent
           transition-all duration-300 ease-in-out
-          ${expanded ? 'p-3' : 'p-2'}
+          p-2.5
           hover:scale-110 hover:shadow-md
           ${isActive 
             ? 'bg-blue-800/80 hover:bg-blue-700/70'
@@ -202,27 +238,28 @@ function HotbarButton({ expanded, onClick, icon, description, isActive, darkMode
         </span>
       </button>
       
-      {/* Tooltip como popup */}
+      {/* Tooltip ao lado do botão */}
       <div className={`
-        absolute top-full left-1/2 transform -translate-x-1/2 mt-2
+        absolute left-full top-1/2 -translate-y-1/2 ml-2
         ${darkMode 
           ? 'bg-gray-800/90 text-gray-100' 
           : 'bg-white/90 text-gray-800'} 
         backdrop-blur-sm px-3 py-1.5 rounded text-sm whitespace-nowrap
         shadow-lg z-10 transition-all duration-200 ease-in-out pointer-events-none
         border ${darkMode ? 'border-gray-700/50' : 'border-gray-300/50'}
-        ${isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-1 invisible'}
+        ${showTooltip ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-1 invisible'}
       `}>
         {description}
         <div className={`
-          absolute bottom-full left-1/2 transform -translate-x-1/2
+          absolute right-full top-1/2 -translate-y-1/2
           border-8 border-transparent 
           ${darkMode 
-            ? 'border-b-gray-800/90' 
-            : 'border-b-white/90'}
+            ? 'border-r-gray-800/90' 
+            : 'border-r-white/90'}
         `}></div>
       </div>
     </div>
   );
 }
+
 export default Hotbar;
