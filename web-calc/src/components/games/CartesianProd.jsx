@@ -341,13 +341,6 @@ function CartesianGame({ onClose, darkMode }) {
   return (
     <DndProvider backend={HTML5Backend}>
       <div className={`p-6 max-w-4xl mx-auto ${darkMode ? 'bg-gray-800 text-white' : 'bg-white'} rounded-lg shadow-lg transition-colors`}>
-        <div 
-          className="absolute top-2 left-2 w-8 h-8 rounded-full bg-red-500 hover:bg-red-600 cursor-pointer transition-colors flex items-center justify-center"
-          onClick={onClose}
-          title="Fechar jogo"
-        >
-          <span className="text-white text-lg font-bold">×</span>
-        </div>
         
         <h1 className="text-2xl font-bold mb-4 text-center">Produto Cartesiano: Capture a Bolinha!</h1>
         
