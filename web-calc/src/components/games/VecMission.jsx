@@ -200,8 +200,13 @@ function VectorGame({ onClose, darkMode }) {
         </button>
       )}
       
-      <h1 className="text-2xl font-bold mb-4 text-center">Decomposição Vetorial</h1>
-      
+      <h1 
+        className="text-2xl font-bold mb-4 text-center"
+        style={{ fontFamily: "'Dancing Script', cursive" }}
+      >
+        Missão Vetorial
+      </h1>      
+
       <div className="mb-4 flex justify-between items-center">
         <div>
           <span className="font-bold mr-2">Nível:</span>

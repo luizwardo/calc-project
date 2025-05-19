@@ -342,7 +342,12 @@ function CartesianGame({ onClose, darkMode }) {
     <DndProvider backend={HTML5Backend}>
       <div className={`p-6 max-w-4xl mx-auto ${darkMode ? 'bg-gray-800 text-white' : 'bg-white'} rounded-lg shadow-lg transition-colors`}>
         
-        <h1 className="text-2xl font-bold mb-4 text-center">Produto Cartesiano: Capture a Bolinha!</h1>
+          <h1 
+          className="text-2xl font-bold mb-4 text-center"
+          style={{ fontFamily: "'Dancing Script', cursive" }}
+        >
+          Produto Cartesiano: Capture a Bolinha!
+          </h1>
         
         <div className="mb-6">
           <div className="flex justify-between items-center mb-4">

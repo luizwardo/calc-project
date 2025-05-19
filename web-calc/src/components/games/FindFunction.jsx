@@ -283,8 +283,13 @@ function FunctionGame({ onClose, darkMode }) {
         </button>
       )}
 
-      <h1 className="text-2xl font-bold mb-4 text-center">Descubra a Função</h1>
-      
+        <h1 
+          className="text-2xl font-bold mb-4 text-center"
+          style={{ fontFamily: "'Dancing Script', cursive" }}
+        >
+          Descubra a Função
+        </h1>
+
       <div className="flex items-center justify-between mb-4">
         <div>
           <span className="font-bold mr-2">Modo:</span>
