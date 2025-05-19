@@ -164,7 +164,10 @@ function App() {
                 className="text-3xl md:text-5xl font-bold text-center mb-8 text-amber-900 dark:text-amber-100 transition-colors"
                 style={{ fontFamily: "'Dancing Script', cursive" }}
               >
-                Explorando Matemática Interativa
+                O site está em construção! pode apresentar bugs.
+                <br />
+                <br />
+                The website is under construction! it may have bugs.
               </h1>
               
               <h2 
