@@ -229,7 +229,7 @@ function App() {
                         Descubra a Função
                       </h3>
                       <p className="text-sm text-gray-700 dark:text-gray-300 transition-colors">
-                        Deduza a função a partir de seu gráfico.
+                        Deduza a função a partir de seu gráfico. So pra testar o linux
                       </p>
                     </div>
                   </div>
@@ -432,7 +432,7 @@ function App() {
             className="text-xl md:text-2xl mt-6 text-gray-700 dark:text-gray-300 transition-colors"
             style={{ fontFamily: "'Dancing Script', cursive" }}
           >
-            Equipe de desenvolvimento: [Seus nomes aqui]
+            Equipe de desenvolvimento: Luiz Eduardo Varela
           </p>
         </div>
       </section>
