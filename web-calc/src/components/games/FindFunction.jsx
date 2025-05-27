@@ -224,43 +224,51 @@ function FunctionGame({ onClose, darkMode }) {
     const { a, b, c } = userCoefficients;
     
     switch (functionType) {
-      case 'linear':
-        return {
-          func: (x) => a * x + b,
-          x: generatePoints((x) => a * x + b, -10, 10, 100).x,
-          y: generatePoints((x) => a * x + b, -10, 10, 100).y,
-          equation: `f(x) = ${a}x ${b >= 0 ? '+ ' + b : '- ' + Math.abs(b)}`
-        };
-      case 'quadratic':
-        return {
-          func: (x) => a * x * x + b * x + c,
-          x: generatePoints((x) => a * x * x + b * x + c, -10, 10, 100).x,
-          y: generatePoints((x) => a * x * x + b * x + c, -10, 10, 100).y,
-          equation: `f(x) = ${a}x² ${b >= 0 ? '+ ' + b : '- ' + Math.abs(b)}x ${c >= 0 ? '+ ' + c : '- ' + Math.abs(c)}`
-        };
-      case 'sine':
-        return {
-          func: (x) => a * Math.sin(b * x + c),
-          x: generatePoints((x) => a * Math.sin(b * x + c), -10, 10, 100).x,
-          y: generatePoints((x) => a * Math.sin(b * x + c), -10, 10, 100).y,
-          equation: `f(x) = ${a}sin(${b}x ${c > 0 ? '+ ' + c : c < 0 ? '- ' + Math.abs(c) : ''})`
-        };
-      case 'exponential':
-        return {
-          func: (x) => a * Math.exp(b * x),
-          x: generatePoints((x) => a * Math.exp(b * x), -10, 10, 100).x,
-          y: generatePoints((x) => a * Math.exp(b * x), -10, 10, 100).y,
-          equation: `f(x) = ${a}e^(${b}x)`
-        };
-      default:
-        return {
-          func: (x) => 0,
-          x: [-10, 10],
-          y: [0, 0],
-          equation: "f(x) = 0"
-        };
+    case 'linear': {
+      const points = generatePoints((x) => a * x + b, -10, 10, 100);
+      return {
+        func: (x) => a * x + b,
+        x: points.x,
+        y: points.y,
+        equation: `f(x) = ${a}x ${b >= 0 ? '+ ' + b : '- ' + Math.abs(b)}`
+      };
     }
-  };
+    case 'quadratic': {
+      const points = generatePoints((x) => a * x * x + b * x + c, -10, 10, 100);
+      return {
+        func: (x) => a * x * x + b * x + c,
+        x: points.x,
+        y: points.y,
+        equation: `f(x) = ${a}x² ${b >= 0 ? '+ ' + b : '- ' + Math.abs(b)}x ${c >= 0 ? '+ ' + c : '- ' + Math.abs(c)}`
+      };
+    }
+      case 'sine': {
+      const points = generatePoints((x) => a * Math.sin(b * x + c), -10, 10, 100);
+      return {
+        func: (x) => a * Math.sin(b * x + c),
+        x: points.x,
+        y: points.y,
+        equation: `f(x) = ${a}sin(${b}x ${c > 0 ? '+ ' + c : c < 0 ? '- ' + Math.abs(c) : ''})`
+      };
+    }
+      case 'exponential': {
+      const points = generatePoints((x) => a * Math.exp(b * x), -10, 10, 100);
+      return {
+        func: (x) => a * Math.exp(b * x),
+        x: points.x,
+        y: points.y,
+        equation: `f(x) = ${a}e^(${b}x)`
+      };
+    }
+    default:
+      return {
+        func: (x) => 0,
+        x: [-10, 10],
+        y: [0, 0],
+        equation: "f(x) = 0"
+      };
+  }
+};
 
   return (
     <div className={`p-6 max-w-4xl mx-auto ${darkMode ? 'bg-gray-800 text-white' : 'bg-white'} rounded-lg shadow-lg transition-colors relative`}>
@@ -310,67 +318,80 @@ function FunctionGame({ onClose, darkMode }) {
 
       {currentFunction && (
         <div className="mb-6">
-          <div className={`w-full h-[300px] border-2 ${darkMode ? 'border-green-600 bg-gray-700' : 'border-green-300 bg-gray-50'} rounded-lg shadow-md mb-6 transition-colors overflow-hidden`}>
+          <div className={`w-full h-[300px] border-2 ${darkMode ? 'border-gray-600 bg-gray-700' : 'border-gray-300 bg-gray-50'} rounded-lg shadow-md mb-6 transition-colors overflow-hidden`}>
             <Plot
-              data={[
-                gameMode === 'quiz' ? {
-                  // No modo quiz, mostra apenas a função correta
-                  x: generatePoints(currentFunction.func, -10, 10, 100).x,
-                  y: generatePoints(currentFunction.func, -10, 10, 100).y,
-                  type: 'scatter',
-                  mode: 'lines',
-                  line: { color: darkMode ? '#3b82f6' : '#1d4ed8', width: 2 }
-                } : {
-                  // No modo construção, mostra a função que o usuário está construindo
-                  x: getUserFunction().x,
-                  y: getUserFunction().y,
-                  type: 'scatter',
-                  mode: 'lines',
-                  line: { color: darkMode ? '#3b82f6' : '#1d4ed8', width: 2 }
-                },
-                // Para comparação no modo de construção, mostra a função alvo em pontilhado
-                gameMode === 'construct' ? {
-                  x: generatePoints(currentFunction.func, -10, 10, 100).x,
-                  y: generatePoints(currentFunction.func, -10, 10, 100).y,
-                  type: 'scatter',
-                  mode: 'lines',
-                  line: { color: darkMode ? '#ef4444' : '#dc2626', width: 2, dash: 'dash' },
-                  visible: isComplete ? true : 'legendonly',
-                  name: 'Função alvo'
-                } : {}
-              ]}
-              layout={{
-                autosize: true,
-                margin: { l: 40, r: 40, b: 40, t: 40 },
-                paper_bgcolor: darkMode ? '#374151' : '#f9fafb',
-                plot_bgcolor: darkMode ? '#374151' : '#f9fafb',
-                font: {
-                  color: darkMode ? '#f9fafb' : '#111827'
-                },
-                xaxis: { 
-                  title: 'x',
-                  range: [-10, 10],
-                  zeroline: true,
-                  gridcolor: darkMode ? '#4b5563' : '#e5e5e5'
-                },
-                yaxis: { 
-                  title: 'y',
-                  range: [-10, 10],
-                  zeroline: true,
-                  gridcolor: darkMode ? '#4b5563' : '#e5e5e5'
-                },
-                showlegend: gameMode === 'construct' && isComplete
-              }}
-              config={{ 
-                displayModeBar: false,
-                responsive: true
-              }}
-              style={{ 
-                width: '100%', 
-                height: '100%'
-              }}
-            />
-          </div>
+        data={(() => {
+          // Generate points once and reuse
+          const currentFunctionPoints = generatePoints(currentFunction.func, -10, 10, 100);
+          const userFunctionData = getUserFunction();
+          
+          const plotData = [];
+          
+          if (gameMode === 'quiz') {
+            // No modo quiz, mostra apenas a função correta
+            plotData.push({
+              x: currentFunctionPoints.x,
+              y: currentFunctionPoints.y,
+              type: 'scatter',
+              mode: 'lines',
+              line: { color: darkMode ? '#3b82f6' : '#1d4ed8', width: 2 }
+            });
+          } else {
+            // No modo construção, mostra a função que o usuário está construindo
+            plotData.push({
+              x: userFunctionData.x,
+              y: userFunctionData.y,
+              type: 'scatter',
+              mode: 'lines',
+              line: { color: darkMode ? '#3b82f6' : '#1d4ed8', width: 2 }
+            });
+            
+            // Para comparação no modo de construção, mostra a função alvo em pontilhado
+            plotData.push({
+              x: currentFunctionPoints.x,
+              y: currentFunctionPoints.y,
+              type: 'scatter',
+              mode: 'lines',
+              line: { color: darkMode ? '#ef4444' : '#dc2626', width: 2, dash: 'dash' },
+              visible: isComplete ? true : 'legendonly',
+              name: 'Função alvo'
+            });
+          }
+          
+          return plotData;
+        })()}
+        layout={{
+          autosize: true,
+          margin: { l: 40, r: 40, b: 40, t: 40 },
+          paper_bgcolor: darkMode ? '#374151' : '#f9fafb',
+          plot_bgcolor: darkMode ? '#374151' : '#f9fafb',
+          font: {
+            color: darkMode ? '#f9fafb' : '#111827'
+          },
+          xaxis: { 
+            title: 'x',
+            range: [-10, 10],
+            zeroline: true,
+            gridcolor: darkMode ? '#4b5563' : '#e5e5e5'
+          },
+          yaxis: { 
+            title: 'y',
+            range: [-10, 10],
+            zeroline: true,
+            gridcolor: darkMode ? '#4b5563' : '#e5e5e5'
+          },
+          showlegend: gameMode === 'construct' && isComplete
+        }}
+        config={{ 
+          displayModeBar: false,
+          responsive: true
+        }}
+        style={{ 
+          width: '100%', 
+          height: '100%'
+        }}
+      />
+    </div>
 
           {gameMode === 'quiz' ? (
             // MODO QUIZ: Mostra opções de equações
@@ -508,7 +529,7 @@ function FunctionGame({ onClose, darkMode }) {
         
         <div className="flex flex-row gap-3 w-full sm:w-auto">
           <button
-            onClick={() => generateLevel(level)}
+            onClick={() => generateNewProblem()}
             className={`
               px-4 py-2 rounded border transition-colors
               bg-transparent flex-1 sm:flex-initial text-sm sm:text-base
@@ -522,7 +543,7 @@ function FunctionGame({ onClose, darkMode }) {
           </button>
           
           <button
-            onClick={checkAnswer}
+            onClick={gameMode === 'quiz' ? checkAnswer : checkConstruction}
             className={`
               px-4 py-2 rounded border transition-colors
               bg-transparent flex-1 sm:flex-initial text-sm sm:text-base
@@ -532,7 +553,7 @@ function FunctionGame({ onClose, darkMode }) {
               }
             `}
           >
-            Verificar Decomposição
+            {gameMode === 'quiz' ? 'Verificar Resposta' : 'Verificar Construção'}
           </button>
         </div>
       </div>

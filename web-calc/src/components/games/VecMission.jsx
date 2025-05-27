@@ -14,7 +14,7 @@ import {
 
 function VectorGame({ onClose, darkMode }) {
   // Estados para o jogo
-  const [level, setLevel] = useState(1);
+  const [level,] = useState(1);
   const [feedback, setFeedback] = useState('');
   const [alertOpen, setAlertOpen] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
@@ -128,17 +128,7 @@ function VectorGame({ onClose, darkMode }) {
       hoverinfo: 'none',
       showlegend: false
     });
-    
-    // Mostrar vetor a ser decomposto
-    plotData.push({
-      x: [0, vectorToDecompose.x],
-      y: [0, vectorToDecompose.y],
-      mode: 'lines+markers',
-      line: { color: darkMode ? '#d8b4fe' : 'purple', width: 3 },
-      marker: { size: 8, symbol: 'circle' },
-      name: `Vetor (${vectorToDecompose.x}, ${vectorToDecompose.y})`,
-      hoverinfo: 'name'
-    });
+
     
     // Mostrar componentes do usuário
     plotData.push({
@@ -177,15 +167,10 @@ function VectorGame({ onClose, darkMode }) {
   const handleAlertClose = () => {
     setAlertOpen(false);
     if (isComplete) {
-      generateNewProblem();
       setIsComplete(false);
     }
   };
 
-  // Lidar com o próximo nível
-  const handleNextLevel = () => {
-    setLevel(level + 1);
-  };
 
   return (
     <div className={`p-6 max-w-4xl mx-auto ${darkMode ? 'bg-gray-800 text-white' : 'bg-white'} rounded-lg shadow-lg transition-colors relative`}>
@@ -258,11 +243,7 @@ function VectorGame({ onClose, darkMode }) {
           <p><strong>Módulo:</strong> {round2Decimals(calculateMagnitude(vectorToDecompose))}</p>
           <p><strong>Ângulo:</strong> {round2Decimals(calculateAngle(vectorToDecompose))}°</p>
           
-          <div className={`mt-3 pt-2 border-t ${darkMode ? 'border-gray-600' : 'border-gray-300'} transition-colors`}>
-            <p><strong>Seu vetor atual:</strong> ({round2Decimals(userComponents.x)}, {round2Decimals(userComponents.y)})</p>
-            <p><strong>Seu módulo:</strong> {round2Decimals(calculateMagnitude(userComponents))}</p>
-            <p><strong>Seu ângulo:</strong> {round2Decimals(calculateAngle(userComponents))}°</p>
-          </div>
+
         </div>
         
         <div className="space-y-4">

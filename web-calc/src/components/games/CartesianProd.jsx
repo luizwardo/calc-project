@@ -13,7 +13,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-function CartesianGame({ onClose, darkMode }) {
+function CartesianGame({ darkMode }) {
   // Estados originais
   const [setA, setSetA] = useState([1, 2, 3]);
   const [setB, setSetB] = useState(['A', 'B', 'C']);
@@ -108,21 +108,25 @@ function CartesianGame({ onClose, darkMode }) {
 
   // Função modificada para mover a bolinha com efeito de arrasto
   const moveToRandomPosition = () => {
-    // Pegar a posição atual e a nova posição aleatória
-    const startPosition = currentBallPosition || getRandomPosition();
-    if (!startPosition) return;
-    
-    const endPosition = getRandomPosition();
-    if (!endPosition || 
-        (startPosition.plotPosition[0] === endPosition.plotPosition[0] && 
-         startPosition.plotPosition[1] === endPosition.plotPosition[1])) {
-      // Se a nova posição for a mesma, encontre outra
-      moveToRandomPosition();
-      return;
-    }
+  const newPosition = getRandomPosition();
+  if (!newPosition) return;
+  
+  // If there's no current position (first time), set it directly
+  if (!currentBallPosition) {
+    setCurrentBallPosition(newPosition);
+    updatePlotData(newPosition);
+    return;
+  }
+  
+  // If the new position is the same as current, find another
+  if (currentBallPosition.plotPosition[0] === newPosition.plotPosition[0] && 
+      currentBallPosition.plotPosition[1] === newPosition.plotPosition[1]) {
+    moveToRandomPosition();
+    return;
+  }
     
     // Iniciar a animação entre as duas posições
-    animateBallMovement(startPosition, endPosition);
+    animateBallMovement(currentBallPosition, newPosition);
   };
 
   // Nova função para animar o movimento da bolinha
@@ -231,27 +235,32 @@ function CartesianGame({ onClose, darkMode }) {
 
   // Iniciar o jogo
   const startGame = () => {
-    setGameStarted(true);
-    setScore(0);
-    setFeedback('Jogo iniciado! Identifique rapidamente as coordenadas da bolinha.');
-    setUserPairs([]);
-    setPositionHistory([]); // Limpar o histórico de posições
-    
-    // Mover a bolinha para uma posição inicial
+  setGameStarted(true);
+  setScore(0);
+  setFeedback('Jogo iniciado! Identifique rapidamente as coordenadas da bolinha.');
+  setUserPairs([]);
+  setPositionHistory([]);
+  
+  // Get initial position and immediately show the ball
+  const initialPosition = getRandomPosition();
+  if (initialPosition) {
+    setCurrentBallPosition(initialPosition);
+    updatePlotData(initialPosition);
+  }
+  
+  setTimeLeft(5);
+  
+  // Set up timer to move ball every 5 seconds
+  timerRef.current = setInterval(() => {
     moveToRandomPosition();
     setTimeLeft(5);
-    
-    // Configurar o temporizador para mover a bolinha a cada 5 segundos
-    timerRef.current = setInterval(() => {
-      moveToRandomPosition();
-      setTimeLeft(5);
-    }, 5000);
-    
-    // Configurar o intervalo para atualizar o contador regressivo
-    intervalRef.current = setInterval(() => {
-      setTimeLeft(prev => Math.max(prev - 1, 0));
-    }, 1000);
-  };
+  }, 5000);
+  
+  // Set up countdown interval
+  intervalRef.current = setInterval(() => {
+    setTimeLeft(prev => Math.max(prev - 1, 0));
+  }, 1000);
+};
 
   // Parar o jogo
   const stopGame = () => {
@@ -339,11 +348,7 @@ function CartesianGame({ onClose, darkMode }) {
   };
 
   const handleAlertClose = () => {
-    setAlertOpen(false);
-    if (isComplete) {
-      generateNewProblem();
-      setIsComplete(false);
-    }
+    setAlertOpen(false); 
   };
 
   return (
@@ -371,9 +376,19 @@ function CartesianGame({ onClose, darkMode }) {
           </div>
           
           {/* Plano Cartesiano */}
-          <div className={`w-full h-[300px] border-2 ${darkMode ? 'border-blue-600 bg-gray-700' : 'border-blue-300 bg-gray-50'} rounded-lg shadow-md mb-6 transition-colors overflow-hidden relative`}>
+          <div className={`w-full h-[300px] border-2 ${darkMode ? 'border-gray-600 bg-gray-700' : 'border-gray-300 bg-gray-50'} rounded-lg shadow-md mb-6 transition-colors overflow-hidden relative`}>
+            
             <Plot
-              data={plotData}
+              data={plotData.length > 0 ? plotData : [
+                // Default placeholder data to ensure grid rendering
+                {
+                  x: [],
+                  y: [],
+                  mode: 'markers',
+                  type: 'scatter',
+                  hoverinfo: 'none',
+                }
+              ]}
               layout={{
                 autosize: true,
                 margin: { l: 50, r: 50, b: 50, t: 50 },
@@ -389,8 +404,11 @@ function CartesianGame({ onClose, darkMode }) {
                   tickvals: setA,
                   ticktext: setA.map(String),
                   zeroline: true,
-                  gridcolor: darkMode ? '#4b5563' : '#d0d0d0',
-                  gridwidth: 0.3
+                  showgrid: true,
+                  gridcolor: darkMode ? 'rgba(75, 85, 99, 0.6)' : 'rgba(208, 208, 208, 0.8)',
+                  gridwidth: 1,
+                  zerolinecolor: darkMode ? 'rgba(156, 163, 175, 0.8)' : 'rgba(156, 163, 175, 0.8)',
+                  zerolinewidth: 1.5
                 },
                 yaxis: {
                   title: 'Conjunto B',
@@ -399,11 +417,45 @@ function CartesianGame({ onClose, darkMode }) {
                   tickvals: Array.from({length: setB.length}, (_, i) => i + 1),
                   ticktext: setB.map(String),
                   zeroline: true,
-                  gridcolor: darkMode ? '#4b5563' : '#d0d0d0',
-                  gridwidth: 0.3
+                  showgrid: true,
+                  gridcolor: darkMode ? 'rgba(75, 85, 99, 0.6)' : 'rgba(208, 208, 208, 0.8)',
+                  gridwidth: 1,
+                  zerolinecolor: darkMode ? 'rgba(156, 163, 175, 0.8)' : 'rgba(156, 163, 175, 0.8)',
+                  zerolinewidth: 1.5
                 },
                 showlegend: false,
-                hovermode: 'closest'
+                hovermode: 'closest',
+                shapes: [
+                  // Add explicit grid lines as shapes in case the built-in grid fails
+                  ...setA.flatMap(a => [
+                    {
+                      type: 'line',
+                      x0: a,
+                      x1: a,
+                      y0: 0,
+                      y1: setB.length + 1,
+                      line: {
+                        color: darkMode ? 'rgba(75, 85, 99, 0.6)' : 'rgba(208, 208, 208, 0.8)',
+                        width: 1,
+                        dash: 'solid',
+                      }
+                    }
+                  ]),
+                  ...Array.from({length: setB.length}, (_, i) => i + 1).flatMap(y => [
+                    {
+                      type: 'line',
+                      x0: Math.min(...setA) - 1,
+                      x1: Math.max(...setA) + 1,
+                      y0: y,
+                      y1: y,
+                      line: {
+                        color: darkMode ? 'rgba(75, 85, 99, 0.6)' : 'rgba(208, 208, 208, 0.8)',
+                        width: 1,
+                        dash: 'solid',
+                      }
+                    }
+                  ])
+                ]
               }}
               config={{ 
                 displayModeBar: false, 
