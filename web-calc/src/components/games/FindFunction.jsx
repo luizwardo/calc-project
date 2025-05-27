@@ -489,12 +489,14 @@ function FunctionGame({ onClose, darkMode }) {
         </div>
       )}
 
-      <div className="flex justify-between items-center mb-4">
+      
+      {/* Fix the button layout for better responsive behavior */}
+      <div className="flex flex-col sm:flex-row justify-between items-center mt-6 mb-4 gap-4">
         <button
           onClick={onClose}
           className={`
             px-4 py-2 rounded border transition-colors
-            bg-transparent 
+            bg-transparent w-full sm:w-auto
             ${darkMode 
               ? 'border-gray-600 text-gray-300 hover:bg-gray-700/50 hover:border-gray-500' 
               : 'border-gray-400 text-gray-600 hover:bg-gray-100 hover:border-gray-500'
@@ -504,12 +506,12 @@ function FunctionGame({ onClose, darkMode }) {
           Voltar
         </button>
         
-        <div className="space-x-3">
+        <div className="flex flex-row gap-3 w-full sm:w-auto">
           <button
-            onClick={generateNewProblem}
+            onClick={() => generateLevel(level)}
             className={`
               px-4 py-2 rounded border transition-colors
-              bg-transparent 
+              bg-transparent flex-1 sm:flex-initial text-sm sm:text-base
               ${darkMode 
                 ? 'border-yellow-700 text-yellow-400 hover:bg-yellow-900/30 hover:border-yellow-600' 
                 : 'border-yellow-500 text-yellow-600 hover:bg-yellow-50 hover:border-yellow-600'
@@ -520,21 +522,21 @@ function FunctionGame({ onClose, darkMode }) {
           </button>
           
           <button
-            onClick={gameMode === 'quiz' ? checkAnswer : checkConstruction}
+            onClick={checkAnswer}
             className={`
               px-4 py-2 rounded border transition-colors
-              bg-transparent
+              bg-transparent flex-1 sm:flex-initial text-sm sm:text-base
               ${darkMode 
-                ? 'border-blue-500 text-blue-300 hover:bg-blue-900/30 hover:border-blue-400' 
-                : 'border-blue-600 text-blue-700 hover:bg-blue-50 hover:border-blue-700'
+                ? 'border-purple-500 text-purple-300 hover:bg-purple-900/30 hover:border-purple-400' 
+                : 'border-purple-600 text-purple-700 hover:bg-purple-50 hover:border-purple-700'
               }
             `}
           >
-            {gameMode === 'quiz' ? 'Verificar Resposta' : 'Verificar Construção'}
+            Verificar Decomposição
           </button>
         </div>
       </div>
-      
+            
       {feedback && (
         <div className={`p-3 rounded text-center mb-4 transition-colors ${
           feedback.includes('Correto') || feedback.includes('bom') 
@@ -560,32 +562,31 @@ function FunctionGame({ onClose, darkMode }) {
           <AlertDialogFooter>
             <AlertDialogAction 
               onClick={handleAlertClose}
-              className={`
-                bg-transparent border 
-                ${darkMode 
-                  ? 'border-blue-600 text-blue-400 hover:bg-blue-900/30' 
-                  : 'border-blue-500 text-blue-600 hover:bg-blue-50'
-                }
-              `}
-            >
-              Próximo desafio
-            </AlertDialogAction>
-            
-            {onClose && (
-              <button
-                onClick={onClose}
                 className={`
-                  ml-2 px-4 py-2 rounded border transition-colors
-                  bg-transparent 
+                  px-4 py-2 rounded border transition-colors
+                  bg-transparent
                   ${darkMode 
                     ? 'border-gray-600 text-gray-300 hover:bg-gray-700/50 hover:border-gray-500' 
                     : 'border-gray-400 text-gray-600 hover:bg-gray-100 hover:border-gray-500'
                   }
                 `}
-              >
-                Sair
-              </button>
-            )}
+            >
+              Próximo desafio
+            </AlertDialogAction>
+            
+            <AlertDialogAction 
+              onClick={handleAlertClose}
+                className={`
+                  px-4 py-2 rounded border transition-colors
+                  bg-transparent
+                  ${darkMode 
+                    ? 'border-gray-600 text-gray-300 hover:bg-gray-700/50 hover:border-gray-500' 
+                    : 'border-gray-400 text-gray-600 hover:bg-gray-100 hover:border-gray-500'
+                  }
+                `}
+            >
+              Sair
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

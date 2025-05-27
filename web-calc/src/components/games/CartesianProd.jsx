@@ -338,6 +338,14 @@ function CartesianGame({ onClose, darkMode }) {
     setScore(0);
   };
 
+  const handleAlertClose = () => {
+    setAlertOpen(false);
+    if (isComplete) {
+      generateNewProblem();
+      setIsComplete(false);
+    }
+  };
+
   return (
     <DndProvider backend={HTML5Backend}>
       <div className={`p-6 max-w-4xl mx-auto ${darkMode ? 'bg-gray-800 text-white' : 'bg-white'} rounded-lg shadow-lg transition-colors`}>
@@ -595,38 +603,32 @@ function CartesianGame({ onClose, darkMode }) {
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogAction 
-                onClick={() => {
-                  setAlertOpen(false);
-                  if (alertType === 'gameOver') {
-                    generateNewSets();
-                  }
-                }}
-                className={`
-                  bg-transparent border 
-                  ${darkMode 
-                    ? 'border-blue-600 text-blue-400 hover:bg-blue-900/30' 
-                    : 'border-blue-500 text-blue-600 hover:bg-blue-50'
-                  }
-                `}
-              >
-                {alertType === 'gameOver' ? 'Novo Jogo' : 'Continuar'}
-              </AlertDialogAction>
-              
-              {onClose && alertType === 'gameOver' && (
-                <button
-                  onClick={onClose}
+                onClick={handleAlertClose}
                   className={`
-                    ml-2 px-4 py-2 rounded border transition-colors
-                    bg-transparent 
+                    px-4 py-2 rounded border transition-colors
+                    bg-transparent
                     ${darkMode 
                       ? 'border-gray-600 text-gray-300 hover:bg-gray-700/50 hover:border-gray-500' 
                       : 'border-gray-400 text-gray-600 hover:bg-gray-100 hover:border-gray-500'
                     }
                   `}
-                >
-                  Sair
-                </button>
-              )}
+              >
+                Próximo desafio
+              </AlertDialogAction>
+              
+              <AlertDialogAction 
+                onClick={handleAlertClose}
+                  className={`
+                    px-4 py-2 rounded border transition-colors
+                    bg-transparent
+                    ${darkMode 
+                      ? 'border-gray-600 text-gray-300 hover:bg-gray-700/50 hover:border-gray-500' 
+                      : 'border-gray-400 text-gray-600 hover:bg-gray-100 hover:border-gray-500'
+                    }
+                  `}
+              >
+                Sair
+              </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
