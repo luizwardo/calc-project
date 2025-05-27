@@ -264,25 +264,7 @@ function FunctionGame({ onClose, darkMode }) {
 
   return (
     <div className={`p-6 max-w-4xl mx-auto ${darkMode ? 'bg-gray-800 text-white' : 'bg-white'} rounded-lg shadow-lg transition-colors relative`}>
-      {/* Botão de fechar no canto superior direito */}
-      {onClose && (
-        <button
-          onClick={onClose}
-          className={`
-            absolute top-4 right-4 w-8 h-8 flex items-center justify-center
-            rounded-full transition-colors
-            bg-transparent border
-            ${darkMode 
-              ? 'border-gray-600 text-gray-300 hover:bg-gray-700/50 hover:border-gray-500' 
-              : 'border-gray-400 text-gray-600 hover:bg-gray-100 hover:border-gray-500'
-            }
-          `}
-          aria-label="Fechar"
-        >
-          <span className={`text-lg font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>×</span>
-        </button>
-      )}
-
+      
         <h1 
           className="text-2xl font-bold mb-4 text-center"
           style={{ fontFamily: "'Dancing Script', cursive" }}
