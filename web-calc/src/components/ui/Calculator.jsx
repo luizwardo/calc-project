@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-function Calculator({ onClose, darkMode, isMobile = false }) {
+function Calculator({ onClose, isMobile = false }) {
   const [display, setDisplay] = useState('0');
   const [operation, setOperation] = useState(null);
   const [prevValue, setPrevValue] = useState(null);

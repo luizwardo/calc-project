@@ -106,7 +106,7 @@ function VectorGame({ onClose, darkMode }) {
     
     // Configuração do plano cartesiano
     plotData.push({
-      x: [-10, 10],
+      x: [-20, 20],
       y: [0, 0],
       mode: 'lines',
       line: { color: axisColor, width: 1 },
@@ -116,20 +116,23 @@ function VectorGame({ onClose, darkMode }) {
     
     plotData.push({
       x: [0, 0],
-      y: [-10, 10],
+      y: [-20, 20],
       mode: 'lines',
       line: { color: axisColor, width: 1 },
       hoverinfo: 'none',
       showlegend: false
     });
-    
+
     plotData.push({
-      x: [0, 0],
-      y: [-10, 10],
-      mode: 'lines',
-      line: { color: axisColor, width: 1 },
-      hoverinfo: 'none',
-      showlegend: false
+    x: [vectorToDecompose.x],
+    y: [vectorToDecompose.y],
+    mode: 'markers',
+    marker: { 
+      size: 8,
+      color: darkMode ? '#dc2626' : '#ef4444',
+      line: { width: 1, color: darkMode ? '#fbbf24' : '#f59e0b' }
+    },
+    showlegend: false
     });
     
     
@@ -139,9 +142,9 @@ function VectorGame({ onClose, darkMode }) {
       y: [0, 0],
       mode: 'lines+markers',
       line: { color: darkMode ? '#fca5a5' : 'red', width: 2 },
-      marker: { size: 6, symbol: 'circle' },
       name: `Componente X: ${round2Decimals(userComponents.x)}`,
-      hoverinfo: 'name'
+      hoverinfo: 'name',
+      showlegend: false
     });
     
     plotData.push({
@@ -151,7 +154,8 @@ function VectorGame({ onClose, darkMode }) {
       line: { color: darkMode ? '#93c5fd' : 'blue', width: 2 },
       marker: { size: 6, symbol: 'circle' },
       name: `Componente Y: ${round2Decimals(userComponents.y)}`,
-      hoverinfo: 'name'
+      hoverinfo: 'name',
+      showlegend: false
     });
     
     // Mostrar vetor resultante da decomposição do usuário
@@ -159,9 +163,10 @@ function VectorGame({ onClose, darkMode }) {
       x: [0, userComponents.x],
       y: [0, userComponents.y],
       mode: 'lines',
-      line: { color: darkMode ? '#86efac' : 'green', width: 2, dash: 'dash' },
+      line: { color: darkMode ? '#86efac' : 'gray', width: 1, dash: 'dash' },
       name: `Vetor Resultante: (${round2Decimals(userComponents.x)}, ${round2Decimals(userComponents.y)})`,
-      hoverinfo: 'name'
+      hoverinfo: 'name',
+      showlegend: false
     });
     
     return plotData;
@@ -301,7 +306,7 @@ function VectorGame({ onClose, darkMode }) {
                   </Label>
                   <Slider
                     min={-15}
-                    max={15}f
+                    max={15}
                     step={1}
                     value={[userComponents.y]}
                     onValueChange={(value) => setUserComponents({...userComponents, y: value[0]})}
@@ -384,15 +389,15 @@ function VectorGame({ onClose, darkMode }) {
         <AlertDialogContent className={`${darkMode ? 'bg-gray-800 text-white border border-gray-700' : 'bg-white border border-gray-200'} rounded-xl shadow-2xl backdrop-blur-lg`}>
           <AlertDialogHeader>
             <AlertDialogTitle className={`text-xl font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
-              🎯 Parabéns!
+               Parabéns!
             </AlertDialogTitle>
             <AlertDialogDescription className={`text-base ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-              Você decompôs o vetor corretamente! Excelente trabalho!
+              Você decompôs o vetor corretamente!
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="flex gap-3">
             <AlertDialogAction 
-              onClick={handleAlertClose}
+              onClick={() => { handleAlertClose(); generateLevel(level); }}
               className={`
                 px-4 py-2 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105
                 ${darkMode 
@@ -401,7 +406,7 @@ function VectorGame({ onClose, darkMode }) {
                 }
               `}
             >
-              Próximo Desafio
+              Próximo
             </AlertDialogAction>
             
             <AlertDialogAction 
