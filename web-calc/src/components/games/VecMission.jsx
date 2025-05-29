@@ -11,6 +11,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Navigation, RotateCcw, Check, Target } from 'lucide-react';
 
 function VectorGame({ onClose, darkMode }) {
   // Estados para o jogo
@@ -171,200 +172,251 @@ function VectorGame({ onClose, darkMode }) {
     }
   };
 
-
   return (
-    <div className={`p-6 max-w-4xl mx-auto ${darkMode ? 'bg-gray-800 text-white' : 'bg-white'} rounded-lg shadow-lg transition-colors relative`}>
-     
-      <h1 
-        className="text-2xl font-bold mb-4 text-center"
-        style={{ fontFamily: "'Dancing Script', cursive" }}
-      >
-        Missão Vetorial
-      </h1>      
-
-      <div className="mb-4 flex justify-between items-center">
-        <div>
-          <span className="font-bold mr-2">Nível:</span>
-          <span className="text-lg">{level}</span>
-        </div>
-      </div>
-      
-      {/* Plano Cartesiano */}
-      <div className={`w-full h-[350px] border-2  border-gray-300 ${darkMode ? 'border-gray-600 bg-gray-700' : 'border-blue-300 bg-gray-50'} rounded-lg shadow-md mb-6 transition-colors overflow-hidden`}>
-        <Plot
-          ref={plotRef}
-          data={getPlotData()}
-          layout={{
-            autosize: true,
-            margin: { l: 40, r: 40, b: 40, t: 40 },
-            paper_bgcolor: darkMode ? '#374151' : '#f9fafb',
-            plot_bgcolor: darkMode ? '#374151' : '#f9fafb',
-            font: {
-              color: darkMode ? '#f9fafb' : '#111827'
-            },
-            xaxis: {
-              title: 'x',
-              range: [-10, 10],
-              zeroline: true,
-              gridcolor: darkMode ? '#4b5563' : '#d0d0d0',
-              gridwidth: 1
-            },
-            yaxis: {
-              title: 'y',
-              range: [-10, 10],
-              zeroline: true,
-              gridcolor: darkMode ? '#4b5563' : '#d0d0d0',
-              gridwidth: 1,
-              scaleanchor: 'x',
-              scaleratio: 1
-            },
-            showlegend: true,
-            legend: {
-              x: 0,
-              y: 1,
-              orientation: 'h'
-            }
-          }}
-          config={{
-            displayModeBar: false,
-            responsive: true,
-            staticPlot: true
-          }}
-          style={{ width: '100%', height: '100%' }}
-          useResizeHandler={true}
-        />
-      </div>
-      
-      <div className="space-y-4">
-        <h2 className="text-lg font-medium">Decomponha o vetor em suas componentes x e y</h2>
+    <div className={`min-h-screen p-2 md:p-4 ${darkMode ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' : 'bg-gradient-to-br from-blue-50 via-white to-purple-50'} transition-all duration-300`}>
+      <div className={`max-w-7xl mx-auto ${darkMode ? 'bg-gray-800/90 border border-gray-700/50' : 'bg-white/90 border border-gray-200/50'} rounded-xl shadow-2xl backdrop-blur-lg transition-all duration-300`}>
         
-        <div className={`p-3 ${darkMode ? 'bg-gray-700' : 'bg-gray-100'} rounded mb-4 transition-colors`}>
-          <p><strong>Vetor a decompor:</strong> ({round2Decimals(vectorToDecompose.x)}, {round2Decimals(vectorToDecompose.y)})</p>
-          <p><strong>Módulo:</strong> {round2Decimals(calculateMagnitude(vectorToDecompose))}</p>
-          <p><strong>Ângulo:</strong> {round2Decimals(calculateAngle(vectorToDecompose))}°</p>
-          
-
-        </div>
-        
-        <div className="space-y-4">
-          <div>
-            <Label className="mb-1 block">Componente X: {round2Decimals(userComponents.x)}</Label>
-            <Slider
-              min={-10}
-              max={10}
-              step={0.1}
-              value={[userComponents.x]}
-              onValueChange={(value) => setUserComponents({...userComponents, x: value[0]})}
-            />
+        {/* Header Section */}
+        <div className={`p-4 md:p-6 border-b ${darkMode ? 'border-gray-700/50' : 'border-gray-200/50'}`}>
+          <div className="flex items-center justify-center mb-4">
+            <div className={`p-2 rounded-full ${darkMode ? 'bg-orange-500/20' : 'bg-orange-100'} mr-3`}>
+              <Navigation className={`h-6 w-6 ${darkMode ? 'text-orange-400' : 'text-orange-600'}`} />
+            </div>
+            <h1 
+              className={`text-2xl md:text-3xl font-bold text-center ${darkMode ? 'text-white' : 'text-gray-800'}`}
+              style={{ fontFamily: "'Dancing Script', cursive" }}
+            >
+              Missão Vetorial
+            </h1>
           </div>
           
-          <div>
-            <Label className="mb-1 block">Componente Y: {round2Decimals(userComponents.y)}</Label>
-            <Slider
-              min={-10}
-              max={10}
-              step={0.1}
-              value={[userComponents.y]}
-              onValueChange={(value) => setUserComponents({...userComponents, y: value[0]})}
-            />
+          {/* Vector Info Card */}
+          <div className={`p-4 rounded-lg ${darkMode ? 'bg-gradient-to-br from-orange-900/30 to-orange-800/20 border border-orange-700/30' : 'bg-gradient-to-br from-orange-50 to-orange-100 border border-orange-200'} backdrop-blur-sm`}>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="text-center">
+                <p className={`text-xs font-medium ${darkMode ? 'text-orange-300' : 'text-orange-600'} mb-1`}>Vetor Alvo</p>
+                <p className={`text-sm font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+                  ({round2Decimals(vectorToDecompose.x)}, {round2Decimals(vectorToDecompose.y)})
+                </p>
+              </div>
+              <div className="text-center">
+                <p className={`text-xs font-medium ${darkMode ? 'text-orange-300' : 'text-orange-600'} mb-1`}>Módulo</p>
+                <p className={`text-sm font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+                  {round2Decimals(calculateMagnitude(vectorToDecompose))}
+                </p>
+              </div>
+              <div className="text-center">
+                <p className={`text-xs font-medium ${darkMode ? 'text-orange-300' : 'text-orange-600'} mb-1`}>Ângulo</p>
+                <p className={`text-sm font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+                  {round2Decimals(calculateAngle(vectorToDecompose))}°
+                </p>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-      
-      
-      {/* Fix the button layout for better responsive behavior */}
-      <div className="flex flex-col sm:flex-row justify-between items-center mt-6 mb-4 gap-4">
-        <button
-          onClick={onClose}
-          className={`
-            px-4 py-2 rounded border transition-colors
-            bg-transparent w-full sm:w-auto
-            ${darkMode 
-              ? 'border-gray-600 text-gray-300 hover:bg-gray-700/50 hover:border-gray-500' 
-              : 'border-gray-400 text-gray-600 hover:bg-gray-100 hover:border-gray-500'
-            }
-          `}
-        >
-          Voltar
-        </button>
-        
-        <div className="flex flex-row gap-3 w-full sm:w-auto">
-          <button
-            onClick={() => generateLevel(level)}
-            className={`
-              px-4 py-2 rounded border transition-colors
-              bg-transparent flex-1 sm:flex-initial text-sm sm:text-base
-              ${darkMode 
-                ? 'border-yellow-700 text-yellow-400 hover:bg-yellow-900/30 hover:border-yellow-600' 
-                : 'border-yellow-500 text-yellow-600 hover:bg-yellow-50 hover:border-yellow-600'
-              }
-            `}
-          >
-            Novo Problema
-          </button>
-          
-          <button
-            onClick={checkAnswer}
-            className={`
-              px-4 py-2 rounded border transition-colors
-              bg-transparent flex-1 sm:flex-initial text-sm sm:text-base
-              ${darkMode 
-                ? 'border-purple-500 text-purple-300 hover:bg-purple-900/30 hover:border-purple-400' 
-                : 'border-purple-600 text-purple-700 hover:bg-purple-50 hover:border-purple-700'
-              }
-            `}
-          >
-            Verificar Decomposição
-          </button>
-        </div>
-      </div>
-      
-      
-      {feedback && (
-        <div className={`p-3 rounded text-center mb-4 ${
-          feedback.includes('Parabéns') 
-            ? (darkMode ? 'bg-green-900/50 text-green-300' : 'bg-green-100 text-green-800')
-            : feedback.includes('Quase')
-              ? (darkMode ? 'bg-yellow-900/50 text-yellow-300' : 'bg-yellow-100 text-yellow-800')
-              : (darkMode ? 'bg-blue-900/50 text-blue-300' : 'bg-blue-100 text-blue-800')
-        } transition-colors`}>
-          {feedback}
-        </div>
-      )}
 
+        {/* Game Content */}
+        <div className="p-4 md:p-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            
+            {/* Plano Cartesiano */}
+            <div className="lg:col-span-2">
+              <div className={`relative w-full h-[300px] md:h-[350px] ${darkMode ? 'bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-600/50' : 'bg-gradient-to-br from-gray-50 to-white border border-gray-200'} rounded-xl shadow-inner mb-4 overflow-hidden`}>
+                <Plot
+                  ref={plotRef}
+                  data={getPlotData()}
+                  layout={{
+                    autosize: true,
+                    margin: { l: 50, r: 50, b: 50, t: 50 },
+                    paper_bgcolor: 'transparent',
+                    plot_bgcolor: 'transparent',
+                    font: {
+                      color: darkMode ? '#f9fafb' : '#111827',
+                      size: 12,
+                      family: "'Inter', sans-serif"
+                    },
+                    xaxis: {
+                      title: { text: 'x', font: { size: 14 } },
+                      range: [-10, 10],
+                      zeroline: true,
+                      showgrid: true,
+                      gridcolor: darkMode ? 'rgba(75, 85, 99, 0.4)' : 'rgba(229, 231, 235, 0.8)',
+                      gridwidth: 1,
+                      zerolinecolor: darkMode ? 'rgba(156, 163, 175, 0.6)' : 'rgba(156, 163, 175, 0.8)',
+                      zerolinewidth: 2
+                    },
+                    yaxis: {
+                      title: { text: 'y', font: { size: 14 } },
+                      range: [-10, 10],
+                      zeroline: true,
+                      showgrid: true,
+                      gridcolor: darkMode ? 'rgba(75, 85, 99, 0.4)' : 'rgba(229, 231, 235, 0.8)',
+                      gridwidth: 1,
+                      zerolinecolor: darkMode ? 'rgba(156, 163, 175, 0.6)' : 'rgba(156, 163, 175, 0.8)',
+                      zerolinewidth: 2,
+                      scaleanchor: 'x',
+                      scaleratio: 1
+                    },
+                    showlegend: true,
+                    legend: {
+                      x: 0,
+                      y: 1,
+                      orientation: 'h',
+                      font: { size: 10 }
+                    }
+                  }}
+                  config={{
+                    displayModeBar: false,
+                    responsive: true,
+                    staticPlot: true
+                  }}
+                  style={{ 
+                    width: '100%', 
+                    height: '100%',
+                    borderRadius: '0.75rem'
+                  }}
+                  useResizeHandler={true}
+                />
+              </div>
+            </div>
+
+            {/* Painel Lateral de Controles */}
+            <div className="lg:col-span-1 space-y-4">
+              
+              {/* Sliders para Componentes */}
+              <div className="space-y-3">
+                <div className={`p-3 rounded-lg ${darkMode ? 'bg-red-900/20 border border-red-700/30' : 'bg-red-50 border border-red-200'}`}>
+                  <Label className={`mb-2 block text-sm font-semibold ${darkMode ? 'text-red-300' : 'text-red-700'}`}>
+                    Componente X: {round2Decimals(userComponents.x)}
+                  </Label>
+                  <Slider
+                    min={-10}
+                    max={10}
+                    step={0.1}
+                    value={[userComponents.x]}
+                    onValueChange={(value) => setUserComponents({...userComponents, x: value[0]})}
+                    className="mt-1"
+                  />
+                </div>
+                
+                <div className={`p-3 rounded-lg ${darkMode ? 'bg-blue-900/20 border border-blue-700/30' : 'bg-blue-50 border border-blue-200'}`}>
+                  <Label className={`mb-2 block text-sm font-semibold ${darkMode ? 'text-blue-300' : 'text-blue-700'}`}>
+                    Componente Y: {round2Decimals(userComponents.y)}
+                  </Label>
+                  <Slider
+                    min={-10}
+                    max={10}
+                    step={0.1}
+                    value={[userComponents.y]}
+                    onValueChange={(value) => setUserComponents({...userComponents, y: value[0]})}
+                    className="mt-1"
+                  />
+                </div>
+              </div>
+
+              {/* Vetor Resultante Display */}
+              <div className={`p-3 rounded-lg text-center ${darkMode ? 'bg-gray-800/50 border border-gray-600' : 'bg-gray-100 border border-gray-200'}`}>
+                <p className={`text-xs font-medium ${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-1`}>Vetor Resultante</p>
+                <p className={`text-sm font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+                  ({round2Decimals(userComponents.x)}, {round2Decimals(userComponents.y)})
+                </p>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="grid grid-cols-1 gap-2">
+                <button
+                  onClick={() => generateLevel(level)}
+                  className={`
+                    px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center justify-center space-x-2
+                    ${darkMode 
+                      ? 'bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 text-white shadow-lg shadow-orange-600/25' 
+                      : 'bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 text-white shadow-lg shadow-orange-600/25'
+                    }
+                  `}
+                >
+                  <RotateCcw className="h-4 w-4" />
+                  <span>Novo Problema</span>
+                </button>
+                
+                <button
+                  onClick={checkAnswer}
+                  className={`
+                    px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center justify-center space-x-2
+                    ${darkMode 
+                      ? 'bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white shadow-lg shadow-blue-600/25' 
+                      : 'bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white shadow-lg shadow-blue-600/25'
+                    }
+                  `}
+                >
+                  <Check className="h-4 w-4" />
+                  <span>Verificar</span>
+                </button>
+
+                <button
+                  onClick={onClose}
+                  className={`
+                    px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95
+                    ${darkMode 
+                      ? 'bg-gray-700 hover:bg-gray-600 text-gray-300 border border-gray-600' 
+                      : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300'
+                    }
+                  `}
+                >
+                  Voltar
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Feedback Section */}
+          {feedback && (
+            <div className={`mt-4 p-3 rounded-lg text-center text-sm font-medium backdrop-blur-sm transition-all duration-300 ${
+              feedback.includes('Parabéns') 
+                ? (darkMode ? 'bg-gradient-to-r from-green-900/50 to-green-800/30 text-green-200 border border-green-700/50' : 'bg-gradient-to-r from-green-100 to-green-200 text-green-800 border border-green-300')
+                : feedback.includes('Quase')
+                  ? (darkMode ? 'bg-gradient-to-r from-yellow-900/50 to-yellow-800/30 text-yellow-200 border border-yellow-700/50' : 'bg-gradient-to-r from-yellow-100 to-yellow-200 text-yellow-800 border border-yellow-300')
+                  : (darkMode ? 'bg-gradient-to-r from-blue-900/50 to-blue-800/30 text-blue-200 border border-blue-700/50' : 'bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 border border-blue-300')
+            } shadow-sm`}>
+              {feedback}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Enhanced Alert Dialog */}
       <AlertDialog open={alertOpen} onOpenChange={setAlertOpen}>
-        <AlertDialogContent className={darkMode ? 'bg-gray-800 text-white border border-gray-700' : ''}>
+        <AlertDialogContent className={`${darkMode ? 'bg-gray-800 text-white border border-gray-700' : 'bg-white border border-gray-200'} rounded-xl shadow-2xl backdrop-blur-lg`}>
           <AlertDialogHeader>
-            <AlertDialogTitle className={darkMode ? 'text-white' : ''}>Parabéns!</AlertDialogTitle>
-            <AlertDialogDescription className={darkMode ? 'text-gray-300' : ''}>
-              Você decompôs o vetor corretamente!
+            <AlertDialogTitle className={`text-xl font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+              🎯 Parabéns!
+            </AlertDialogTitle>
+            <AlertDialogDescription className={`text-base ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+              Você decompôs o vetor corretamente! Excelente trabalho!
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter>
+          <AlertDialogFooter className="flex gap-3">
             <AlertDialogAction 
               onClick={handleAlertClose}
-                className={`
-                  px-4 py-2 rounded border transition-colors
-                  bg-transparent
-                  ${darkMode 
-                    ? 'border-gray-600 text-gray-300 hover:bg-gray-700/50 hover:border-gray-500' 
-                    : 'border-gray-400 text-gray-600 hover:bg-gray-100 hover:border-gray-500'
-                  }
-                `}
+              className={`
+                px-4 py-2 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105
+                ${darkMode 
+                  ? 'bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white shadow-lg' 
+                  : 'bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white shadow-lg'
+                }
+              `}
             >
-              Próximo desafio
+              Próximo Desafio
             </AlertDialogAction>
             
             <AlertDialogAction 
               onClick={handleAlertClose}
-                className={`
-                  px-4 py-2 rounded border transition-colors
-                  bg-transparent
-                  ${darkMode 
-                    ? 'border-gray-600 text-gray-300 hover:bg-gray-700/50 hover:border-gray-500' 
-                    : 'border-gray-400 text-gray-600 hover:bg-gray-100 hover:border-gray-500'
-                  }
-                `}
+              className={`
+                px-4 py-2 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105
+                ${darkMode 
+                  ? 'bg-gray-700 hover:bg-gray-600 text-gray-300 border border-gray-600' 
+                  : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300'
+                }
+              `}
             >
               Sair
             </AlertDialogAction>

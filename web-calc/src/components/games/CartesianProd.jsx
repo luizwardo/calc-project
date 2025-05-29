@@ -3,6 +3,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import Plot from 'react-plotly.js';
 import { Progress } from "@/components/ui/progress"
+import { Play, Square, Check, RotateCcw, Trophy, Target } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -353,341 +354,375 @@ function CartesianGame({ darkMode }) {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className={`p-6 max-w-4xl mx-auto ${darkMode ? 'bg-gray-800 text-white' : 'bg-white'} rounded-lg shadow-lg transition-colors`}>
+    <div className={`min-h-screen p-2 md:p-4 ${darkMode ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' : 'bg-gradient-to-br from-blue-50 via-white to-purple-50'} transition-all duration-300`}>
+      <div className={`max-w-7xl mx-auto ${darkMode ? 'bg-gray-800/90 border border-gray-700/50' : 'bg-white/90 border border-gray-200/50'} rounded-xl shadow-2xl backdrop-blur-lg transition-all duration-300`}>
         
-          <h1 
-          className="text-2xl font-bold mb-4 text-center"
-          style={{ fontFamily: "'Dancing Script', cursive" }}
-        >
-          Produto Cartesiano: Capture a Bolinha!
-          </h1>
-        
-        <div className="mb-6">
-          <div className="flex justify-between items-center mb-4">
-            <div>
-              <p className="text-lg font-medium">Conjunto A = {`{${setA.join(', ')}}`}</p>
-              <p className="text-lg font-medium">Conjunto B = {`{${setB.join(', ')}}`}</p>
+        {/* Header Section - Compacto */}
+        <div className={`p-4 md:p-6 border-b ${darkMode ? 'border-gray-700/50' : 'border-gray-200/50'}`}>
+          <div className="flex items-center justify-center mb-4">
+            <div className={`p-2 rounded-full ${darkMode ? 'bg-blue-500/20' : 'bg-blue-100'} mr-3`}>
+              <Target className={`h-6 w-6 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`} />
             </div>
-            
-            <div>
-              <span className="font-bold mr-2">Pontuação:</span>
-              <span className="text-xl">{score}</span>
-            </div>
+            <h1 
+              className={`text-2xl md:text-3xl font-bold text-center ${darkMode ? 'text-white' : 'text-gray-800'}`}
+              style={{ fontFamily: "'Dancing Script', cursive" }}
+            >
+              Produto Cartesiano: Capture a Bolinha!
+            </h1>
           </div>
           
-          {/* Plano Cartesiano */}
-          <div className={`w-full h-[300px] border-2 ${darkMode ? 'border-gray-600 bg-gray-700' : 'border-gray-300 bg-gray-50'} rounded-lg shadow-md mb-6 transition-colors overflow-hidden relative`}>
+          {/* Game Info Cards - Compactas */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div className={`p-3 rounded-lg ${darkMode ? 'bg-gradient-to-br from-blue-900/30 to-blue-800/20 border border-blue-700/30' : 'bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200'} backdrop-blur-sm`}>
+              <p className={`text-xs font-medium ${darkMode ? 'text-blue-300' : 'text-blue-600'} mb-1`}>Conjunto A</p>
+              <p className={`text-sm font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>{`{${setA.join(', ')}}`}</p>
+            </div>
             
-            <Plot
-              data={plotData.length > 0 ? plotData : [
-                // Default placeholder data to ensure grid rendering
-                {
-                  x: [],
-                  y: [],
-                  mode: 'markers',
-                  type: 'scatter',
-                  hoverinfo: 'none',
-                }
-              ]}
-              layout={{
-                autosize: true,
-                margin: { l: 50, r: 50, b: 50, t: 50 },
-                paper_bgcolor: darkMode ? '#374151' : '#f9fafb',
-                plot_bgcolor: darkMode ? '#374151' : '#f9fafb',
-                font: {
-                  color: darkMode ? '#f9fafb' : '#111827'
-                },
-                xaxis: {
-                  title: 'Conjunto A',
-                  range: [Math.min(...setA) - 1, Math.max(...setA) + 1],
-                  tickmode: 'array',
-                  tickvals: setA,
-                  ticktext: setA.map(String),
-                  zeroline: true,
-                  showgrid: true,
-                  gridcolor: darkMode ? 'rgba(75, 85, 99, 0.6)' : 'rgba(208, 208, 208, 0.8)',
-                  gridwidth: 1,
-                  zerolinecolor: darkMode ? 'rgba(156, 163, 175, 0.8)' : 'rgba(156, 163, 175, 0.8)',
-                  zerolinewidth: 1.5
-                },
-                yaxis: {
-                  title: 'Conjunto B',
-                  range: [0, setB.length + 1],
-                  tickmode: 'array',
-                  tickvals: Array.from({length: setB.length}, (_, i) => i + 1),
-                  ticktext: setB.map(String),
-                  zeroline: true,
-                  showgrid: true,
-                  gridcolor: darkMode ? 'rgba(75, 85, 99, 0.6)' : 'rgba(208, 208, 208, 0.8)',
-                  gridwidth: 1,
-                  zerolinecolor: darkMode ? 'rgba(156, 163, 175, 0.8)' : 'rgba(156, 163, 175, 0.8)',
-                  zerolinewidth: 1.5
-                },
-                showlegend: false,
-                hovermode: 'closest',
-                shapes: [
-                  // Add explicit grid lines as shapes in case the built-in grid fails
-                  ...setA.flatMap(a => [
-                    {
-                      type: 'line',
-                      x0: a,
-                      x1: a,
-                      y0: 0,
-                      y1: setB.length + 1,
-                      line: {
-                        color: darkMode ? 'rgba(75, 85, 99, 0.6)' : 'rgba(208, 208, 208, 0.8)',
-                        width: 1,
-                        dash: 'solid',
-                      }
-                    }
-                  ]),
-                  ...Array.from({length: setB.length}, (_, i) => i + 1).flatMap(y => [
-                    {
-                      type: 'line',
-                      x0: Math.min(...setA) - 1,
-                      x1: Math.max(...setA) + 1,
-                      y0: y,
-                      y1: y,
-                      line: {
-                        color: darkMode ? 'rgba(75, 85, 99, 0.6)' : 'rgba(208, 208, 208, 0.8)',
-                        width: 1,
-                        dash: 'solid',
-                      }
-                    }
-                  ])
-                ]
-              }}
-              config={{ 
-                displayModeBar: false, 
-                responsive: true,
-                staticPlot: true
-              }}
-              style={{ 
-                width: '100%', 
-                height: '100%',
-                borderRadius: '0.5rem'
-              }}
-              useResizeHandler={true}
-            />
+            <div className={`p-3 rounded-lg ${darkMode ? 'bg-gradient-to-br from-purple-900/30 to-purple-800/20 border border-purple-700/30' : 'bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200'} backdrop-blur-sm`}>
+              <p className={`text-xs font-medium ${darkMode ? 'text-purple-300' : 'text-purple-600'} mb-1`}>Conjunto B</p>
+              <p className={`text-sm font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>{`{${setB.join(', ')}}`}</p>
+            </div>
             
-            {/* Temporizador sobreposto ao gráfico */}
-            {gameStarted && (
-              <div className="absolute top-2 right-2 bg-opacity-70 bg-black text-white px-3 py-1 rounded-full">
-                {timeLeft}s
+            <div className={`p-3 rounded-lg ${darkMode ? 'bg-gradient-to-br from-green-900/30 to-green-800/20 border border-green-700/30' : 'bg-gradient-to-br from-green-50 to-green-100 border border-green-200'} backdrop-blur-sm`}>
+              <div className="flex items-center">
+                <Trophy className={`h-4 w-4 ${darkMode ? 'text-green-400' : 'text-green-600'} mr-2`} />
+                <div>
+                  <p className={`text-xs font-medium ${darkMode ? 'text-green-300' : 'text-green-600'}`}>Pontuação</p>
+                  <p className={`text-lg font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>{score}</p>
+                </div>
               </div>
-            )}
+            </div>
+          </div>
+        </div>
+        
+        {/* Game Area - Layout em Grid */}
+        <div className="p-4 md:p-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            
+            {/* Plano Cartesiano - Mais compacto */}
+            <div className="lg:col-span-2">
+              <div className={`relative w-full h-[300px] md:h-[350px] ${darkMode ? 'bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-600/50' : 'bg-gradient-to-br from-gray-50 to-white border border-gray-200'} rounded-xl shadow-inner mb-4 overflow-hidden`}>
+                
+                <Plot
+                  data={plotData.length > 0 ? plotData : [
+                    {
+                      x: [],
+                      y: [],
+                      mode: 'markers',
+                      type: 'scatter',
+                      hoverinfo: 'none',
+                    }
+                  ]}
+                  layout={{
+                    autosize: true,
+                    margin: { l: 50, r: 50, b: 50, t: 50 },
+                    paper_bgcolor: 'transparent',
+                    plot_bgcolor: 'transparent',
+                    font: {
+                      color: darkMode ? '#f9fafb' : '#111827',
+                      size: 12,
+                      family: "'Inter', sans-serif"
+                    },
+                    xaxis: {
+                      title: {
+                        text: 'Conjunto A',
+                        font: { size: 14, color: darkMode ? '#93c5fd' : '#3b82f6' }
+                      },
+                      range: [Math.min(...setA) - 1, Math.max(...setA) + 1],
+                      tickmode: 'array',
+                      tickvals: setA,
+                      ticktext: setA.map(String),
+                      zeroline: true,
+                      showgrid: true,
+                      gridcolor: darkMode ? 'rgba(75, 85, 99, 0.4)' : 'rgba(229, 231, 235, 0.8)',
+                      gridwidth: 1,
+                      zerolinecolor: darkMode ? 'rgba(156, 163, 175, 0.6)' : 'rgba(156, 163, 175, 0.8)',
+                      zerolinewidth: 2
+                    },
+                    yaxis: {
+                      title: {
+                        text: 'Conjunto B',
+                        font: { size: 14, color: darkMode ? '#c084fc' : '#8b5cf6' }
+                      },
+                      range: [0, setB.length + 1],
+                      tickmode: 'array',
+                      tickvals: Array.from({length: setB.length}, (_, i) => i + 1),
+                      ticktext: setB.map(String),
+                      zeroline: true,
+                      showgrid: true,
+                      gridcolor: darkMode ? 'rgba(75, 85, 99, 0.4)' : 'rgba(229, 231, 235, 0.8)',
+                      gridwidth: 1,
+                      zerolinecolor: darkMode ? 'rgba(156, 163, 175, 0.6)' : 'rgba(156, 163, 175, 0.8)',
+                      zerolinewidth: 2
+                    },
+                    showlegend: false,
+                    hovermode: 'closest',
+                  }}
+                  config={{ 
+                    displayModeBar: false, 
+                    responsive: true,
+                    staticPlot: true
+                  }}
+                  style={{ 
+                    width: '100%', 
+                    height: '100%',
+                    borderRadius: '0.75rem'
+                  }}
+                  useResizeHandler={true}
+                />
+                
+                {/* Timer overlay */}
+                {gameStarted && (
+                  <div className={`absolute top-3 right-3 ${darkMode ? 'bg-gray-900/90 border border-gray-600' : 'bg-white/90 border border-gray-200'} px-3 py-1 rounded-lg backdrop-blur-sm shadow-lg`}>
+                    <div className="flex items-center space-x-2">
+                      <div className={`w-2 h-2 rounded-full ${timeLeft > 2 ? 'bg-green-400' : 'bg-red-400'} animate-pulse`}></div>
+                      <span className={`text-sm font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>{timeLeft}s</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+            
+            {/* Painel Lateral de Controles */}
+            <div className="lg:col-span-1 space-y-4">
+              
+              {/* Timer Progress Bar */}
+              {gameStarted && (
+                <div className={`p-3 rounded-lg ${darkMode ? 'bg-gradient-to-br from-gray-800/50 to-gray-900/30 border border-gray-700/30' : 'bg-gradient-to-br from-gray-50 to-gray-100/50 border border-gray-200'} backdrop-blur-sm`}>
+                  <div className="flex justify-between items-center mb-2">
+                    <span className={`text-sm font-semibold ${timeLeft > 2 ? (darkMode ? 'text-green-400' : 'text-green-600') : (darkMode ? 'text-red-400' : 'text-red-600')}`}>
+                      Tempo: {timeLeft}s
+                    </span>
+                  </div>
+                  <Progress 
+                    value={(timeLeft / 5) * 100} 
+                    className={`h-2 ${darkMode ? 'bg-gray-700' : 'bg-gray-200'} rounded-full overflow-hidden`}
+                    indicatorClassName={
+                      timeLeft > 2 
+                        ? (darkMode ? 'bg-gradient-to-r from-green-400 to-green-500' : 'bg-gradient-to-r from-green-500 to-green-600')
+                        : (darkMode ? 'bg-gradient-to-r from-red-400 to-red-500' : 'bg-gradient-to-r from-red-500 to-red-600')
+                    }
+                  />
+                </div>
+              )}
+
+              {/* Selected Pairs Display */}
+              <div className={`p-3 rounded-lg ${darkMode ? 'bg-gradient-to-br from-gray-800/50 to-gray-900/30 border border-gray-700/30' : 'bg-gradient-to-br from-gray-50 to-gray-100/50 border border-gray-200'} backdrop-blur-sm`}>
+                <h3 className={`text-sm font-semibold mb-2 ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+                  Par Selecionado:
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {userPairs.length > 0 ? (
+                    userPairs.map((pair, index) => (
+                      <div 
+                        key={index}
+                        className={`px-3 py-2 rounded-lg flex items-center text-sm font-semibold ${
+                          darkMode 
+                            ? 'bg-gradient-to-r from-green-800 to-green-700 border border-green-600 text-green-100' 
+                            : 'bg-gradient-to-r from-green-100 to-green-200 border border-green-300 text-green-800'
+                        } shadow-sm`}
+                      >
+                        <span>({pair[0]}, {pair[1]})</span>
+                        <button 
+                          className={`ml-2 w-4 h-4 rounded-full flex items-center justify-center text-xs ${
+                            darkMode ? 'text-red-400 hover:text-red-300 hover:bg-red-900/30' : 'text-red-500 hover:text-red-700 hover:bg-red-100'
+                          } transition-colors`}
+                          onClick={() => setUserPairs([])}
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ))
+                  ) : (
+                    <div className={`px-3 py-2 rounded-lg border-2 border-dashed text-xs ${darkMode ? 'border-gray-600 text-gray-400' : 'border-gray-300 text-gray-500'}`}>
+                      Selecione A e B
+                    </div>
+                  )}
+                </div>
+              </div>
+              
+              {/* Action Buttons - Compactos */}
+              <div className="grid grid-cols-1 gap-2">
+                {!gameStarted ? (
+                  <button
+                    onClick={startGame}
+                    className={`
+                      px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center justify-center space-x-2
+                      ${darkMode 
+                        ? 'bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400 text-white shadow-lg shadow-green-600/25' 
+                        : 'bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400 text-white shadow-lg shadow-green-600/25'
+                      }
+                    `}
+                  >
+                    <Play className="h-4 w-4" />
+                    <span>Iniciar</span>
+                  </button>
+                ) : (
+                  <button
+                    onClick={endGame}
+                    className={`
+                      px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center justify-center space-x-2
+                      ${darkMode 
+                        ? 'bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white shadow-lg shadow-red-600/25' 
+                        : 'bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white shadow-lg shadow-red-600/25'
+                      }
+                    `}
+                  >
+                    <Square className="h-4 w-4" />
+                    <span>Encerrar</span>
+                  </button>
+                )}
+                
+                <button
+                  onClick={checkAnswer}
+                  disabled={!gameStarted || userPairs.length === 0}
+                  className={`
+                    px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 transform flex items-center justify-center space-x-2
+                    ${gameStarted && userPairs.length > 0
+                      ? 'bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white shadow-lg shadow-blue-600/25 hover:scale-105 active:scale-95'
+                      : (darkMode 
+                         ? 'bg-gray-700 text-gray-500 cursor-not-allowed border border-gray-600' 
+                         : 'bg-gray-200 text-gray-400 cursor-not-allowed border border-gray-300')
+                    }
+                  `}
+                >
+                  <Check className="h-4 w-4" />
+                  <span>Verificar</span>
+                </button>
+                
+                <button
+                  onClick={generateNewSets}
+                  className={`
+                    px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center justify-center space-x-2
+                    ${darkMode 
+                      ? 'bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-400 text-white shadow-lg shadow-purple-600/25' 
+                      : 'bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-400 text-white shadow-lg shadow-purple-600/25'
+                    }
+                  `}
+                >
+                  <RotateCcw className="h-4 w-4" />
+                  <span>Novos Conjuntos</span>
+                </button>
+              </div>
+            </div>
           </div>
           
-          <div className="flex justify-between mb-6">
-            <div className="w-1/2 pr-2">
-              <h2 className="text-lg font-medium mb-2">Elementos do Conjunto A</h2>
+          {/* Selection Areas - Mais compactas */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+            {/* Conjunto A */}
+            <div className={`p-4 rounded-lg ${darkMode ? 'bg-gradient-to-br from-gray-300/20 to-gray-500/10 border border-gray-700/30' : 'bg-gradient-to-br from-gray-50 to-gray-100/50 border border-gray-200'} backdrop-blur-sm`}>
+              <h2 className={`text-lg font-bold mb-3 ${darkMode ? 'text-gray-700' : 'text-gray-300'}`}>
+                Conjunto A
+              </h2>
               <div className="flex flex-wrap gap-2">
                 {setA.map(a => (
-                  <div
-              key={`a-${a}`}
-              className={`
-                px-3 py-2 border rounded cursor-pointer transition-colors
-                ${selectedA === a 
-                  ? (darkMode ? 'border-blue-400 text-blue-300' : 'border-blue-600 text-blue-700')
-                  : (darkMode ? 'border-blue-700 text-blue-200' : 'border-blue-400 text-blue-600')
-                }
-                bg-transparent
-                ${darkMode 
-                  ? 'hover:bg-blue-900/30 hover:border-blue-500' 
-                  : 'hover:bg-blue-50 hover:border-blue-500'
-                }
-              `}
-              onClick={() => handleClickA(a)}
-            >
-              {a}
-            </div>
-                ))}
-              </div>
-            </div>
-            
-            <div className="w-1/2 pl-2">
-              <h2 className="text-lg font-medium mb-2">Elementos do Conjunto B</h2>
-              <div className="flex flex-wrap gap-2">
-          {setB.map(b => (
-            <div
-              key={`b-${b}`}
-              className={`
-                px-3 py-2 border rounded cursor-pointer transition-colors
-                bg-transparent
-                ${darkMode 
-                  ? 'border-purple-700 text-purple-300 hover:bg-purple-900/30 hover:border-purple-500' 
-                  : 'border-purple-400 text-purple-700 hover:bg-purple-50 hover:border-purple-500'
-                }
-              `}
-              onClick={() => handleClickB(b)}
-            >
-              {b}
-            </div>
-                ))}
-              </div>
-            </div>
-          </div>
-          
-          <div className="mb-6">
-            <h2 className="text-lg font-medium mb-2">Produto Cartesiano A × B</h2>
-            <p className="mb-2">Identifique o par ordenado onde a bolinha está antes que ela se mova!</p>
-            
-            {/* Temporizador como barra de progresso */}
-            {gameStarted && (
-              <div className="mb-4">
-                <div className="flex justify-between items-center mb-2">
-                  <span className={`font-medium text-blue-500`}>
-                    Tempo restante: {timeLeft}s
-                  </span>
-                </div>
-                <Progress 
-                  value={(timeLeft / 5) * 100} 
-                  className={`h-2 ${darkMode ? 'bg-gray-700' : 'bg-gray-200'}`}
-                  indicatorClassName={
-                    timeLeft > 2 
-                      ? (darkMode ? 'bg-green-400' : 'bg-green-600')
-                      : (darkMode ? 'bg-red-400' : 'bg-red-600')
-                  }
-                />
-              </div>
-            )}
-
-            <div className="flex flex-wrap gap-2 mb-4 min-h-[60px]">
-              {userPairs.map((pair, index) => (
-                <div 
-                  key={index}
-                  className={`px-3 py-2 rounded flex items-center ${
-                    darkMode 
-                      ? 'bg-green-900 border border-green-700' 
-                      : 'bg-green-100 border border-green-300'
-                  }`}
-                >
-                  <span>({pair[0]}, {pair[1]})</span>
-                  <button 
-                    className={`ml-2 ${
-                      darkMode ? 'text-red-400 hover:text-red-300' : 'text-red-500 hover:text-red-700'
-                    }`}
-                    onClick={() => setUserPairs([])}
+                  <button
+                    key={`a-${a}`}
+                    className={`
+                      px-3 py-2 rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95
+                      ${selectedA === a 
+                        ? (darkMode 
+                           ? 'bg-gray-500 text-white shadow-lg shadow-gray-500/25 border border-gray-400' 
+                           : 'bg-gray-600 text-white shadow-lg shadow-gray-600/25 border border-gray-500')
+                        : (darkMode 
+                           ? 'bg-gray-900/30 text-gray-700 border border-gray-700/50 hover:bg-gray-800/40 hover:border-gray-600' 
+                           : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:border-gray-400 shadow-sm')
+                      }
+                    `}
+                    onClick={() => handleClickA(a)}
                   >
-                    ×
+                    {a}
                   </button>
-                </div>
-              ))}
+                ))}
+              </div>
+            </div>
+            
+            {/* Conjunto B */}
+            <div className={`p-4 rounded-lg ${darkMode ? 'bg-gradient-to-br from-purple-900/20 to-purple-800/10 border border-purple-700/30' : 'bg-gradient-to-br from-purple-50 to-purple-100/50 border border-purple-200'} backdrop-blur-sm`}>
+              <h2 className={`text-lg font-bold mb-3 ${darkMode ? 'text-purple-300' : 'text-purple-700'}`}>
+                Conjunto B
+              </h2>
+              <div className="flex flex-wrap gap-2">
+                {setB.map(b => (
+                  <button
+                    key={`b-${b}`}
+                    className={`
+                      px-3 py-2 rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95
+                      ${darkMode 
+                        ? 'bg-purple-900/30 text-purple-300 border border-purple-700/50 hover:bg-purple-800/40 hover:border-purple-600' 
+                        : 'bg-white text-purple-700 border border-purple-300 hover:bg-purple-50 hover:border-purple-400 shadow-sm'
+                      }
+                    `}
+                    onClick={() => handleClickB(b)}
+                  >
+                    {b}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-        
-        <div className="flex justify-between items-center mb-4">
-          {!gameStarted ? (
-            <button
-              onClick={startGame}
-              className={`
-                px-4 py-2 rounded border transition-colors
-                bg-transparent 
-                ${darkMode 
-                  ? 'border-green-700 text-green-400 hover:bg-green-900/30 hover:border-green-600' 
-                  : 'border-green-500 text-green-600 hover:bg-green-50 hover:border-green-600'
-                }
-              `}
-            >
-              Iniciar Jogo
-            </button>
-          ) : (
-            <button
-              onClick={endGame}
-              className={`
-                px-4 py-2 rounded border transition-colors
-                bg-transparent 
-                ${darkMode 
-                  ? 'border-red-700 text-red-400 hover:bg-red-900/30 hover:border-red-600' 
-                  : 'border-red-500 text-red-600 hover:bg-red-50 hover:border-red-600'
-                }
-              `}
-            >
-              Encerrar Jogo
-            </button>
-          )}
           
-          <button
-            onClick={checkAnswer}
-            disabled={!gameStarted || userPairs.length === 0}
-            className={`
-              px-4 py-2 rounded border transition-colors
-              bg-transparent
-              ${gameStarted && userPairs.length > 0
-                ? (darkMode 
-                   ? 'border-blue-500 text-blue-300 hover:bg-blue-900/30 hover:border-blue-400' 
-                   : 'border-blue-600 text-blue-700 hover:bg-blue-50 hover:border-blue-700')
-                : (darkMode 
-                   ? 'border-gray-600 text-gray-400 opacity-50' 
-                   : 'border-gray-300 text-gray-500 opacity-50')
-              } 
-              ${!gameStarted || userPairs.length === 0 ? 'cursor-not-allowed' : ''}
-            `}
-          >
-            Verificar Par
-          </button>
+          {/* Feedback Section - Compacto */}
+          {feedback && (
+            <div className={`mt-4 p-3 rounded-lg text-center text-sm font-medium backdrop-blur-sm transition-all duration-300 ${
+              feedback.includes('Correto') 
+                ? (darkMode ? 'bg-gradient-to-r from-green-900/50 to-green-800/30 text-green-200 border border-green-700/50' : 'bg-gradient-to-r from-green-100 to-green-200 text-green-800 border border-green-300')
+                : feedback.includes('Incorreto')
+                  ? (darkMode ? 'bg-gradient-to-r from-red-900/50 to-red-800/30 text-red-200 border border-red-700/50' : 'bg-gradient-to-r from-red-100 to-red-200 text-red-800 border border-red-300')
+                  : (darkMode ? 'bg-gradient-to-r from-blue-900/50 to-blue-800/30 text-blue-200 border border-blue-700/50' : 'bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 border border-blue-300')
+            } shadow-sm`}>
+              {feedback}
+            </div>
+          )}
         </div>
-        
-        {feedback && (
-          <div className={`p-3 rounded text-center mb-4 ${
-            feedback.includes('Correto') 
-              ? (darkMode ? 'bg-green-900 text-green-100' : 'bg-green-100 text-green-800')
-              : feedback.includes('Incorreto')
-                ? (darkMode ? 'bg-red-900 text-red-100' : 'bg-red-100 text-red-800')
-                : (darkMode ? 'bg-blue-900 text-blue-100' : 'bg-blue-100 text-blue-800')
-          } transition-colors`}>
-            {feedback}
-          </div>
-        )}
-
-         <AlertDialog open={alertOpen} onOpenChange={setAlertOpen}>
-          <AlertDialogContent className={darkMode ? 'bg-gray-800 text-white border border-gray-700' : ''}>
-            <AlertDialogHeader>
-              <AlertDialogTitle className={darkMode ? 'text-white' : ''}>
-                {alertType === 'gameOver' ? 'Jogo Encerrado' : 'Parabéns!'}
-              </AlertDialogTitle>
-              <AlertDialogDescription className={darkMode ? 'text-gray-300' : ''}>
-                {alertType === 'gameOver' 
-                  ? `Você fez ${score} pontos!` 
-                  : 'Você identificou corretamente o par ordenado!'}
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogAction 
-                onClick={handleAlertClose}
-                  className={`
-                    px-4 py-2 rounded border transition-colors
-                    bg-transparent
-                    ${darkMode 
-                      ? 'border-gray-600 text-gray-300 hover:bg-gray-700/50 hover:border-gray-500' 
-                      : 'border-gray-400 text-gray-600 hover:bg-gray-100 hover:border-gray-500'
-                    }
-                  `}
-              >
-                Próximo desafio
-              </AlertDialogAction>
-              
-              <AlertDialogAction 
-                onClick={handleAlertClose}
-                  className={`
-                    px-4 py-2 rounded border transition-colors
-                    bg-transparent
-                    ${darkMode 
-                      ? 'border-gray-600 text-gray-300 hover:bg-gray-700/50 hover:border-gray-500' 
-                      : 'border-gray-400 text-gray-600 hover:bg-gray-100 hover:border-gray-500'
-                    }
-                  `}
-              >
-                Sair
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-        
       </div>
-    </DndProvider>
-  );
+
+      {/* Alert Dialog mantido igual */}
+      <AlertDialog open={alertOpen} onOpenChange={setAlertOpen}>
+        <AlertDialogContent className={`${darkMode ? 'bg-gray-800 text-white border border-gray-700' : 'bg-white border border-gray-200'} rounded-xl shadow-2xl backdrop-blur-lg`}>
+          <AlertDialogHeader>
+            <AlertDialogTitle className={`text-xl font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+              {alertType === 'gameOver' ? '🎮 Jogo Encerrado' : '🎉 Parabéns!'}
+            </AlertDialogTitle>
+            <AlertDialogDescription className={`text-base ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+              {alertType === 'gameOver' 
+                ? `Você conquistou ${score} pontos! Continue praticando para melhorar sua pontuação.` 
+                : 'Você identificou corretamente o par ordenado! Excelente trabalho!'}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="flex gap-3">
+            <AlertDialogAction 
+              onClick={handleAlertClose}
+              className={`
+                px-4 py-2 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105
+                ${darkMode 
+                  ? 'bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white shadow-lg' 
+                  : 'bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white shadow-lg'
+                }
+              `}
+            >
+              Próximo Desafio
+            </AlertDialogAction>
+            
+            <AlertDialogAction 
+              onClick={handleAlertClose}
+              className={`
+                px-4 py-2 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105
+                ${darkMode 
+                  ? 'bg-gray-700 hover:bg-gray-600 text-gray-300 border border-gray-600' 
+                  : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300'
+                }
+              `}
+            >
+              Sair
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+      
+    </div>
+  </DndProvider>
+);
 }
 
 export default CartesianGame;
