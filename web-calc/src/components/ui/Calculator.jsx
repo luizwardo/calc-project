@@ -127,8 +127,8 @@ function Calculator({ onClose, darkMode, isMobile = false }) {
         break;
       case 'operator':
         buttonStyle = active
-          ? (darkMode ? 'bg-orange-200 text-black shadow-lg' : 'bg-orange-200 text-white shadow-lg')
-          : (darkMode ? 'bg-orange-300 hover:bg-orange-300 text-white shadow-lg' : 'bg-orange-400 hover:bg-orange-400 text-white shadow-lg');
+          ? (darkMode ? 'bg-orange-300 text-black shadow-lg' : 'bg-orange-300 text-white shadow-lg')
+          : (darkMode ? 'bg-orange-400 hover:bg-orange-400 text-white shadow-lg' : 'bg-orange-400 hover:bg-orange-400 text-white shadow-lg');
         break;
     }
     
