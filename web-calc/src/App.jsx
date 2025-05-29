@@ -4,7 +4,7 @@ import Calculator from './components/ui/Calculator'
 import CartesianGame from './components/games/CartesianProd'
 import FunctionGame from './components/games/FindFunction'
 import VectorGame from './components/games/VecMission'
-import { Moon, Sun } from "lucide-react" 
+import { AlignCenter, Moon, Sun, X} from "lucide-react" 
 import {
   Carousel,
   CarouselContent,
@@ -29,6 +29,9 @@ function App() {
   const [isMobile, setIsMobile] = useState(false);
   const [currentGameIndex, setCurrentGameIndex] = useState(0);
   const [carouselApi, setCarouselApi] = useState();
+
+  const [showGameModal, setShowGameModal] = useState(false);
+  const [selectedGameId, setSelectedGameId] = useState(null);
 
   // Detectar se o dispositivo é móvel
   useEffect(() => {
@@ -88,6 +91,22 @@ function App() {
     }
   ];
 
+
+    // Add modal handlers
+  const openGameModal = (gameId) => {
+    setSelectedGameId(gameId);
+    setShowGameModal(true);
+    // Prevent body scroll when modal is open
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeGameModal = () => {
+    setShowGameModal(false);
+    setSelectedGameId(null);
+    // Restore body scroll
+    document.body.style.overflow = 'unset';
+  };
+
   // Handle game navigation
   const navigateToGame = (gameId) => {
     const gameIndex = games.findIndex(game => game.id === gameId);
@@ -103,7 +122,7 @@ function App() {
     }
   };
 
-  // Updated scroll function
+  // Update scroll function to handle game modals
   const scrollToSection = (sectionId) => {
     if (sectionId === 'calculator') {
       setShowCalculator(true);
@@ -126,9 +145,33 @@ function App() {
       return;
     }
 
-    // For game sections, navigate to the games carousel
+    // For game sections from navbar, navigate to carousel
     navigateToGame(sectionId);
   };
+
+
+  // Get selected game component
+  const getSelectedGameComponent = () => {
+    const game = games.find(g => g.id === selectedGameId);
+    return game ? game.component : null;
+  };
+
+  // Close modal on escape key
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === 'Escape' && showGameModal) {
+        closeGameModal();
+      }
+    };
+
+    if (showGameModal) {
+      document.addEventListener('keydown', handleEscape);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [showGameModal]);
 
   useEffect(() => {
     if (!carouselApi) {
@@ -185,6 +228,55 @@ function App() {
       
       {showCalculator && <Calculator onClose={() => setShowCalculator(false)} darkMode={darkMode} />}
       
+    {/* Game Modal */}
+      {showGameModal && selectedGameId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          {/* Backdrop */}
+          <div 
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
+            onClick={closeGameModal}
+          />
+          
+          {/* Modal Content */}
+          <div className={`
+            relative w-full max-w-7xl max-h-[90vh] overflow-auto
+            ${darkMode ? 'bg-gray-900' : 'bg-white'}
+            rounded-lg shadow-2xl transform transition-all
+            border ${darkMode ? 'border-gray-700' : 'border-gray-200'}
+          `}>
+            {/* Close Button */}
+            <button
+              onClick={closeGameModal}
+              className={`
+                absolute top-4 right-4 z-10 p-2 rounded-full
+                transition-colors hover:scale-110
+                ${darkMode 
+                  ? 'bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white' 
+                  : 'bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-900'
+                }
+              `}
+              aria-label="Fechar modal"
+            >
+              <X className="h-5 w-5" />
+            </button>
+            
+            {/* Game Component */}
+            <div className="w-full h-full">
+              {(() => {
+                const GameComponent = getSelectedGameComponent();
+                return GameComponent ? (
+                  <GameComponent 
+                    onClose={closeGameModal} 
+                    darkMode={darkMode} 
+                    isMobile={isMobile} 
+                  />
+                ) : null;
+              })()}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Botão toggle theme apenas aparece para viewports maiores */}
       {!isMobile && (
         <button
@@ -198,8 +290,8 @@ function App() {
           }
         </button>
       )}
-      
-      {/* Home Section */}
+         
+      {/* Home Section - Update card onClick handlers */}
       <section 
         ref={homeRef} 
         id="home"
@@ -220,12 +312,12 @@ function App() {
             Nossos Jogos
           </h2>
           
-          {/* Grid layout instead of carousel */}
+          {/* Updated Grid layout with modal handlers */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-5xl mx-auto">
             {/* Card Produto Cartesiano */}
             <div 
-              onClick={() => scrollToSection('cartesianGame')}
-              className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden border border-gray-200 dark:border-gray-700 transition-all cursor-pointer hover:shadow-md hover:scale-105 duration-300"
+              onClick={() => openGameModal('cartesianGame')}
+              className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden border border-gray-200 dark:border-gray-700 transition-all cursor-pointer hover:shadow-lg hover:scale-105 duration-300"
             >
               <div className="h-24 md:h-36 bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center transition-colors">
                 <div 
@@ -250,8 +342,8 @@ function App() {
             
             {/* Card Função */}
             <div 
-              onClick={() => scrollToSection('functionGame')}
-              className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden border border-gray-200 dark:border-gray-700 transition-all cursor-pointer hover:shadow-md hover:scale-105 duration-300"
+              onClick={() => openGameModal('functionGame')}
+              className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden border border-gray-200 dark:border-gray-700 transition-all cursor-pointer hover:shadow-lg hover:scale-105 duration-300"
             >
               <div className="h-24 md:h-36 bg-gray-50 dark:bg-gray-700/30 flex items-center justify-center transition-colors">
                 <div 
@@ -276,8 +368,8 @@ function App() {
             
             {/* Card Vetor */}
             <div 
-              onClick={() => scrollToSection('vectorGame')}
-              className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden border border-gray-200 dark:border-gray-700 transition-all cursor-pointer hover:shadow-md hover:scale-105 duration-300"
+              onClick={() => openGameModal('vectorGame')}
+              className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden border border-gray-200 dark:border-gray-700 transition-all cursor-pointer hover:shadow-lg hover:scale-105 duration-300"
             >
               <div className="h-24 md:h-36 bg-gray-50 dark:bg-purple-900/30 flex items-center justify-center transition-colors">
                 <div 
@@ -323,10 +415,15 @@ function App() {
             setApi={setCarouselApi}
             opts={{
               startIndex: currentGameIndex,
-              loop: true
+              loop: true,
+              dragfree: true,
+              skipSnaps: true,
+              AlignCenter: true,        
+              duration: 30,
+              slidesToScroll: 1,     
             }}
           >
-            <CarouselContent>
+            <CarouselContent className="transitions-all durations-700 slides-in">
               {games.map((game,) => {
                 const GameComponent = game.component;
                 return (
@@ -355,7 +452,8 @@ function App() {
             />
             <CarouselNext 
               className={`
-                absolute right-4 top-1/2 transform -translate-y-1/2
+                absolute right-4 top-1/2 transform -translate-y-1/2 
+                transition-all duration-300 slides-in
                 ${darkMode 
                   ? 'bg-gray-800 border-gray-600 text-gray-300 hover:bg-gray-700' 
                   : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
@@ -364,22 +462,32 @@ function App() {
             />
           </Carousel>
           
-          {/* Game indicators below the carousel */}
-          <div className="flex justify-center mt-6 gap-2">
+          {/* Enhanced indicators with animation */}
+          <div className="flex justify-center mt-8 gap-4">
             {games.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => handleIndicatorClick(index)}
-                className={`
-                  w-3 h-3 rounded-full transition-colors
-                  ${index === currentGameIndex
-                    ? (darkMode ? 'bg-blue-400' : 'bg-blue-600')
-                    : (darkMode ? 'bg-gray-600' : 'bg-gray-300')
-                  }
-                `}
-                aria-label={`Ir para ${games[index].title}`}
-              />
-            ))}
+            <button
+          key={index}
+          onClick={() => handleIndicatorClick(index)}
+          className={`
+            transition-all duration-500 ease-out rounded-full relative overflow-hidden
+            hover:scale-115 active:scale-35
+            ${index === currentGameIndex
+              ? `w-8 h-4 ${darkMode ? 'bg-blue-400 shadow-blue-400/50' : 'bg-blue-600 shadow-blue-600/50'} shadow-lg`
+              : `w-4 h-4 ${darkMode ? 'bg-gray-600 hover:bg-gray-500' : 'bg-gray-300 hover:bg-gray-400'} hover:shadow-md`
+            }
+          `}
+          aria-label={`Ir para ${games[index].title}`}
+        >
+          {/* Animated inner indicator */}
+          <div className={`
+            absolute inset-0 rounded-full transition-all duration-300
+            ${index === currentGameIndex
+              ? `${darkMode ? 'bg-gradient-to-r from-blue-300 to-blue-500' : 'bg-gradient-to-r from-blue-500 to-blue-700'} animate-pulse`
+              : 'bg-transparent'
+            }
+          `} />
+        </button>
+      ))}
           </div>
         </div>
       </section>
