@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { X } from 'lucide-react';
 
-function Calculator({ onClose, isMobile = false }) {
+function Calculator({ onClose, darkMode, isMobile = false }) {
   const [display, setDisplay] = useState('0');
   const [operation, setOperation] = useState(null);
   const [prevValue, setPrevValue] = useState(null);
@@ -35,7 +36,7 @@ function Calculator({ onClose, isMobile = false }) {
       setDisplay(num);
       setResetDisplay(false);
     } else {
-      if (display.length < 12) { // Limitar o número de dígitos
+      if (display.length < 12) {
         setDisplay(display + num);
       }
     }
@@ -102,92 +103,201 @@ function Calculator({ onClose, isMobile = false }) {
     }
   };
 
-  // Renderização
+  // Componente de botão estilo macOS
+  const CalcButton = ({ children, onClick, type = 'number', className = '', colSpan = 1, active = false }) => {
+    const baseStyle = `
+      h-16 rounded-full font-medium text-lg transition-all duration-150 ease-in-out
+      flex items-center justify-center select-none cursor-pointer
+      active:scale-95 hover:brightness-110
+      ${colSpan === 2 ? 'col-span-2' : ''}
+    `;
+    
+    let buttonStyle = '';
+    
+    switch(type) {
+      case 'number':
+        buttonStyle = darkMode 
+          ? 'bg-gray-700 hover:bg-gray-600 text-white shadow-lg' 
+          : 'bg-gray-200 hover:bg-gray-300 text-black shadow-md';
+        break;
+      case 'function':
+        buttonStyle = darkMode 
+          ? 'bg-gray-800 hover:bg-gray-700 text-white shadow-lg' 
+          : 'bg-gray-400 hover:bg-gray-500 text-white shadow-md';
+        break;
+      case 'operator':
+        buttonStyle = active
+          ? (darkMode ? 'bg-orange-200 text-black shadow-lg' : 'bg-orange-200 text-white shadow-lg')
+          : (darkMode ? 'bg-orange-300 hover:bg-orange-300 text-white shadow-lg' : 'bg-orange-400 hover:bg-orange-400 text-white shadow-lg');
+        break;
+    }
+    
+    return (
+      <button 
+        className={`${baseStyle} ${buttonStyle} ${className}`}
+        onClick={onClick}
+      >
+        {children}
+      </button>
+    );
+  };
+
   return (
     <div 
-      className={`
-        fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm
-        transition-all duration-300 ease-in-out
-      `}
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm transition-all duration-300 ease-in-out"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       <div 
         className={`
-          ${isMobile ? 'w-full max-w-[320px] mx-4' : 'w-[350px]'}
-          bg-white dark:bg-gray-800 rounded-xl shadow-2xl overflow-hidden
-          border border-gray-200 dark:border-gray-700
+          ${isMobile ? 'w-full max-w-[340px] mx-4' : 'w-[340px]'}
+          ${darkMode ? 'bg-black' : 'bg-white'}
+          rounded-3xl shadow-2xl overflow-hidden
+          border ${darkMode ? 'border-gray-800' : 'border-gray-200'}
           transition-all duration-300 ease-in-out
         `}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Cabeçalho da Calculadora */}
-        <div className="flex justify-between items-center px-4 py-3 bg-gray-100 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
-          <h3 className="font-medium text-gray-800 dark:text-gray-200">Calculadora</h3>
+        {/* Cabeçalho estilo macOS */}
+        <div className={`
+          flex justify-between items-center px-6 py-4
+          ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}
+          border-b ${darkMode ? 'border-gray-800' : 'border-gray-200'}
+        `}>
+          <div className="flex space-x-2">
+            <div className="w-3 h-3 rounded-full bg-red-500"></div>
+            <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+            <div className="w-3 h-3 rounded-full bg-green-500"></div>
+          </div>
+          <h3 className={`font-medium ${darkMode ? 'text-gray-200' : 'text-gray-800'}`}>
+            Calculadora
+          </h3>
           <button 
-            className="w-6 h-6 flex items-center justify-center rounded-full bg-red-100 hover:bg-red-200 dark:bg-red-900 dark:hover:bg-red-800"
+            className={`
+              w-6 h-6 flex items-center justify-center rounded-full
+              ${darkMode ? 'hover:bg-gray-700 text-gray-400' : 'hover:bg-gray-200 text-gray-600'}
+              transition-colors duration-150
+            `}
             onClick={onClose}
           >
-            <span className="text-red-600 dark:text-red-400 text-sm">✕</span>
+            <X className="w-4 h-4" />
           </button>
         </div>
         
-        {/* Display */}
+        {/* Display estilo macOS */}
         <div className={`
-          px-4 py-6 bg-gray-50 dark:bg-gray-900
-          border-b border-gray-200 dark:border-gray-700
-          text-right overflow-hidden
+          px-6 py-8 text-right
+          ${darkMode ? 'bg-black' : 'bg-white'}
+          min-h-[120px] flex flex-col justify-end
         `}>
-          <div className="text-gray-500 dark:text-gray-400 text-sm h-4 mb-1">
+          {/* Operação anterior */}
+          <div className={`
+            ${darkMode ? 'text-gray-500' : 'text-gray-400'} 
+            text-sm h-6 mb-2 font-light
+          `}>
             {prevValue !== null ? `${prevValue} ${operation || ''}` : ''}
           </div>
-          <div className="text-3xl font-semibold text-gray-900 dark:text-gray-100 truncate">
+          
+          {/* Display principal */}
+          <div className={`
+            ${darkMode ? 'text-white' : 'text-black'} 
+            text-5xl font-light tracking-tight leading-none
+            ${display.length > 8 ? 'text-3xl' : display.length > 6 ? 'text-4xl' : 'text-5xl'}
+            transition-all duration-200 min-h-[60px] flex items-end justify-end
+          `}>
             {display}
           </div>
         </div>
         
-        {/* Teclado */}
-        <div className="grid grid-cols-4 gap-1 p-2">
-          {/* Linha 1 */}
-          <button onClick={handleClear} className="col-span-2 calc-button bg-transparent dark:transparent text-red-600 dark:text-red-300">
+        {/* Teclado estilo macOS */}
+        <div className={`
+          grid grid-cols-4 gap-3 p-6
+          ${darkMode ? 'bg-black' : 'bg-white'}
+        `}>
+          {/* Linha 1 - Funções */}
+          <CalcButton 
+            type="function" 
+            onClick={handleClear}
+          >
             AC
-          </button>
-          <button onClick={handleDelete} className="calc-button bg-transparent dark:bg-transparent text-gray-700 dark:text-gray-300">
-            DEL
-          </button>
-          <button onClick={() => handleOperation('/')} className="calc-button bg-transparent dark:bg-transparent text-blue-600 dark:text-blue-300">
+          </CalcButton>
+          <CalcButton 
+            type="function" 
+            onClick={() => {
+              const current = parseFloat(display);
+              setDisplay(String(current * -1));
+            }}
+          >
+            +/−
+          </CalcButton>
+          <CalcButton 
+            type="function" 
+            onClick={() => {
+              const current = parseFloat(display);
+              setDisplay(String(current / 100));
+            }}
+          >
+            %
+          </CalcButton>
+          <CalcButton 
+            type="operator" 
+            onClick={() => handleOperation('/')}
+            active={operation === '/'}
+          >
             ÷
-          </button>
+          </CalcButton>
           
           {/* Linha 2 */}
-          <button onClick={() => handleNumber('7')} className="calc-button">7</button>
-          <button onClick={() => handleNumber('8')} className="calc-button">8</button>
-          <button onClick={() => handleNumber('9')} className="calc-button">9</button>
-          <button onClick={() => handleOperation('*')} className="calc-button bg-transparent dark:bg-transparent text-blue-600 dark:text-blue-300">
+          <CalcButton onClick={() => handleNumber('7')}>7</CalcButton>
+          <CalcButton onClick={() => handleNumber('8')}>8</CalcButton>
+          <CalcButton onClick={() => handleNumber('9')}>9</CalcButton>
+          <CalcButton 
+            type="operator" 
+            onClick={() => handleOperation('*')}
+            active={operation === '*'}
+          >
             ×
-          </button>
+          </CalcButton>
           
           {/* Linha 3 */}
-          <button onClick={() => handleNumber('4')} className="calc-button">4</button>
-          <button onClick={() => handleNumber('5')} className="calc-button">5</button>
-          <button onClick={() => handleNumber('6')} className="calc-button">6</button>
-          <button onClick={() => handleOperation('-')} className="calc-button bg-transparent dark:bg-transparent text-blue-600 dark:text-blue-300">
-            -
-          </button>
+          <CalcButton onClick={() => handleNumber('4')}>4</CalcButton>
+          <CalcButton onClick={() => handleNumber('5')}>5</CalcButton>
+          <CalcButton onClick={() => handleNumber('6')}>6</CalcButton>
+          <CalcButton 
+            type="operator" 
+            onClick={() => handleOperation('-')}
+            active={operation === '-'}
+          >
+            −
+          </CalcButton>
           
           {/* Linha 4 */}
-          <button onClick={() => handleNumber('1')} className="calc-button">1</button>
-          <button onClick={() => handleNumber('2')} className="calc-button">2</button>
-          <button onClick={() => handleNumber('3')} className="calc-button">3</button>
-          <button onClick={() => handleOperation('+')} className="calc-button bg-transparent dark:bg-transparent text-blue-600 dark:text-blue-300">
+          <CalcButton onClick={() => handleNumber('1')}>1</CalcButton>
+          <CalcButton onClick={() => handleNumber('2')}>2</CalcButton>
+          <CalcButton onClick={() => handleNumber('3')}>3</CalcButton>
+          <CalcButton 
+            type="operator" 
+            onClick={() => handleOperation('+')}
+            active={operation === '+'}
+          >
             +
-          </button>
+          </CalcButton>
           
           {/* Linha 5 */}
-          <button onClick={() => handleNumber('0')} className="calc-button col-span-2">0</button>
-          <button onClick={handleDecimal} className="calc-button">.</button>
-          <button onClick={handleEquals} className="calc-button bg-blue-500 dark:bg-blue-600 text-white">
+          <CalcButton 
+            onClick={() => handleNumber('0')} 
+            colSpan={2}
+          >
+            0
+          </CalcButton>
+          <CalcButton onClick={handleDecimal}>
+            ,
+          </CalcButton>
+          <CalcButton 
+            type="operator" 
+            onClick={handleEquals}
+          >
             =
-          </button>
+          </CalcButton>
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Calculator from './Calculator';
-import { Sun, Moon } from "lucide-react"; // Importar os ícones
+import { Sun, Moon, Home, Calculator as CalculatorIcon, Info } from "lucide-react"; // Importar os ícones
 
 function Hotbar({ onNavigate, showCalculator, setShowCalculator, darkMode, toggleTheme, isMobile = false }) {
   const [expanded, setExpanded] = useState(false);
@@ -137,7 +137,7 @@ function Hotbar({ onNavigate, showCalculator, setShowCalculator, darkMode, toggl
               <HotbarButton 
                 expanded={expanded}
                 onClick={() => onNavigate('home')}
-                icon="🏠"
+                icon={<Home className={`h-5 w-5 ${darkMode ? 'text-gray-100' : 'text-gray-600'}`} />}
                 description={buttonDescriptions.home}
                 isActive={activeSection === 'home'}
                 darkMode={darkMode}
@@ -146,7 +146,7 @@ function Hotbar({ onNavigate, showCalculator, setShowCalculator, darkMode, toggl
               <HotbarButton 
                 expanded={expanded}
                 onClick={() => onNavigate('about')}
-                icon="ℹ️"
+                icon={<Info className={`h-5 w-5 ${darkMode ? 'text-gray-100' : 'text-gray-600'}`} />}
                 description={buttonDescriptions.about}
                 isActive={activeSection === 'about'}
                 darkMode={darkMode}
@@ -155,7 +155,7 @@ function Hotbar({ onNavigate, showCalculator, setShowCalculator, darkMode, toggl
               <HotbarButton 
                 expanded={expanded}
                 onClick={() => onNavigate('calculator')}
-                icon="🧮"
+                icon={<CalculatorIcon className={`h-5 w-5 ${darkMode ? 'text-gray-100' : 'text-gray-600'}`} />}
                 description={buttonDescriptions.calculator}
                 darkMode={darkMode}
               />
@@ -166,7 +166,7 @@ function Hotbar({ onNavigate, showCalculator, setShowCalculator, darkMode, toggl
                 icon={
                   darkMode ? 
                     <Sun className="h-5 w-5 text-gray-100" /> : 
-                    <Moon className="h-5 w-5 text-gray-800" />
+                    <Moon className="h-5 w-5 text-gray-600" />
                 }
                 description={buttonDescriptions.theme}
                 darkMode={darkMode}
@@ -188,35 +188,14 @@ function Hotbar({ onNavigate, showCalculator, setShowCalculator, darkMode, toggl
           ">
             <MobileHotbarButton 
               onClick={() => onNavigate('home')}
-              icon="🏠"
+              icon={<Home className="h-5 w-5 text-gray-600" />}
               isActive={activeSection === 'home'}
               darkMode={darkMode}
             />
             
             <MobileHotbarButton 
-              onClick={() => onNavigate('cartesianGame')}
-              icon="🔢"
-              isActive={activeSection === 'cartesianGame'}
-              darkMode={darkMode}
-            />
-            
-            <MobileHotbarButton 
-              onClick={() => onNavigate('functionGame')}
-              icon="📈"
-              isActive={activeSection === 'functionGame'}
-              darkMode={darkMode}
-            />
-            
-            <MobileHotbarButton 
-              onClick={() => onNavigate('vectorGame')}
-              icon="➡️"
-              isActive={activeSection === 'vectorGame'}
-              darkMode={darkMode}
-            />
-            
-            <MobileHotbarButton 
               onClick={() => onNavigate('calculator')}
-              icon="🧮"
+              icon={<CalculatorIcon className="h-5 w-5 text-gray-600" />}
               darkMode={darkMode}
             />
             
@@ -224,8 +203,8 @@ function Hotbar({ onNavigate, showCalculator, setShowCalculator, darkMode, toggl
               onClick={toggleTheme}
               icon={
                 darkMode ? 
-                  <Sun className="h-5 w-5 text-gray-100" /> : 
-                  <Moon className="h-5 w-5 text-gray-800" />
+                  <Sun className="h-5 w-5 text-gray-600" /> : 
+                  <Moon className="h-5 w-5 text-gray-600" />
               }
               darkMode={darkMode}
             />
@@ -317,30 +296,30 @@ function HotbarButton({ onClick, icon, description, isActive, darkMode }) {
   );
 }
 
-  // Modificar o MobileHotbarButton para aceitar componentes React como ícones
-  function MobileHotbarButton({ onClick, icon, isActive, }) {  
-    return (
-      <button 
-        className={`
-          relative text-white rounded-xl
-          flex items-center justify-center bg-transparent
-          transition-all duration-300 ease-in-out
-          p-2
-          active:scale-95
-          ${isActive 
-            ? 'bg-blue-800/80' 
-            : 'bg-gray-800/50'}
-        `}
-        onClick={onClick}
-      >
-        {/* Renderizar o ícone como string ou componente React */}
-        {typeof icon === 'string' ? (
-          <span className="text-base">{icon}</span>
-        ) : (
-          icon
-        )}
-      </button>
-    );
-  }
+// Modificar o MobileHotbarButton para aceitar componentes React como ícones
+function MobileHotbarButton({ onClick, icon, isActive, }) {  
+  return (
+    <button 
+      className={`
+        relative text-white rounded-xl
+        flex items-center justify-center bg-transparent
+        transition-all duration-300 ease-in-out
+        p-2
+        active:scale-95
+        ${isActive 
+          ? 'bg-blue-800/80' 
+          : 'bg-gray-800/50'}
+      `}
+      onClick={onClick}
+    >
+      {/* Renderizar o ícone como string ou componente React */}
+      {typeof icon === 'string' ? (
+        <span className="text-base">{icon}</span>
+      ) : (
+        icon
+      )}
+    </button>
+  );
+}
 
 export default Hotbar;
