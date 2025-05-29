@@ -198,7 +198,6 @@ function App() {
           }
         </button>
       )}
-
       
       {/* Home Section */}
       <section 
@@ -221,104 +220,86 @@ function App() {
             Nossos Jogos
           </h2>
           
-          {/* Carousel para ambas as versões */}
-          <div className="w-full">
-            <Carousel 
-              className="w-full max-w-5xl mx-auto" 
-              opts={{ 
-                align: "center",
-                loop: true
-              }}
+          {/* Grid layout instead of carousel */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-5xl mx-auto">
+            {/* Card Produto Cartesiano */}
+            <div 
+              onClick={() => scrollToSection('cartesianGame')}
+              className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden border border-gray-200 dark:border-gray-700 transition-all cursor-pointer hover:shadow-md hover:scale-105 duration-300"
             >
-              <CarouselContent className="-ml-2 md:-ml-4">
-                {/* Card Produto Cartesiano */}
-                <CarouselItem className="pl-2 md:pl-4 basis-full md:basis-1/2 lg:basis-1/3">
-                  <div 
-                    onClick={() => scrollToSection('cartesianGame')}
-                    className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden border border-gray-200 dark:border-gray-700 transition-all cursor-pointer hover:shadow-md hover:scale-105 duration-300"
-                  >
-                    <div className="h-24 md:h-36 bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center transition-colors">
-                      <div 
-                        className="text-4xl md:text-5xl text-blue-600 dark:text-blue-300 font-bold"
-                        style={{ fontFamily: "'Dancing Script', cursive" }}
-                      >
-                        A×B
-                      </div>
-                    </div>
-                    <div className="p-4">
-                      <h3 
-                        className="text-lg md:text-xl font-bold text-blue-700 dark:text-blue-300 mb-2 transition-colors"
-                        style={{ fontFamily: "'Dancing Script', cursive" }}
-                      >
-                        Produto Cartesiano
-                      </h3>
-                      <p className="text-sm md:text-base text-gray-700 dark:text-gray-300 transition-colors">
-                        Explore a combinação de conjuntos e colete os pares ordenados no plano cartesiano.
-                      </p>
-                    </div>
-                  </div>
-                </CarouselItem>
-                
-                {/* Card Função */}
-                <CarouselItem className="pl-2 md:pl-4 basis-full md:basis-1/2 lg:basis-1/3">
-                  <div 
-                    onClick={() => scrollToSection('functionGame')}
-                    className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden border border-gray-200 dark:border-gray-700 transition-all cursor-pointer hover:shadow-md hover:scale-105 duration-300"
-                  >
-                    <div className="h-24 md:h-36 bg-gray-50 dark:bg-gray-700/30 flex items-center justify-center transition-colors">
-                      <div 
-                        className="text-2xl md:text-3xl text-gray-800 dark:text-gray-200 font-bold transition-colors"
-                        style={{ fontFamily: "'Dancing Script', cursive" }}
-                      >
-                        f(x)=ax²+bx+c
-                      </div>
-                    </div>
-                    <div className="p-4">
-                      <h3 
-                        className="text-lg md:text-xl font-bold text-gray-800 dark:text-gray-200 mb-2 transition-colors"
-                        style={{ fontFamily: "'Dancing Script', cursive" }}
-                      >
-                        Descubra a Função
-                      </h3>
-                      <p className="text-sm md:text-base text-gray-700 dark:text-gray-300 transition-colors">
-                        Deduza a função matemática a partir do seu gráfico e comportamento.
-                      </p>
-                    </div>
-                  </div>
-                </CarouselItem>
-                
-                {/* Card Vetor */}
-                <CarouselItem className="pl-2 md:pl-4 basis-full md:basis-1/2 lg:basis-1/3">
-                  <div 
-                    onClick={() => scrollToSection('vectorGame')}
-                    className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden border border-gray-200 dark:border-gray-700 transition-all cursor-pointer hover:shadow-md hover:scale-105 duration-300"
-                  >
-                    <div className="h-24 md:h-36 bg-gray-50 dark:bg-purple-900/30 flex items-center justify-center transition-colors">
-                      <div 
-                        className="text-2xl md:text-3xl text-gray-800 dark:text-purple-200 font-bold transition-colors"
-                        style={{ fontFamily: "'Dancing Script', cursive" }}
-                      >
-                        <span className="inline-block transform -translate-y-2">→</span>
-                        <span className="ml-1">v = (x,y)</span>
-                      </div>
-                    </div>
-                    <div className="p-4">
-                      <h3 
-                        className="text-lg md:text-xl font-bold text-gray-800 dark:text-gray-200 mb-2 transition-colors"
-                        style={{ fontFamily: "'Dancing Script', cursive" }}
-                      >
-                        Decomposição Vetorial
-                      </h3>
-                      <p className="text-sm md:text-base text-gray-700 dark:text-gray-300 transition-colors">
-                        Aprenda a decompor vetores em suas componentes x e y no plano cartesiano.
-                      </p>
-                    </div>
-                  </div>
-                </CarouselItem>
-              </CarouselContent>
-              <CarouselPrevious className="left-0 md:-left-12" />
-              <CarouselNext className="right-0 md:-right-12" />
-            </Carousel>
+              <div className="h-24 md:h-36 bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center transition-colors">
+                <div 
+                  className="text-4xl md:text-5xl text-blue-600 dark:text-blue-300 font-bold"
+                  style={{ fontFamily: "'Dancing Script', cursive" }}
+                >
+                  A×B
+                </div>
+              </div>
+              <div className="p-4">
+                <h3 
+                  className="text-lg md:text-xl font-bold text-blue-700 dark:text-blue-300 mb-2 transition-colors"
+                  style={{ fontFamily: "'Dancing Script', cursive" }}
+                >
+                  Produto Cartesiano
+                </h3>
+                <p className="text-sm md:text-base text-gray-700 dark:text-gray-300 transition-colors">
+                  Explore a combinação de conjuntos e colete os pares ordenados no plano cartesiano.
+                </p>
+              </div>
+            </div>
+            
+            {/* Card Função */}
+            <div 
+              onClick={() => scrollToSection('functionGame')}
+              className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden border border-gray-200 dark:border-gray-700 transition-all cursor-pointer hover:shadow-md hover:scale-105 duration-300"
+            >
+              <div className="h-24 md:h-36 bg-gray-50 dark:bg-gray-700/30 flex items-center justify-center transition-colors">
+                <div 
+                  className="text-2xl md:text-3xl text-gray-800 dark:text-gray-200 font-bold transition-colors"
+                  style={{ fontFamily: "'Dancing Script', cursive" }}
+                >
+                  f(x)=ax²+bx+c
+                </div>
+              </div>
+              <div className="p-4">
+                <h3 
+                  className="text-lg md:text-xl font-bold text-gray-800 dark:text-gray-200 mb-2 transition-colors"
+                  style={{ fontFamily: "'Dancing Script', cursive" }}
+                >
+                  Descubra a Função
+                </h3>
+                <p className="text-sm md:text-base text-gray-700 dark:text-gray-300 transition-colors">
+                  Deduza a função matemática a partir do seu gráfico e comportamento.
+                </p>
+              </div>
+            </div>
+            
+            {/* Card Vetor */}
+            <div 
+              onClick={() => scrollToSection('vectorGame')}
+              className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden border border-gray-200 dark:border-gray-700 transition-all cursor-pointer hover:shadow-md hover:scale-105 duration-300"
+            >
+              <div className="h-24 md:h-36 bg-gray-50 dark:bg-purple-900/30 flex items-center justify-center transition-colors">
+                <div 
+                  className="text-2xl md:text-3xl text-gray-800 dark:text-purple-200 font-bold transition-colors"
+                  style={{ fontFamily: "'Dancing Script', cursive" }}
+                >
+                  <span className="inline-block transform -translate-y-2">→</span>
+                  <span className="ml-1">v = (x,y)</span>
+                </div>
+              </div>
+              <div className="p-4">
+                <h3 
+                  className="text-lg md:text-xl font-bold text-gray-800 dark:text-gray-200 mb-2 transition-colors"
+                  style={{ fontFamily: "'Dancing Script', cursive" }}
+                >
+                  Decomposição Vetorial
+                </h3>
+                <p className="text-sm md:text-base text-gray-700 dark:text-gray-300 transition-colors">
+                  Aprenda a decompor vetores em suas componentes x e y no plano cartesiano.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
