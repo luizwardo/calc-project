@@ -21,14 +21,13 @@ const fontStyles = `
 
 function App() {
   const homeRef = useRef(null);
-  const gamesRef = useRef(null);
   const aboutRef = useRef(null);
   
   const [showCalculator, setShowCalculator] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [currentGameIndex, setCurrentGameIndex] = useState(0);
-  const [carouselApi, setCarouselApi] = useState();
+  const [currentHomeIndex, setCurrentHomeIndex] = useState(0);
+  const [homeCarouselApi, setHomeCarouselApi] = useState();
 
   const [showGameModal, setShowGameModal] = useState(false);
   const [selectedGameId, setSelectedGameId] = useState(null);
@@ -107,20 +106,6 @@ function App() {
     document.body.style.overflow = 'unset';
   };
 
-  // Handle game navigation
-  const navigateToGame = (gameId) => {
-    const gameIndex = games.findIndex(game => game.id === gameId);
-    if (gameIndex !== -1) {
-      setCurrentGameIndex(gameIndex);
-      // Scroll to games carousel section
-      if (gamesRef.current) {
-        gamesRef.current.scrollIntoView({ 
-          behavior: 'smooth',
-          block: 'start'
-        });
-      }
-    }
-  };
 
   // Update scroll function to handle game modals
   const scrollToSection = (sectionId) => {
@@ -144,9 +129,6 @@ function App() {
       });
       return;
     }
-
-    // For game sections from navbar, navigate to carousel
-    navigateToGame(sectionId);
   };
 
 
@@ -174,28 +156,28 @@ function App() {
   }, [showGameModal]);
 
   useEffect(() => {
-    if (!carouselApi) {
-      return;
-    }
+  if (!homeCarouselApi) {
+    return;
+  }
 
-    const onSelect = () => {
-      setCurrentGameIndex(carouselApi.selectedScrollSnap());
-    };
+  const onSelect = () => {
+    setCurrentHomeIndex(homeCarouselApi.selectedScrollSnap());
+  };
 
-    carouselApi.on('select', onSelect);
-    onSelect(); // Set initial state
+  homeCarouselApi.on('select', onSelect);
+  onSelect();
 
-    return () => {
-      carouselApi.off('select', onSelect);
-    };
-  }, [carouselApi]);
+  return () => {
+    homeCarouselApi.off('select', onSelect);
+  };
+}, [homeCarouselApi]);
 
-  // Handle indicator click
-  const handleIndicatorClick = useCallback((index) => {
-    if (carouselApi) {
-      carouselApi.scrollTo(index);
-    }
-  }, [carouselApi]);
+// Handler para indicadores do carrossel da home
+const handleHomeIndicatorClick = useCallback((index) => {
+  if (homeCarouselApi) {
+    homeCarouselApi.scrollTo(index);
+  }
+}, [homeCarouselApi]);
 
   return (
     <div 
@@ -290,12 +272,12 @@ function App() {
           }
         </button>
       )}
-         
+
       {/* Home Section - Update card onClick handlers */}
       <section 
         ref={homeRef} 
         id="home"
-        className="min-h-screen flex flex-col items-center justify-center px-4 py-12 md:p-6 transition-colors"
+        className=" min-h-screen flex items-center justify-center px-4 py-12 md:p-6 transition-colors"
       >
         <div className="max-w-5xl w-full">
           <h1 
@@ -312,186 +294,186 @@ function App() {
             Nossos Jogos
           </h2>
           
-          {/* Updated Grid layout with modal handlers */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-5xl mx-auto">
-            {/* Card Produto Cartesiano */}
-            <div 
-              onClick={() => openGameModal('cartesianGame')}
-              className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden border border-gray-200 dark:border-gray-700 transition-all cursor-pointer hover:shadow-lg hover:scale-105 duration-300"
-            >
-              <div className="h-24 md:h-36 bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center transition-colors">
-                <div 
-                  className="text-4xl md:text-5xl text-blue-600 dark:text-blue-300 font-bold"
-                  style={{ fontFamily: "'Dancing Script', cursive" }}
-                >
-                  A×B
-                </div>
-              </div>
-              <div className="p-4">
-                <h3 
-                  className="text-lg md:text-xl font-bold text-blue-700 dark:text-blue-300 mb-2 transition-colors"
-                  style={{ fontFamily: "'Dancing Script', cursive" }}
-                >
-                  Produto Cartesiano
-                </h3>
-                <p className="text-sm md:text-base text-gray-700 dark:text-gray-300 transition-colors">
-                  Explore a combinação de conjuntos e colete os pares ordenados no plano cartesiano.
-                </p>
-              </div>
-            </div>
-            
-            {/* Card Função */}
-            <div 
-              onClick={() => openGameModal('functionGame')}
-              className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden border border-gray-200 dark:border-gray-700 transition-all cursor-pointer hover:shadow-lg hover:scale-105 duration-300"
-            >
-              <div className="h-24 md:h-36 bg-gray-50 dark:bg-gray-700/30 flex items-center justify-center transition-colors">
-                <div 
-                  className="text-2xl md:text-3xl text-gray-800 dark:text-gray-200 font-bold transition-colors"
-                  style={{ fontFamily: "'Dancing Script', cursive" }}
-                >
-                  f(x)=ax²+bx+c
-                </div>
-              </div>
-              <div className="p-4">
-                <h3 
-                  className="text-lg md:text-xl font-bold text-gray-800 dark:text-gray-200 mb-2 transition-colors"
-                  style={{ fontFamily: "'Dancing Script', cursive" }}
-                >
-                  Descubra a Função
-                </h3>
-                <p className="text-sm md:text-base text-gray-700 dark:text-gray-300 transition-colors">
-                  Deduza a função matemática a partir do seu gráfico e comportamento.
-                </p>
-              </div>
-            </div>
-            
-            {/* Card Vetor */}
-            <div 
-              onClick={() => openGameModal('vectorGame')}
-              className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden border border-gray-200 dark:border-gray-700 transition-all cursor-pointer hover:shadow-lg hover:scale-105 duration-300"
-            >
-              <div className="h-24 md:h-36 bg-gray-50 dark:bg-purple-900/30 flex items-center justify-center transition-colors">
-                <div 
-                  className="text-2xl md:text-3xl text-gray-800 dark:text-purple-200 font-bold transition-colors"
-                  style={{ fontFamily: "'Dancing Script', cursive" }}
-                >
-                  <span className="inline-block transform -translate-y-2">→</span>
-                  <span className="ml-1">v = (x,y)</span>
-                </div>
-              </div>
-              <div className="p-4">
-                <h3 
-                  className="text-lg md:text-xl font-bold text-gray-800 dark:text-gray-200 mb-2 transition-colors"
-                  style={{ fontFamily: "'Dancing Script', cursive" }}
-                >
-                  Decomposição Vetorial
-                </h3>
-                <p className="text-sm md:text-base text-gray-700 dark:text-gray-300 transition-colors">
-                  Aprenda a decompor vetores em suas componentes x e y no plano cartesiano.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-
-      <section 
-        ref={gamesRef}
-        id="games"
-        className="min-h-screen flex items-center justify-center px-2 py-16 md:p-6 transition-colors"
-      >
-        <div className="w-full max-w-6xl mx-auto">
-          <h2 
-            className="text-2xl md:text-4xl font-bold text-center mb-8 text-gray-800 dark:text-gray-200 transition-colors"
-            style={{ fontFamily: "'Dancing Script', cursive" }}
-          >
-            {games[currentGameIndex].title}
-          </h2>
-          
+          {/* Cards em carrossel */}
           <Carousel 
-            className="w-full"
-            setApi={setCarouselApi}
-            opts={{
-              startIndex: currentGameIndex,
-              loop: true,
-              dragfree: true,
-              skipSnaps: true,
-              AlignCenter: true,        
-              duration: 30,
-              slidesToScroll: 1,     
-            }}
-          >
-            <CarouselContent className="transitions-all durations-700 slides-in">
-              {games.map((game,) => {
-                const GameComponent = game.component;
-                return (
-                  <CarouselItem key={game.id} className="w-full">
-                    <div className="w-full h-full">
-                      <GameComponent 
-                        onClose={() => scrollToSection('home')} 
-                        darkMode={darkMode} 
-                        isMobile={isMobile} 
-                      />
-                    </div>
-                  </CarouselItem>
-                );
-              })}
-            </CarouselContent>
-            
-            {/* Arrows positioned on the sides */}
-            <CarouselPrevious 
-              className={`
-                absolute left-4 top-1/2 transform -translate-y-1/2
-                ${darkMode 
-                  ? 'bg-gray-800 border-gray-600 text-gray-300 hover:bg-gray-700' 
-                  : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
-                }
-              `}
-            />
-            <CarouselNext 
-              className={`
-                absolute right-4 top-1/2 transform -translate-y-1/2 
-                transition-all duration-300 slides-in
-                ${darkMode 
-                  ? 'bg-gray-800 border-gray-600 text-gray-300 hover:bg-gray-700' 
-                  : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
-                }
-              `}
-            />
-          </Carousel>
-          
-          {/* Enhanced indicators with animation */}
-          <div className="flex justify-center mt-8 gap-4">
-            {games.map((_, index) => (
-            <button
-          key={index}
-          onClick={() => handleIndicatorClick(index)}
+  className=""
+  setApi={setHomeCarouselApi}
+  opts={{
+    loop: true,
+    align: "center",
+    dragFree: true,
+    skipSnaps: false,
+    duration: 30,
+    startIndex: 0,
+  }}
+>
+  <CarouselContent className="-ml-2 md:-ml-4 py-4">
+    {/* Card Produto Cartesiano */}
+    <CarouselItem className="pl-2 md:pl-4 basis-full md:basis-1/2 lg:basis-1/3">
+      <div className="p-2">
+        <div 
+          onClick={() => openGameModal('cartesianGame')}
           className={`
-            transition-all duration-500 ease-out rounded-full relative overflow-hidden
-            hover:scale-115 active:scale-35
-            ${index === currentGameIndex
-              ? `w-8 h-4 ${darkMode ? 'bg-blue-400 shadow-blue-400/50' : 'bg-blue-600 shadow-blue-600/50'} shadow-lg`
-              : `w-4 h-4 ${darkMode ? 'bg-gray-600 hover:bg-gray-500' : 'bg-gray-300 hover:bg-gray-400'} hover:shadow-md`
-            }
+            bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden 
+            border border-gray-200 dark:border-gray-700 transition-all 
+            cursor-pointer hover:shadow-lg hover:scale-105 duration-300 h-full
           `}
-          aria-label={`Ir para ${games[index].title}`}
         >
-          {/* Animated inner indicator */}
-          <div className={`
-            absolute inset-0 rounded-full transition-all duration-300
-            ${index === currentGameIndex
-              ? `${darkMode ? 'bg-gradient-to-r from-blue-300 to-blue-500' : 'bg-gradient-to-r from-blue-500 to-blue-700'} animate-pulse`
-              : 'bg-transparent'
-            }
-          `} />
-        </button>
-      ))}
+          <div className="h-24 md:h-36 bg-gray-50 dark:bg-gray-700/30 flex items-center justify-center transition-colors">
+            <div 
+              className="text-4xl md:text-5xl text-gray-800 dark:text-gray-200 font-bold"
+              style={{ fontFamily: "'Dancing Script', cursive" }}
+            >
+              A×B
+            </div>
+          </div>
+          <div className="p-4">
+            <h3 
+              className="text-lg md:text-xl font-bold text-gray-800 dark:text-gray-200 mb-2 transition-colors"
+              style={{ fontFamily: "'Dancing Script', cursive" }}
+            >
+              Produto Cartesiano
+            </h3>
+            <p className="text-sm md:text-base text-gray-700 dark:text-gray-300 transition-colors">
+              Explore e colete os pares ordenados no plano cartesiano.
+            </p>
+          </div>
+        </div>
+      </div>
+    </CarouselItem>
+    
+    {/* Card Função */}
+    <CarouselItem className="pl-2 md:pl-4 basis-full md:basis-1/2 lg:basis-1/3">
+      <div className="p-2">
+        <div 
+          onClick={() => openGameModal('functionGame')}
+          className={`
+            bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden 
+            border border-gray-200 dark:border-gray-700 transition-all 
+            cursor-pointer hover:shadow-lg hover:scale-105 duration-300 h-full
+          `}
+        >
+          <div className="h-24 md:h-36 bg-gray-50 dark:bg-gray-700/30 flex items-center justify-center transition-colors">
+            <div 
+              className="text-2xl md:text-3xl text-gray-800 dark:text-gray-200 font-bold transition-colors"
+              style={{ fontFamily: "'Dancing Script', cursive" }}
+            >
+              f(x)=ax²+bx+c
+            </div>
+          </div>
+          <div className="p-4">
+            <h3 
+              className="text-lg md:text-xl font-bold text-gray-800 dark:text-gray-200 mb-2 transition-colors"
+              style={{ fontFamily: "'Dancing Script', cursive" }}
+            >
+              Descubra a Função
+            </h3>
+            <p className="text-sm md:text-base text-gray-700 dark:text-gray-300 transition-colors">
+              Deduza a função matemática a partir do seu gráfico e comportamento.
+            </p>
+          </div>
+        </div>
+      </div>
+    </CarouselItem>
+    
+    {/* Card Vetor */}
+    <CarouselItem className="pl-2 md:pl-4 basis-full md:basis-1/2 lg:basis-1/3">
+      <div className="p-2">
+        <div 
+          onClick={() => openGameModal('vectorGame')}
+          className={`
+            bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden 
+            border border-gray-200 dark:border-gray-700 transition-all 
+            cursor-pointer hover:shadow-lg hover:scale-105 duration-300 h-full
+          `}
+        >
+          <div className="h-24 md:h-36 bg-gray-50 dark:bg-gray-700/30 flex items-center justify-center transition-colors">
+            <div 
+              className="text-2xl md:text-3xl text-gray-800 dark:text-gray-200 font-bold transition-colors"
+              style={{ fontFamily: "'Dancing Script', cursive" }}
+            >
+              <span className="inline-block transform -translate-y-2">→</span>
+              <span className="ml-1">v = (x,y)</span>
+            </div>
+          </div>
+          <div className="p-4">
+            <h3 
+              className="text-lg md:text-xl font-bold text-gray-800 dark:text-gray-200 mb-2 transition-colors"
+              style={{ fontFamily: "'Dancing Script', cursive" }}
+            >
+              Decomposição Vetorial
+            </h3>
+            <p className="text-sm md:text-base text-gray-700 dark:text-gray-300 transition-colors">
+              Decompor vetores em seus componentes no plano cartesiano.
+            </p>
+          </div>
+        </div>
+      </div>
+    </CarouselItem>
+  </CarouselContent>
+  
+  {/* Navigation controls */}
+  <CarouselPrevious 
+    className={`
+      -left-12 md:-left-16 
+      transition-all duration-300 ease-out 
+      hover:scale-110 hover:shadow-xl hover:-translate-x-1
+      ${darkMode 
+        ? 'bg-gray-800/90 border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white' 
+        : 'bg-white/90 border-gray-300 text-gray-700 hover:bg-gray-50 hover:text-gray-900'
+      }
+    `}
+    style={{
+      backdropFilter: 'blur(8px)',
+      WebkitBackdropFilter: 'blur(8px)',
+    }}
+  />
+  <CarouselNext 
+    className={`
+      -right-12 md:-right-16 
+      transition-all duration-300 ease-out 
+      hover:scale-110 hover:shadow-xl hover:translate-x-1
+      ${darkMode 
+        ? 'bg-gray-800/90 border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white' 
+        : 'bg-white/90 border-gray-300 text-gray-700 hover:bg-gray-50 hover:text-gray-900'
+      }
+    `}
+    style={{
+      backdropFilter: 'blur(8px)',
+      WebkitBackdropFilter: 'blur(8px)',
+    }}
+  />
+</Carousel>
+          
+          {/* Indicadores do carrossel */}
+          <div className="flex justify-center mt-8 gap-3">
+            {[0, 1, 2].map((index) => (
+              <button
+                key={index}
+                onClick={() => handleHomeIndicatorClick(index)}
+                className={`
+                  transition-all duration-300 ease-out rounded-full relative overflow-hidden
+                  hover:scale-125 active:scale-95
+                  ${index === currentHomeIndex
+                    ? `w-8 h-3 ${darkMode ? 'bg-blue-400 shadow-blue-400/60' : 'bg-blue-600 shadow-blue-600/60'} shadow-lg`
+                    : `w-3 h-3 ${darkMode ? 'bg-gray-600 hover:bg-gray-500' : 'bg-gray-300 hover:bg-gray-400'} hover:shadow-md`
+                  }
+                `}
+                aria-label={`Ir para o jogo ${index + 1}`}
+              >
+                {/* Animação no indicador ativo */}
+                <div className={`
+                  absolute inset-0 rounded-full transition-all duration-300
+                  ${index === currentHomeIndex
+                    ? `${darkMode ? 'bg-gradient-to-r from-blue-300 to-blue-500' : 'bg-gradient-to-r from-blue-500 to-blue-700'} animate-pulse`
+                    : 'bg-transparent'
+                  }
+                `} />
+              </button>
+            ))}
           </div>
         </div>
       </section>
-      
       
       {/* About Section */}
       <section 

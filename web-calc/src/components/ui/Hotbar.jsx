@@ -145,33 +145,6 @@ function Hotbar({ onNavigate, showCalculator, setShowCalculator, darkMode, toggl
               
               <HotbarButton 
                 expanded={expanded}
-                onClick={() => onNavigate('cartesianGame')}
-                icon="🔢"
-                description={buttonDescriptions.cartesianGame}
-                isActive={activeSection === 'cartesianGame'}
-                darkMode={darkMode}
-              />
-              
-              <HotbarButton 
-                expanded={expanded}
-                onClick={() => onNavigate('functionGame')}
-                icon="📈"
-                description={buttonDescriptions.functionGame}
-                isActive={activeSection === 'functionGame'}
-                darkMode={darkMode}
-              />
-              
-              <HotbarButton 
-                expanded={expanded}
-                onClick={() => onNavigate('vectorGame')}
-                icon="➡️"
-                description={buttonDescriptions.vectorGame}
-                isActive={activeSection === 'vectorGame'}
-                darkMode={darkMode}
-              />
-              
-              <HotbarButton 
-                expanded={expanded}
                 onClick={() => onNavigate('about')}
                 icon="ℹ️"
                 description={buttonDescriptions.about}
@@ -266,7 +239,7 @@ function Hotbar({ onNavigate, showCalculator, setShowCalculator, darkMode, toggl
 }
 
 // Modificar o componente HotbarButton para aceitar componentes React como ícones
-function HotbarButton({ expanded, onClick, icon, description, isActive, darkMode }) {
+function HotbarButton({ onClick, icon, description, isActive, darkMode }) {
   const [isHovered, setIsHovered] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
   const hoverTimer = useRef(null);  
@@ -345,7 +318,7 @@ function HotbarButton({ expanded, onClick, icon, description, isActive, darkMode
 }
 
   // Modificar o MobileHotbarButton para aceitar componentes React como ícones
-  function MobileHotbarButton({ onClick, icon, isActive, darkMode }) {  
+  function MobileHotbarButton({ onClick, icon, isActive, }) {  
     return (
       <button 
         className={`

@@ -262,7 +262,7 @@ function FunctionGame({ onClose, darkMode }) {
     }
     default:
       return {
-        func: (x) => 0,
+        func: () => 0,
         x: [-10, 10],
         y: [0, 0],
         equation: "f(x) = 0"

@@ -26,17 +26,17 @@ function VectorGame({ onClose, darkMode }) {
   // Referência para o plano cartesiano
   const plotRef = useRef(null);
 
-  // Inicializar o jogo
-  useEffect(() => {
-    generateLevel(level);
-  }, [level]);
-
   // Gerar um novo nível com base na dificuldade
-  const generateLevel = (levelNumber) => {
+  const generateLevel = React.useCallback((levelNumber) => {
     setFeedback('');
     setIsComplete(false);
     generateDecompositionLevel(levelNumber);
-  };
+  }, []);
+
+  // Inicializar o jogo
+  useEffect(() => {
+    generateLevel(level);
+  }, [level, generateLevel]);
 
   // Gerar nível de decomposição de vetores
   const generateDecompositionLevel = (difficulty) => {
