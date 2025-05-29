@@ -40,32 +40,25 @@ function VectorGame({ onClose, darkMode }) {
   }, [level, generateLevel]);
 
   // Gerar nível de decomposição de vetores
-  const generateDecompositionLevel = (difficulty) => {
+  const generateDecompositionLevel = () => {
     // Ajustar dificuldade - quanto maior o nível, maiores e mais complexos os vetores
-    const multiplier = Math.min(difficulty, 5);
+    const maxRange = 15;
     
     // Gerar um vetor aleatório para decompor
     const vector = {
-      x: Math.floor(Math.random() * (3 * multiplier)) - Math.floor(1.5 * multiplier),
-      y: Math.floor(Math.random() * (3 * multiplier)) - Math.floor(1.5 * multiplier)
+      x: Math.floor(Math.random() * (2 * maxRange + 1)) - maxRange,
+      y: Math.floor(Math.random() * (2 * maxRange + 1)) - maxRange
     };
     
     // Garantir que não temos o vetor nulo ou muito simples
-    if (Math.abs(vector.x) < 2) vector.x = vector.x < 0 ? -2 : 2;
-    if (Math.abs(vector.y) < 2) vector.y = vector.y < 0 ? -2 : 2;
-    
-    // Garantir alguma complexidade em níveis mais altos
-    if (difficulty > 3) {
-      // Usar valores não inteiros para níveis mais avançados
-      if (Math.random() > 0.5) {
-        vector.x += (Math.random() * 0.8).toFixed(1);
-        vector.y += (Math.random() * 0.8).toFixed(1);
-      }
-    }
-    
-    setVectorToDecompose(vector);
-    setUserComponents({ x: 0, y: 0 });
-  };
+    if (vector.x === 0 && vector.y === 0) {
+    vector.x = Math.random() > 0.5 ? 1 : -1;
+    vector.y = Math.random() > 0.5 ? 1 : -1;
+  }
+  
+  setVectorToDecompose(vector);
+  setUserComponents({ x: 0, y: 0 });
+};
 
   // Calcular o módulo (comprimento) de um vetor
   const calculateMagnitude = (vector) => {
@@ -129,7 +122,16 @@ function VectorGame({ onClose, darkMode }) {
       hoverinfo: 'none',
       showlegend: false
     });
-
+    
+    plotData.push({
+      x: [0, 0],
+      y: [-10, 10],
+      mode: 'lines',
+      line: { color: axisColor, width: 1 },
+      hoverinfo: 'none',
+      showlegend: false
+    });
+    
     
     // Mostrar componentes do usuário
     plotData.push({
@@ -191,14 +193,8 @@ function VectorGame({ onClose, darkMode }) {
           </div>
           
           {/* Vector Info Card */}
-          <div className={`p-4 rounded-lg ${darkMode ? 'bg-gradient-to-br from-orange-900/30 to-orange-800/20 border border-orange-700/30' : 'bg-gradient-to-br from-orange-50 to-orange-100 border border-orange-200'} backdrop-blur-sm`}>
+          <div className={`p-4 rounded-lg ${darkMode ? 'bg-gradient-to-br from-blue-200/30 to-blue-600/20 border border-blue-700/30' : 'bg-gradient-to-b from-gray-150/30 to-gray-200/30 border border-gray-200/90'} backdrop-blur-sm`}>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="text-center">
-                <p className={`text-xs font-medium ${darkMode ? 'text-orange-300' : 'text-orange-600'} mb-1`}>Vetor Alvo</p>
-                <p className={`text-sm font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
-                  ({round2Decimals(vectorToDecompose.x)}, {round2Decimals(vectorToDecompose.y)})
-                </p>
-              </div>
               <div className="text-center">
                 <p className={`text-xs font-medium ${darkMode ? 'text-orange-300' : 'text-orange-600'} mb-1`}>Módulo</p>
                 <p className={`text-sm font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
@@ -237,7 +233,7 @@ function VectorGame({ onClose, darkMode }) {
                     },
                     xaxis: {
                       title: { text: 'x', font: { size: 14 } },
-                      range: [-10, 10],
+                      range: [-20, 20],
                       zeroline: true,
                       showgrid: true,
                       gridcolor: darkMode ? 'rgba(75, 85, 99, 0.4)' : 'rgba(229, 231, 235, 0.8)',
@@ -247,7 +243,7 @@ function VectorGame({ onClose, darkMode }) {
                     },
                     yaxis: {
                       title: { text: 'y', font: { size: 14 } },
-                      range: [-10, 10],
+                      range: [-20, 20],
                       zeroline: true,
                       showgrid: true,
                       gridcolor: darkMode ? 'rgba(75, 85, 99, 0.4)' : 'rgba(229, 231, 235, 0.8)',
@@ -290,9 +286,9 @@ function VectorGame({ onClose, darkMode }) {
                     Componente X: {round2Decimals(userComponents.x)}
                   </Label>
                   <Slider
-                    min={-10}
-                    max={10}
-                    step={0.1}
+                    min={-15}
+                    max={15}
+                    step={1}
                     value={[userComponents.x]}
                     onValueChange={(value) => setUserComponents({...userComponents, x: value[0]})}
                     className="mt-1"
@@ -304,9 +300,9 @@ function VectorGame({ onClose, darkMode }) {
                     Componente Y: {round2Decimals(userComponents.y)}
                   </Label>
                   <Slider
-                    min={-10}
-                    max={10}
-                    step={0.1}
+                    min={-15}
+                    max={15}f
+                    step={1}
                     value={[userComponents.y]}
                     onValueChange={(value) => setUserComponents({...userComponents, y: value[0]})}
                     className="mt-1"
