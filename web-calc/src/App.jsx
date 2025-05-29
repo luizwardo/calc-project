@@ -281,14 +281,14 @@ const handleHomeIndicatorClick = useCallback((index) => {
       >
         <div className="max-w-5xl w-full">
           <h1 
-            className="text-3xl md:text-5xl font-bold text-center mb-10 text-gray-800 dark:text-gray-200 transition-colors"
+            className="text-3xl md:text-5xl font-bold text-center mb-10 text-gray-600 dark:text-gray-200 transition-colors"
             style={{ fontFamily: "'Dancing Script', cursive" }}
           >
             Explorando Matemática Interativa
           </h1>
           
           <h2 
-            className="text-xl md:text-3xl font-semibold text-center mb-8 text-gray-700 dark:text-gray-300 transition-colors"
+            className="text-xl md:text-3xl font-semibold text-center mb-8 text-gray-600 dark:text-gray-300 transition-colors"
             style={{ fontFamily: "'Dancing Script', cursive" }}
           >
             Nossos Jogos
@@ -296,116 +296,122 @@ const handleHomeIndicatorClick = useCallback((index) => {
           
           {/* Cards em carrossel */}
           <Carousel 
-  className=""
+  className="relative"
   setApi={setHomeCarouselApi}
   opts={{
     loop: true,
     align: "center",
-    dragFree: true,
+    dragFree: false,
     skipSnaps: false,
-    duration: 30,
+    duration: 20,
     startIndex: 0,
   }}
 >
-  <CarouselContent className="-ml-2 md:-ml-4 py-4">
+  <CarouselContent className="-ml-4 py-4">
     {/* Card Produto Cartesiano */}
-    <CarouselItem className="pl-2 md:pl-4 basis-full md:basis-1/2 lg:basis-1/3">
-      <div className="p-2">
-        <div 
-          onClick={() => openGameModal('cartesianGame')}
-          className={`
-            bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden 
-            border border-gray-200 dark:border-gray-700 transition-all 
-            cursor-pointer hover:shadow-lg hover:scale-105 duration-300 h-full
-          `}
-        >
-          <div className="h-24 md:h-36 bg-gray-50 dark:bg-gray-700/30 flex items-center justify-center transition-colors">
-            <div 
-              className="text-4xl md:text-5xl text-gray-800 dark:text-gray-200 font-bold"
-              style={{ fontFamily: "'Dancing Script', cursive" }}
-            >
-              A×B
+    <CarouselItem className="pl-4 basis-full">
+      <div className="flex justify-center">
+        <div className="w-full max-w-sm">
+          <div 
+            onClick={() => openGameModal('cartesianGame')}
+            className={`
+              bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden 
+              border border-gray-200 dark:border-gray-700 transition-all 
+              cursor-pointer hover:shadow-lg hover:scale-105 duration-300 h-full
+            `}
+          >
+            <div className="h-32 md:h-40 bg-gray-50 dark:bg-gray-700/30 flex items-center justify-center transition-colors">
+              <div 
+                className="text-4xl md:text-5xl text-gray-600 dark:text-gray-200 font-bold"
+                style={{ fontFamily: "'Dancing Script', cursive" }}
+              >
+                A×B
+              </div>
             </div>
-          </div>
-          <div className="p-4">
-            <h3 
-              className="text-lg md:text-xl font-bold text-gray-800 dark:text-gray-200 mb-2 transition-colors"
-              style={{ fontFamily: "'Dancing Script', cursive" }}
-            >
-              Produto Cartesiano
-            </h3>
-            <p className="text-sm md:text-base text-gray-700 dark:text-gray-300 transition-colors">
-              Explore e colete os pares ordenados no plano cartesiano.
-            </p>
+            <div className="p-6">
+              <h3 
+                className="text-xl md:text-2xl font-bold text-gray-600 dark:text-gray-200 mb-3 transition-colors text-center"
+                style={{ fontFamily: "'Dancing Script', cursive" }}
+              >
+                Produto Cartesiano
+              </h3>
+              <p className="text-base text-gray-600 dark:text-gray-300 transition-colors text-center">
+                Explore e colete os pares ordenados no plano cartesiano.
+              </p>
+            </div>
           </div>
         </div>
       </div>
     </CarouselItem>
     
     {/* Card Função */}
-    <CarouselItem className="pl-2 md:pl-4 basis-full md:basis-1/2 lg:basis-1/3">
-      <div className="p-2">
-        <div 
-          onClick={() => openGameModal('functionGame')}
-          className={`
-            bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden 
-            border border-gray-200 dark:border-gray-700 transition-all 
-            cursor-pointer hover:shadow-lg hover:scale-105 duration-300 h-full
-          `}
-        >
-          <div className="h-24 md:h-36 bg-gray-50 dark:bg-gray-700/30 flex items-center justify-center transition-colors">
-            <div 
-              className="text-2xl md:text-3xl text-gray-800 dark:text-gray-200 font-bold transition-colors"
-              style={{ fontFamily: "'Dancing Script', cursive" }}
-            >
-              f(x)=ax²+bx+c
+    <CarouselItem className="pl-4 basis-full">
+      <div className="flex justify-center">
+        <div className="w-full max-w-sm">
+          <div 
+            onClick={() => openGameModal('functionGame')}
+            className={`
+              bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden 
+              border border-gray-200 dark:border-gray-700 transition-all 
+              cursor-pointer hover:shadow-lg hover:scale-105 duration-300 h-full
+            `}
+          >
+            <div className="h-32 md:h-40 bg-gray-50 dark:bg-gray-700/30 flex items-center justify-center transition-colors">
+              <div 
+                className="text-2xl md:text-3xl text-gray-600 dark:text-gray-200 font-bold transition-colors"
+                style={{ fontFamily: "'Dancing Script', cursive" }}
+              >
+                f(x)=ax²+bx+c
+              </div>
             </div>
-          </div>
-          <div className="p-4">
-            <h3 
-              className="text-lg md:text-xl font-bold text-gray-800 dark:text-gray-200 mb-2 transition-colors"
-              style={{ fontFamily: "'Dancing Script', cursive" }}
-            >
-              Descubra a Função
-            </h3>
-            <p className="text-sm md:text-base text-gray-700 dark:text-gray-300 transition-colors">
-              Deduza a função matemática a partir do seu gráfico e comportamento.
-            </p>
+            <div className="p-6">
+              <h3 
+                className="text-xl md:text-2xl font-bold text-gray-600 dark:text-gray-200 mb-3 transition-colors text-center"
+                style={{ fontFamily: "'Dancing Script', cursive" }}
+              >
+                Descubra a Função
+              </h3>
+              <p className="text-base text-gray-600 dark:text-gray-300 transition-colors text-center">
+                Deduza a função matemática a partir do seu gráfico e comportamento.
+              </p>
+            </div>
           </div>
         </div>
       </div>
     </CarouselItem>
     
     {/* Card Vetor */}
-    <CarouselItem className="pl-2 md:pl-4 basis-full md:basis-1/2 lg:basis-1/3">
-      <div className="p-2">
-        <div 
-          onClick={() => openGameModal('vectorGame')}
-          className={`
-            bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden 
-            border border-gray-200 dark:border-gray-700 transition-all 
-            cursor-pointer hover:shadow-lg hover:scale-105 duration-300 h-full
-          `}
-        >
-          <div className="h-24 md:h-36 bg-gray-50 dark:bg-gray-700/30 flex items-center justify-center transition-colors">
-            <div 
-              className="text-2xl md:text-3xl text-gray-800 dark:text-gray-200 font-bold transition-colors"
-              style={{ fontFamily: "'Dancing Script', cursive" }}
-            >
-              <span className="inline-block transform -translate-y-2">→</span>
-              <span className="ml-1">v = (x,y)</span>
+    <CarouselItem className="pl-4 basis-full">
+      <div className="flex justify-center">
+        <div className="w-full max-w-sm">
+          <div 
+            onClick={() => openGameModal('vectorGame')}
+            className={`
+              bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden 
+              border border-gray-200 dark:border-gray-700 transition-all 
+              cursor-pointer hover:shadow-lg hover:scale-105 duration-300 h-full
+            `}
+          >
+            <div className="h-32 md:h-40 bg-gray-50 dark:bg-gray-700/30 flex items-center justify-center transition-colors">
+              <div 
+                className="text-2xl md:text-3xl text-gray-600 dark:text-gray-200 font-bold transition-colors"
+                style={{ fontFamily: "'Dancing Script', cursive" }}
+              >
+                <span className="inline-block transform -translate-y-2">→</span>
+                <span className="ml-1">v = (x,y)</span>
+              </div>
             </div>
-          </div>
-          <div className="p-4">
-            <h3 
-              className="text-lg md:text-xl font-bold text-gray-800 dark:text-gray-200 mb-2 transition-colors"
-              style={{ fontFamily: "'Dancing Script', cursive" }}
-            >
-              Decomposição Vetorial
-            </h3>
-            <p className="text-sm md:text-base text-gray-700 dark:text-gray-300 transition-colors">
-              Decompor vetores em seus componentes no plano cartesiano.
-            </p>
+            <div className="p-6">
+              <h3 
+                className="text-xl md:text-2xl font-bold text-gray-600 dark:text-gray-200 mb-3 transition-colors text-center"
+                style={{ fontFamily: "'Dancing Script', cursive" }}
+              >
+                Decomposição Vetorial
+              </h3>
+              <p className="text-base text-gray-600 dark:text-gray-300 transition-colors text-center">
+                Decompor vetores em seus componentes no plano cartesiano.
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -415,12 +421,12 @@ const handleHomeIndicatorClick = useCallback((index) => {
   {/* Navigation controls */}
   <CarouselPrevious 
     className={`
-      -left-12 md:-left-16 
+      -left-8 md:-left-12 
       transition-all duration-300 ease-out 
       hover:scale-110 hover:shadow-xl hover:-translate-x-1
       ${darkMode 
         ? 'bg-gray-800/90 border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white' 
-        : 'bg-white/90 border-gray-300 text-gray-700 hover:bg-gray-50 hover:text-gray-900'
+        : 'bg-white/90 border-gray-300 text-gray-600 hover:bg-gray-50 hover:text-gray-900'
       }
     `}
     style={{
@@ -430,12 +436,12 @@ const handleHomeIndicatorClick = useCallback((index) => {
   />
   <CarouselNext 
     className={`
-      -right-12 md:-right-16 
+      -right-8 md:-right-12 
       transition-all duration-300 ease-out 
       hover:scale-110 hover:shadow-xl hover:translate-x-1
       ${darkMode 
         ? 'bg-gray-800/90 border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white' 
-        : 'bg-white/90 border-gray-300 text-gray-700 hover:bg-gray-50 hover:text-gray-900'
+        : 'bg-white/90 border-gray-300 text-gray-600 hover:bg-gray-50 hover:text-gray-900'
       }
     `}
     style={{
@@ -483,26 +489,26 @@ const handleHomeIndicatorClick = useCallback((index) => {
       >
         <div className="w-full max-w-2xl bg-white dark:bg-gray-800 p-4 md:p-8 rounded-lg shadow-lg transition-colors">
           <h2 
-            className="text-3xl md:text-4xl font-bold mb-6 dark:text-white transition-colors"
+            className="text-3xl md:text-4xl font-bold mb-6 text-gray-600 dark:text-white transition-colors"
             style={{ fontFamily: "'Dancing Script', cursive" }}
           >
             Sobre o Projeto
           </h2>
-          <p className="mb-4 text-sm md:text-base text-gray-700 dark:text-gray-300 transition-colors">
+          <p className="mb-4 text-sm md:text-base text-gray-600 dark:text-gray-300 transition-colors">
             Este projeto foi desenvolvido como parte do trabalho de Estruturas Matemáticas,
             com o objetivo de criar ferramentas interativas para ensino e aprendizagem de
             conceitos matemáticos.
           </p>
-          <p className="mb-4 text-sm md:text-base text-gray-700 dark:text-gray-300 transition-colors">
+          <p className="mb-4 text-sm md:text-base text-gray-600 dark:text-gray-300 transition-colors">
             Os jogos disponíveis exploram diferentes conceitos:
           </p>
-          <ul className="list-disc pl-6 mb-4 text-sm md:text-base text-gray-700 dark:text-gray-300 transition-colors">
+          <ul className="list-disc pl-6 mb-4 text-sm md:text-base text-gray-600 dark:text-gray-300 transition-colors">
             <li>Produto Cartesiano - Combinação de elementos de conjuntos</li>
             <li>Descubra a Função - Relação entre equações e seus gráficos</li>
             <li>Decomposição Vetorial - Operações e propriedades de vetores</li>
           </ul>
           <p 
-            className="text-xl md:text-2xl mt-6 text-gray-700 dark:text-gray-300 transition-colors"
+            className="text-xl md:text-2xl mt-6 text-gray-600 dark:text-gray-300 transition-colors"
             style={{ fontFamily: "'Dancing Script', cursive" }}
           >
             Equipe de desenvolvimento: Luiz Eduardo Varela
