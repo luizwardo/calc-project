@@ -259,27 +259,13 @@ const handleHomeIndicatorClick = useCallback((index) => {
         </div>
       )}
 
-      {/* Botão toggle theme apenas aparece para viewports maiores */}
-      {!isMobile && (
-        <button
-          onClick={toggleTheme}
-          className="fixed bottom-4 right-4 p-3 rounded-full bg-gray-200 dark:bg-gray-800 shadow-lg z-50 transition-colors"
-          aria-label="Alternar tema"
-        >
-          {darkMode ? 
-            <Sun className="h-5 w-5 text-gray-400" /> : 
-            <Moon className="h-5 w-5 text-gray-800" />
-          }
-        </button>
-      )}
-
       {/* Home Section - Update card onClick handlers */}
       <section 
         ref={homeRef} 
         id="home"
         className=" min-h-screen flex items-center justify-center px-4 py-12 md:p-6 transition-colors"
       >
-        <div className="max-w-5xl w-full">
+        <div className="max-w-xl w-full">
           <h1 
             className="text-3xl md:text-5xl font-bold text-center mb-10 text-gray-600 dark:text-gray-200 transition-colors"
             style={{ fontFamily: "'Dancing Script', cursive" }}
@@ -507,12 +493,6 @@ const handleHomeIndicatorClick = useCallback((index) => {
             <li>Descubra a Função - Relação entre equações e seus gráficos</li>
             <li>Decomposição Vetorial - Operações e propriedades de vetores</li>
           </ul>
-          <p 
-            className="text-xl md:text-2xl mt-6 text-gray-600 dark:text-gray-300 transition-colors"
-            style={{ fontFamily: "'Dancing Script', cursive" }}
-          >
-            Equipe de desenvolvimento: Luiz Eduardo Varela
-          </p>
         </div>
       </section>
     </div>

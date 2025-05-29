@@ -102,7 +102,7 @@ function VectorGame({ onClose, darkMode }) {
     const plotData = [];
     
     // Cores adaptadas ao tema
-    const axisColor = darkMode ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.3)';
+    const axisColor = darkMode ? 'rgba(156, 163, 175, 0.3)' : 'rgba(107, 114, 128, 0.3)';
     
     // Configuração do plano cartesiano
     plotData.push({
@@ -129,8 +129,8 @@ function VectorGame({ onClose, darkMode }) {
     mode: 'markers',
     marker: { 
       size: 8,
-      color: darkMode ? '#dc2626' : '#ef4444',
-      line: { width: 1, color: darkMode ? '#fbbf24' : '#f59e0b' }
+      color: darkMode ? '#6b7280' : '#374151',
+      line: { width: 1, color: darkMode ? '#9ca3af' : '#6b7280' }
     },
     showlegend: false
     });
@@ -141,7 +141,7 @@ function VectorGame({ onClose, darkMode }) {
       x: [0, userComponents.x],
       y: [0, 0],
       mode: 'lines+markers',
-      line: { color: darkMode ? '#fca5a5' : 'red', width: 2 },
+      line: { color: darkMode ? '#9ca3af' : '#6b7280', width: 2 },
       name: `Componente X: ${round2Decimals(userComponents.x)}`,
       hoverinfo: 'name',
       showlegend: false
@@ -151,7 +151,7 @@ function VectorGame({ onClose, darkMode }) {
       x: [userComponents.x, userComponents.x],
       y: [0, userComponents.y],
       mode: 'lines+markers',
-      line: { color: darkMode ? '#93c5fd' : 'blue', width: 2 },
+      line: { color: darkMode ? '#6b7280' : '#374151', width: 2 },
       marker: { size: 6, symbol: 'circle' },
       name: `Componente Y: ${round2Decimals(userComponents.y)}`,
       hoverinfo: 'name',
@@ -163,7 +163,7 @@ function VectorGame({ onClose, darkMode }) {
       x: [0, userComponents.x],
       y: [0, userComponents.y],
       mode: 'lines',
-      line: { color: darkMode ? '#86efac' : 'gray', width: 1, dash: 'dash' },
+      line: { color: darkMode ? '#4b5563' : '#9ca3af', width: 1, dash: 'dash' },
       name: `Vetor Resultante: (${round2Decimals(userComponents.x)}, ${round2Decimals(userComponents.y)})`,
       hoverinfo: 'name',
       showlegend: false
@@ -180,17 +180,17 @@ function VectorGame({ onClose, darkMode }) {
   };
 
   return (
-    <div className={`min-h-screen p-2 md:p-4 ${darkMode ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' : 'bg-gradient-to-br from-blue-50 via-white to-purple-50'} transition-all duration-300`}>
-      <div className={`max-w-7xl mx-auto ${darkMode ? 'bg-gray-800/90 border border-gray-700/50' : 'bg-white/90 border border-gray-200/50'} rounded-xl shadow-2xl backdrop-blur-lg transition-all duration-300`}>
+    <div className={`min-h-screen p-2 md:p-4 ${darkMode ? 'bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950' : 'bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50'} transition-all duration-300`}>
+      <div className={`max-w-7xl mx-auto ${darkMode ? 'bg-gray-900/95 border border-gray-800/50' : 'bg-white/95 border border-gray-200/50'} rounded-xl shadow-2xl backdrop-blur-lg transition-all duration-300`}>
         
         {/* Header Section */}
-        <div className={`p-4 md:p-6 border-b ${darkMode ? 'border-gray-700/50' : 'border-gray-200/50'}`}>
+        <div className={`p-4 md:p-6 border-b ${darkMode ? 'border-gray-800/50' : 'border-gray-200/50'}`}>
           <div className="flex items-center justify-center mb-4">
-            <div className={`p-2 rounded-full ${darkMode ? 'bg-orange-500/20' : 'bg-orange-100'} mr-3`}>
-              <Navigation className={`h-6 w-6 ${darkMode ? 'text-orange-400' : 'text-orange-600'}`} />
+            <div className={`p-2 rounded-full ${darkMode ? 'bg-gray-800/50' : 'bg-gray-100'} mr-3`}>
+              <Navigation className={`h-6 w-6 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`} />
             </div>
             <h1 
-              className={`text-2xl md:text-3xl font-bold text-center ${darkMode ? 'text-white' : 'text-gray-800'}`}
+              className={`text-2xl md:text-3xl font-bold text-center ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}
               style={{ fontFamily: "'Dancing Script', cursive" }}
             >
               Missão Vetorial
@@ -198,17 +198,17 @@ function VectorGame({ onClose, darkMode }) {
           </div>
           
           {/* Vector Info Card */}
-          <div className={`p-4 rounded-lg ${darkMode ? 'bg-gradient-to-br from-blue-200/30 to-blue-600/20 border border-blue-700/30' : 'bg-gradient-to-b from-gray-150/30 to-gray-200/30 border border-gray-200/90'} backdrop-blur-sm`}>
+          <div className={`p-4 rounded-lg ${darkMode ? 'bg-gradient-to-br from-gray-800/50 to-gray-900/30 border border-gray-700/30' : 'bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200'} backdrop-blur-sm`}>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="text-center">
-                <p className={`text-xs font-medium ${darkMode ? 'text-orange-300' : 'text-orange-600'} mb-1`}>Módulo</p>
-                <p className={`text-sm font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+                <p className={`text-xs font-medium ${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-1`}>Módulo</p>
+                <p className={`text-sm font-bold ${darkMode ? 'text-gray-200' : 'text-gray-800'}`}>
                   {round2Decimals(calculateMagnitude(vectorToDecompose))}
                 </p>
               </div>
               <div className="text-center">
-                <p className={`text-xs font-medium ${darkMode ? 'text-orange-300' : 'text-orange-600'} mb-1`}>Ângulo</p>
-                <p className={`text-sm font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+                <p className={`text-xs font-medium ${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-1`}>Ângulo</p>
+                <p className={`text-sm font-bold ${darkMode ? 'text-gray-200' : 'text-gray-800'}`}>
                   {round2Decimals(calculateAngle(vectorToDecompose))}°
                 </p>
               </div>
@@ -222,7 +222,7 @@ function VectorGame({ onClose, darkMode }) {
             
             {/* Plano Cartesiano */}
             <div className="lg:col-span-2">
-              <div className={`relative w-full h-[300px] md:h-[350px] ${darkMode ? 'bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-600/50' : 'bg-gradient-to-br from-gray-50 to-white border border-gray-200'} rounded-xl shadow-inner mb-4 overflow-hidden`}>
+              <div className={`relative w-full h-[300px] md:h-[350px] ${darkMode ? 'bg-gradient-to-br from-gray-900 to-gray-950 border border-gray-800/50' : 'bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200'} rounded-xl shadow-inner mb-4 overflow-hidden`}>
                 <Plot
                   ref={plotRef}
                   data={getPlotData()}
@@ -232,28 +232,28 @@ function VectorGame({ onClose, darkMode }) {
                     paper_bgcolor: 'transparent',
                     plot_bgcolor: 'transparent',
                     font: {
-                      color: darkMode ? '#f9fafb' : '#111827',
+                      color: darkMode ? '#e5e7eb' : '#374151',
                       size: 12,
                       family: "'Inter', sans-serif"
                     },
                     xaxis: {
-                      title: { text: 'x', font: { size: 14 } },
+                      title: { text: 'x', font: { size: 14, color: darkMode ? '#9ca3af' : '#6b7280' } },
                       range: [-20, 20],
                       zeroline: true,
                       showgrid: true,
-                      gridcolor: darkMode ? 'rgba(75, 85, 99, 0.4)' : 'rgba(229, 231, 235, 0.8)',
+                      gridcolor: darkMode ? 'rgba(75, 85, 99, 0.4)' : 'rgba(156, 163, 175, 0.3)',
                       gridwidth: 1,
-                      zerolinecolor: darkMode ? 'rgba(156, 163, 175, 0.6)' : 'rgba(156, 163, 175, 0.8)',
+                      zerolinecolor: darkMode ? 'rgba(107, 114, 128, 0.6)' : 'rgba(107, 114, 128, 0.5)',
                       zerolinewidth: 2
                     },
                     yaxis: {
-                      title: { text: 'y', font: { size: 14 } },
+                      title: { text: 'y', font: { size: 14, color: darkMode ? '#9ca3af' : '#6b7280' } },
                       range: [-20, 20],
                       zeroline: true,
                       showgrid: true,
-                      gridcolor: darkMode ? 'rgba(75, 85, 99, 0.4)' : 'rgba(229, 231, 235, 0.8)',
+                      gridcolor: darkMode ? 'rgba(75, 85, 99, 0.4)' : 'rgba(156, 163, 175, 0.3)',
                       gridwidth: 1,
-                      zerolinecolor: darkMode ? 'rgba(156, 163, 175, 0.6)' : 'rgba(156, 163, 175, 0.8)',
+                      zerolinecolor: darkMode ? 'rgba(107, 114, 128, 0.6)' : 'rgba(107, 114, 128, 0.5)',
                       zerolinewidth: 2,
                       scaleanchor: 'x',
                       scaleratio: 1
@@ -286,8 +286,8 @@ function VectorGame({ onClose, darkMode }) {
               
               {/* Sliders para Componentes */}
               <div className="space-y-3">
-                <div className={`p-3 rounded-lg ${darkMode ? 'bg-red-900/20 border border-red-700/30' : 'bg-red-50 border border-red-200'}`}>
-                  <Label className={`mb-2 block text-sm font-semibold ${darkMode ? 'text-red-300' : 'text-red-700'}`}>
+                <div className={`p-3 rounded-lg ${darkMode ? 'bg-gray-800/50 border border-gray-700/30' : 'bg-gray-100 border border-gray-200'}`}>
+                  <Label className={`mb-2 block text-sm font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                     Componente X: {round2Decimals(userComponents.x)}
                   </Label>
                   <Slider
@@ -300,8 +300,8 @@ function VectorGame({ onClose, darkMode }) {
                   />
                 </div>
                 
-                <div className={`p-3 rounded-lg ${darkMode ? 'bg-blue-900/20 border border-blue-700/30' : 'bg-blue-50 border border-blue-200'}`}>
-                  <Label className={`mb-2 block text-sm font-semibold ${darkMode ? 'text-blue-300' : 'text-blue-700'}`}>
+                <div className={`p-3 rounded-lg ${darkMode ? 'bg-gray-800/50 border border-gray-700/30' : 'bg-gray-100 border border-gray-200'}`}>
+                  <Label className={`mb-2 block text-sm font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                     Componente Y: {round2Decimals(userComponents.y)}
                   </Label>
                   <Slider
@@ -316,9 +316,9 @@ function VectorGame({ onClose, darkMode }) {
               </div>
 
               {/* Vetor Resultante Display */}
-              <div className={`p-3 rounded-lg text-center ${darkMode ? 'bg-gray-800/50 border border-gray-600' : 'bg-gray-100 border border-gray-200'}`}>
+              <div className={`p-3 rounded-lg text-center ${darkMode ? 'bg-gray-800/50 border border-gray-700' : 'bg-gray-100 border border-gray-200'}`}>
                 <p className={`text-xs font-medium ${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-1`}>Vetor Resultante</p>
-                <p className={`text-sm font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+                <p className={`text-sm font-bold ${darkMode ? 'text-gray-200' : 'text-gray-800'}`}>
                   ({round2Decimals(userComponents.x)}, {round2Decimals(userComponents.y)})
                 </p>
               </div>
@@ -330,8 +330,8 @@ function VectorGame({ onClose, darkMode }) {
                   className={`
                     px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center justify-center space-x-2
                     ${darkMode 
-                      ? 'bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 text-white shadow-lg shadow-orange-600/25' 
-                      : 'bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 text-white shadow-lg shadow-orange-600/25'
+                      ? 'bg-gradient-to-r from-gray-700 to-gray-600 hover:from-gray-600 hover:to-gray-500 text-gray-100 shadow-lg shadow-gray-700/25' 
+                      : 'bg-gradient-to-r from-gray-700 to-gray-600 hover:from-gray-600 hover:to-gray-500 text-white shadow-lg shadow-gray-600/25'
                     }
                   `}
                 >
@@ -344,8 +344,8 @@ function VectorGame({ onClose, darkMode }) {
                   className={`
                     px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center justify-center space-x-2
                     ${darkMode 
-                      ? 'bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white shadow-lg shadow-blue-600/25' 
-                      : 'bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white shadow-lg shadow-blue-600/25'
+                      ? 'bg-gradient-to-r from-gray-800 to-gray-700 hover:from-gray-700 hover:to-gray-600 text-gray-100 shadow-lg shadow-gray-700/25' 
+                      : 'bg-gradient-to-r from-gray-800 to-gray-700 hover:from-gray-700 hover:to-gray-600 text-white shadow-lg shadow-gray-700/25'
                     }
                   `}
                 >
@@ -358,7 +358,7 @@ function VectorGame({ onClose, darkMode }) {
                   className={`
                     px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95
                     ${darkMode 
-                      ? 'bg-gray-700 hover:bg-gray-600 text-gray-300 border border-gray-600' 
+                      ? 'bg-gray-800 hover:bg-gray-700 text-gray-300 border border-gray-700' 
                       : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300'
                     }
                   `}
@@ -373,10 +373,10 @@ function VectorGame({ onClose, darkMode }) {
           {feedback && (
             <div className={`mt-4 p-3 rounded-lg text-center text-sm font-medium backdrop-blur-sm transition-all duration-300 ${
               feedback.includes('Parabéns') 
-                ? (darkMode ? 'bg-gradient-to-r from-green-900/50 to-green-800/30 text-green-200 border border-green-700/50' : 'bg-gradient-to-r from-green-100 to-green-200 text-green-800 border border-green-300')
+                ? (darkMode ? 'bg-gradient-to-r from-gray-800/70 to-gray-700/50 text-gray-200 border border-gray-600/50' : 'bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 border border-gray-300')
                 : feedback.includes('Quase')
-                  ? (darkMode ? 'bg-gradient-to-r from-yellow-900/50 to-yellow-800/30 text-yellow-200 border border-yellow-700/50' : 'bg-gradient-to-r from-yellow-100 to-yellow-200 text-yellow-800 border border-yellow-300')
-                  : (darkMode ? 'bg-gradient-to-r from-blue-900/50 to-blue-800/30 text-blue-200 border border-blue-700/50' : 'bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 border border-blue-300')
+                  ? (darkMode ? 'bg-gradient-to-r from-gray-800/70 to-gray-700/50 text-gray-300 border border-gray-600/50' : 'bg-gradient-to-r from-gray-100 to_gray-200 text-gray-700 border border-gray-300')
+                  : (darkMode ? 'bg-gradient-to-r from-gray-800/70 to-gray-700/50 text-gray-200 border border-gray-600/50' : 'bg-gradient-to-r from_gray-100 to_gray-200 text-gray-800 border border-gray-300')
             } shadow-sm`}>
               {feedback}
             </div>
@@ -386,12 +386,12 @@ function VectorGame({ onClose, darkMode }) {
 
       {/* Enhanced Alert Dialog */}
       <AlertDialog open={alertOpen} onOpenChange={setAlertOpen}>
-        <AlertDialogContent className={`${darkMode ? 'bg-gray-800 text-white border border-gray-700' : 'bg-white border border-gray-200'} rounded-xl shadow-2xl backdrop-blur-lg`}>
+        <AlertDialogContent className={`${darkMode ? 'bg-gray-900 text-gray-100 border border-gray-800' : 'bg-white border border-gray-200'} rounded-xl shadow-2xl backdrop-blur-lg`}>
           <AlertDialogHeader>
-            <AlertDialogTitle className={`text-xl font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+            <AlertDialogTitle className={`text-xl font-bold ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>
                Parabéns!
             </AlertDialogTitle>
-            <AlertDialogDescription className={`text-base ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+            <AlertDialogDescription className={`text-base ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
               Você decompôs o vetor corretamente!
             </AlertDialogDescription>
           </AlertDialogHeader>
@@ -401,8 +401,8 @@ function VectorGame({ onClose, darkMode }) {
               className={`
                 px-4 py-2 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105
                 ${darkMode 
-                  ? 'bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white shadow-lg' 
-                  : 'bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white shadow-lg'
+                  ? 'bg-gradient-to-r from-gray-700 to-gray-600 hover:from-gray-600 hover:to-gray-500 text-gray-100 shadow-lg' 
+                  : 'bg-gradient-to-r from-gray-700 to_gray-600 hover:from_gray-600 hover:to_gray-500 text_white shadow-lg'
                 }
               `}
             >
@@ -414,7 +414,7 @@ function VectorGame({ onClose, darkMode }) {
               className={`
                 px-4 py-2 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105
                 ${darkMode 
-                  ? 'bg-gray-700 hover:bg-gray-600 text-gray-300 border border-gray-600' 
+                  ? 'bg-gray-800 hover:bg-gray-700 text-gray-300 border border-gray-700' 
                   : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300'
                 }
               `}
