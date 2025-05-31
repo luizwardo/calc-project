@@ -188,6 +188,55 @@ const handleHomeIndicatorClick = useCallback((index) => {
   }
 }, [homeCarouselApi]);
 
+  // PDF files configuration
+  const studyMaterials = [
+    {
+      id: 'conjuntos',
+      title: '📚 Teoria dos Conjuntos',
+      description: 'Conceitos fundamentais sobre conjuntos, operações e produto cartesiano.',
+      topics: ['• Definição de conjuntos', '• Operações entre conjuntos', '• Produto cartesiano'],
+      pdfPath: '/pdfs/teoria-dos-conjuntos.pdf'
+    },
+    {
+      id: 'funcoes',
+      title: '📈 Funções Matemáticas',
+      description: 'Estudo completo sobre funções lineares, quadráticas e trigonométricas.',
+      topics: ['• Funções lineares', '• Funções quadráticas', '• Funções trigonométricas'],
+      pdfPath: '/pdfs/funcoes-matematicas.pdf'
+    },
+    {
+      id: 'vetores',
+      title: '🧭 Álgebra Vetorial',
+      description: 'Conceitos de vetores, operações vetoriais e decomposição.',
+      topics: ['• Definição de vetores', '• Operações vetoriais', '• Decomposição vetorial'],
+      pdfPath: './pdfs/algebra-vetorial.pdf'
+    }
+  ];
+
+  // Function to open PDF
+  const openPDF = (pdfPath, materialTitle) => {
+    try {
+      // Check if file exists by trying to open it
+      const link = document.createElement('a');
+      link.href = pdfPath;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      
+      // Try to open the PDF
+      link.click();
+      
+      // Optional: Add fallback if PDF doesn't exist
+      setTimeout(() => {
+        // You can add a toast notification here if needed
+        console.log(`Abrindo material: ${materialTitle}`);
+      }, 100);
+      
+    } catch (error) {
+      console.error('Erro ao abrir PDF:', error);
+      alert(`Não foi possível abrir o material: ${materialTitle}`);
+    }
+  };
+
   return (
     <div 
       className={`App ${darkMode ? 'dark' : ''}`}
@@ -294,7 +343,7 @@ const handleHomeIndicatorClick = useCallback((index) => {
             
             {/* Cards em carrossel */}
             <Carousel 
-              className="relative"
+              className="relative px-4"
               setApi={setHomeCarouselApi}
               opts={{
                 loop: true,
@@ -305,10 +354,10 @@ const handleHomeIndicatorClick = useCallback((index) => {
                 startIndex: 0,
               }}
             >
-              <CarouselContent className="-ml-4 py-4">
+              <CarouselContent className="-ml-4 py-8">
                 {/* Card Produto Cartesiano */}
                 <CarouselItem className="pl-4 basis-full">
-                  <div className="flex justify-center">
+                  <div className="flex justify-center px-4">
                     <div className="w-full max-w-sm">
                       <div 
                         onClick={() => openGameModal('cartesianGame')}
@@ -316,6 +365,7 @@ const handleHomeIndicatorClick = useCallback((index) => {
                           bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden 
                           border border-gray-200 dark:border-gray-700 transition-all 
                           cursor-pointer hover:shadow-lg hover:scale-105 duration-300 h-full
+                          transform-gpu
                         `}
                       >
                         <div className="h-32 md:h-40 bg-gray-50 dark:bg-gray-700/30 flex items-center justify-center transition-colors">
@@ -344,7 +394,7 @@ const handleHomeIndicatorClick = useCallback((index) => {
                 
                 {/* Card Função */}
                 <CarouselItem className="pl-4 basis-full">
-                  <div className="flex justify-center">
+                  <div className="flex justify-center px-4">
                     <div className="w-full max-w-sm">
                       <div 
                         onClick={() => openGameModal('functionGame')}
@@ -352,6 +402,7 @@ const handleHomeIndicatorClick = useCallback((index) => {
                           bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden 
                           border border-gray-200 dark:border-gray-700 transition-all 
                           cursor-pointer hover:shadow-lg hover:scale-105 duration-300 h-full
+                          transform-gpu
                         `}
                       >
                         <div className="h-32 md:h-40 bg-gray-50 dark:bg-gray-700/30 flex items-center justify-center transition-colors">
@@ -370,7 +421,7 @@ const handleHomeIndicatorClick = useCallback((index) => {
                             Descubra a Função
                           </h3>
                           <p className="text-base text-gray-600 dark:text-gray-300 transition-colors text-center">
-                            Deduza a função matemática a partir do seu gráfico e comportamento.
+                            Deduza a função matemática a partir do seu gráfico.
                           </p>
                         </div>
                       </div>
@@ -380,7 +431,7 @@ const handleHomeIndicatorClick = useCallback((index) => {
                 
                 {/* Card Vetor */}
                 <CarouselItem className="pl-4 basis-full">
-                  <div className="flex justify-center">
+                  <div className="flex justify-center px-4">
                     <div className="w-full max-w-sm">
                       <div 
                         onClick={() => openGameModal('vectorGame')}
@@ -388,6 +439,7 @@ const handleHomeIndicatorClick = useCallback((index) => {
                           bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden 
                           border border-gray-200 dark:border-gray-700 transition-all 
                           cursor-pointer hover:shadow-lg hover:scale-105 duration-300 h-full
+                          transform-gpu
                         `}
                       >
                         <div className="h-32 md:h-40 bg-gray-50 dark:bg-gray-700/30 flex items-center justify-center transition-colors">
@@ -419,7 +471,7 @@ const handleHomeIndicatorClick = useCallback((index) => {
               {/* Navigation controls */}
               <CarouselPrevious 
                 className={`
-                  -left-8 md:-left-12 
+                  -left-12 md:-left-16 
                   transition-all duration-300 ease-out 
                   hover:scale-110 hover:shadow-xl hover:-translate-x-1
                   ${darkMode 
@@ -434,7 +486,7 @@ const handleHomeIndicatorClick = useCallback((index) => {
               />
               <CarouselNext 
                 className={`
-                  -right-8 md:-right-12 
+                  -right-12 md:-right-16 
                   transition-all duration-300 ease-out 
                   hover:scale-110 hover:shadow-xl hover:translate-x-1
                   ${darkMode 
@@ -488,77 +540,38 @@ const handleHomeIndicatorClick = useCallback((index) => {
             </h2>
             
             <div className="space-y-6">
-              {/* Card Teoria dos Conjuntos */}
-              <div className={`
-                bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden 
-                border border-gray-200 dark:border-gray-700 transition-all 
-                hover:shadow-lg hover:scale-105 duration-300 cursor-pointer
-              `}>
-                <div className="p-6">
-                  <h3 
-                    className="text-xl md:text-2xl font-bold text-gray-600 dark:text-gray-200 mb-3 transition-colors"
-                    style={{ fontFamily: "'Dancing Script', cursive" }}
-                  >
-                    📚 Teoria dos Conjuntos
-                  </h3>
-                  <p className="text-sm md:text-base text-gray-600 dark:text-gray-300 transition-colors mb-4">
-                    Conceitos fundamentais sobre conjuntos, operações e produto cartesiano.
-                  </p>
-                  <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                    <li>• Definição de conjuntos</li>
-                    <li>• Operações entre conjuntos</li>
-                    <li>• Produto cartesiano</li>
-                  </ul>
+              {studyMaterials.map((material) => (
+                <div 
+                  key={material.id}
+                  onClick={() => openPDF(material.pdfPath, material.title)}
+                  className={`
+                    bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden 
+                    border border-gray-200 dark:border-gray-700 transition-all 
+                    hover:shadow-lg hover:scale-105 duration-300 cursor-pointer
+                    hover:border-blue-400 dark:hover:border-blue-500
+                  `}
+                >
+                  <div className="p-6">
+                    <h3 
+                      className="text-xl md:text-2xl font-bold text-gray-600 dark:text-gray-200 mb-3 transition-colors"
+                      style={{ fontFamily: "'Dancing Script', cursive" }}
+                    >
+                      {material.title}
+                    </h3>
+                    <p className="text-sm md:text-base text-gray-600 dark:text-gray-300 transition-colors mb-4">
+                      {material.description}
+                    </p>
+                    <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                      {material.topics.map((topic, index) => (
+                        <li key={index}>{topic}</li>
+                      ))}
+                    </ul>
+                    <div className="mt-4 text-xs text-blue-600 dark:text-blue-400 font-medium">
+                      Clique para abrir o material em PDF
+                    </div>
+                  </div>
                 </div>
-              </div>
-
-              {/* Card Funções */}
-              <div className={`
-                bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden 
-                border border-gray-200 dark:border-gray-700 transition-all 
-                hover:shadow-lg hover:scale-105 duration-300 cursor-pointer
-              `}>
-                <div className="p-6">
-                  <h3 
-                    className="text-xl md:text-2xl font-bold text-gray-600 dark:text-gray-200 mb-3 transition-colors"
-                    style={{ fontFamily: "'Dancing Script', cursive" }}
-                  >
-                    📈 Funções Matemáticas
-                  </h3>
-                  <p className="text-sm md:text-base text-gray-600 dark:text-gray-300 transition-colors mb-4">
-                    Estudo completo sobre funções lineares, quadráticas e trigonométricas.
-                  </p>
-                  <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                    <li>• Funções lineares</li>
-                    <li>• Funções quadráticas</li>
-                    <li>• Funções trigonométricas</li>
-                  </ul>
-                </div>
-              </div>
-
-              {/* Card Vetores */}
-              <div className={`
-                bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden 
-                border border-gray-200 dark:border-gray-700 transition-all 
-                hover:shadow-lg hover:scale-105 duration-300 cursor-pointer
-              `}>
-                <div className="p-6">
-                  <h3 
-                    className="text-xl md:text-2xl font-bold text-gray-600 dark:text-gray-200 mb-3 transition-colors"
-                    style={{ fontFamily: "'Dancing Script', cursive" }}
-                  >
-                    🧭 Álgebra Vetorial
-                  </h3>
-                  <p className="text-sm md:text-base text-gray-600 dark:text-gray-300 transition-colors mb-4">
-                    Conceitos de vetores, operações vetoriais e decomposição.
-                  </p>
-                  <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                    <li>• Definição de vetores</li>
-                    <li>• Operações vetoriais</li>
-                    <li>• Decomposição vetorial</li>
-                  </ul>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </div>
