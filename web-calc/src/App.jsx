@@ -427,17 +427,36 @@ Então v⃗ = (4, 3)`
           />
           
           {/* Sidebar Content */}
-          <div className={`
-            w-full max-w-2xl h-full overflow-auto
-            ${darkMode ? 'bg-gray-900' : 'bg-white'}
-            shadow-2xl transform transition-all
-            border-l ${darkMode ? 'border-gray-700' : 'border-gray-200'}
-          `}>
+          <div 
+            className={`
+              w-full max-w-2xl h-full overflow-auto
+              shadow-2xl transform transition-all
+              border-l ${darkMode ? 'border-gray-700' : 'border-gray-200'}
+            `}
+            style={{
+              backgroundColor: darkMode ? '#1f2937' : 'rgba(227, 228, 233, 0.95)',
+              backgroundImage: darkMode 
+                ? `
+                  linear-gradient(to right, rgba(75, 85, 99, 0.2) 1px, transparent 1px),
+                  linear-gradient(to bottom, rgba(75, 85, 99, 0.2) 1px, transparent 1px)
+                `
+                : `
+                  linear-gradient(to right, rgba(211, 213, 218, 0.8) 1px, transparent 1px),
+                  linear-gradient(to bottom, rgba(211, 213, 218, 0.8) 1px, transparent 1px)
+                `,
+              backgroundSize: '20px 20px'
+            }}
+          >
             {/* Header */}
             <div className={`
-              sticky top-0 z-10 p-6 border-b
-              ${darkMode ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-200'}
-            `}>
+              sticky top-0 z-10 p-6 border-b backdrop-blur-sm
+              ${darkMode ? 'border-gray-700' : 'border-gray-200'}
+            `}
+            style={{
+              backgroundColor: darkMode ? 'rgba(31, 41, 55, 0.95)' : 'rgba(227, 228, 233, 0.95)',
+              backdropFilter: 'blur(8px)'
+            }}
+            >
               <div className="flex items-center justify-between">
                 <h2 
                   className="text-2xl font-bold text-gray-600 dark:text-gray-200"
