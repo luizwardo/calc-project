@@ -4,6 +4,7 @@ import Calculator from './components/ui/Calculator'
 import CartesianGame from './components/games/CartesianProd'
 import FunctionGame from './components/games/FindFunction'
 import VectorGame from './components/games/VecMission'
+import SetTheoryGame from './components/games/SetTheoryGame'
 import { AlignCenter, Moon, Sun, X} from "lucide-react" 
 import {
   Carousel,
@@ -17,6 +18,14 @@ import './App.css'
 // Importação da fonte caligráfica
 const fontStyles = `
   @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap');
+  
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  * {
+    scroll-behavior: smooth;
+  }
 `;
 
 function App() {
@@ -32,6 +41,8 @@ function App() {
 
   const [showGameModal, setShowGameModal] = useState(false);
   const [selectedGameId, setSelectedGameId] = useState(null);
+  const [showMaterialSidebar, setShowMaterialSidebar] = useState(false);
+  const [selectedMaterial, setSelectedMaterial] = useState(null);
 
   // Detectar se o dispositivo é móvel
   useEffect(() => {
@@ -88,6 +99,11 @@ function App() {
       id: 'vectorGame',
       component: VectorGame,
       title: 'Decomposição Vetorial'
+    },
+    {
+      id: 'setTheoryGame',
+      component: SetTheoryGame,
+      title: 'Teoria dos Conjuntos'
     }
   ];
 
@@ -188,54 +204,186 @@ const handleHomeIndicatorClick = useCallback((index) => {
   }
 }, [homeCarouselApi]);
 
-  // PDF files configuration
+  // PDF files configuration - now with content instead of paths
   const studyMaterials = [
     {
       id: 'conjuntos',
       title: '📚 Teoria dos Conjuntos',
       description: 'Conceitos fundamentais sobre conjuntos, operações e produto cartesiano.',
       topics: ['• Definição de conjuntos', '• Operações entre conjuntos', '• Produto cartesiano'],
-      pdfPath: '/pdfs/teoria-dos-conjuntos.pdf'
+      content: {
+        sections: [
+          {
+            title: 'Definição de Conjuntos',
+            content: `Um conjunto é uma coleção bem definida de objetos distintos, chamados elementos ou membros do conjunto. Os conjuntos são representados por letras maiúsculas (A, B, C, ...) e seus elementos são listados entre chaves.
+
+Exemplos:
+• A = {1, 2, 3, 4, 5}
+• B = {a, e, i, o, u}
+• C = {x | x é um número par}`
+          },
+          {
+            title: 'Operações entre Conjuntos',
+            content: `As principais operações entre conjuntos são:
+
+União (A ∪ B): Conjunto formado por todos os elementos que pertencem a A ou a B.
+
+Interseção (A ∩ B): Conjunto formado por todos os elementos que pertencem a A e a B.
+
+Diferença (A - B): Conjunto formado por todos os elementos que pertencem a A mas não pertencem a B.
+
+Complementar (A'): Conjunto formado por todos os elementos que não pertencem a A.`
+          },
+          {
+            title: 'Produto Cartesiano',
+            content: `O produto cartesiano de dois conjuntos A e B, denotado por A × B, é o conjunto de todos os pares ordenados (a, b) onde a ∈ A e b ∈ B.
+
+Exemplo:
+Se A = {1, 2} e B = {x, y}, então:
+A × B = {(1,x), (1,y), (2,x), (2,y)}
+
+O número de elementos em A × B é |A| × |B|.`
+          }
+        ]
+      }
     },
     {
       id: 'funcoes',
       title: '📈 Funções Matemáticas',
       description: 'Estudo completo sobre funções lineares, quadráticas e trigonométricas.',
       topics: ['• Funções lineares', '• Funções quadráticas', '• Funções trigonométricas'],
-      pdfPath: '/pdfs/funcoes-matematicas.pdf'
+      content: {
+        sections: [
+          {
+            title: 'Funções Lineares',
+            content: `Uma função linear tem a forma f(x) = ax + b, onde a e b são constantes reais e a ≠ 0.
+
+Características:
+• Gráfico: linha reta
+• Coeficiente angular: a
+• Coeficiente linear: b
+• Crescente se a > 0, decrescente se a < 0
+
+Exemplo: f(x) = 2x + 3`
+          },
+          {
+            title: 'Funções Quadráticas',
+            content: `Uma função quadrática tem a forma f(x) = ax² + bx + c, onde a, b e c são constantes reais e a ≠ 0.
+
+Características:
+• Gráfico: parábola
+• Vértice: V(-b/2a, -Δ/4a)
+• Discriminante: Δ = b² - 4ac
+• Concavidade: para cima se a > 0, para baixo se a < 0
+
+Exemplo: f(x) = x² - 4x + 3`
+          },
+          {
+            title: 'Funções Trigonométricas',
+            content: `As principais funções trigonométricas são seno, cosseno e tangente.
+
+Função Seno: f(x) = sen(x)
+• Domínio: ℝ
+• Imagem: [-1, 1]
+• Período: 2π
+
+Função Cosseno: f(x) = cos(x)
+• Domínio: ℝ
+• Imagem: [-1, 1]
+• Período: 2π
+
+Função Tangente: f(x) = tg(x)
+• Domínio: ℝ - {π/2 + kπ, k ∈ ℤ}
+• Imagem: ℝ
+• Período: π`
+          }
+        ]
+      }
     },
     {
       id: 'vetores',
       title: '🧭 Álgebra Vetorial',
       description: 'Conceitos de vetores, operações vetoriais e decomposição.',
       topics: ['• Definição de vetores', '• Operações vetoriais', '• Decomposição vetorial'],
-      pdfPath: './pdfs/algebra-vetorial.pdf'
+      content: {
+        sections: [
+          {
+            title: 'Definição de Vetores',
+            content: `Um vetor é uma grandeza que possui módulo (tamanho), direção e sentido. É representado geometricamente por uma seta.
+
+Notação:
+• Vetor: v⃗ ou |v|
+• Componentes: v⃗ = (x, y) no plano
+• Módulo: |v⃗| = √(x² + y²)
+
+Exemplo: v⃗ = (3, 4) tem módulo |v⃗| = √(3² + 4²) = 5`
+          },
+          {
+            title: 'Operações Vetoriais',
+            content: `Principais operações com vetores:
+
+Adição: u⃗ + v⃗ = (u₁ + v₁, u₂ + v₂)
+
+Subtração: u⃗ - v⃗ = (u₁ - v₁, u₂ - v₂)
+
+Multiplicação por escalar: k·v⃗ = (k·v₁, k·v₂)
+
+Produto escalar: u⃗ · v⃗ = u₁v₁ + u₂v₂
+
+Produto vetorial (3D): u⃗ × v⃗`
+          },
+          {
+            title: 'Decomposição Vetorial',
+            content: `A decomposição vetorial consiste em expressar um vetor como soma de suas componentes.
+
+No plano cartesiano:
+v⃗ = vₓî + vyĵ
+
+Onde:
+• vₓ = |v⃗|cos(θ) (componente horizontal)
+• vy = |v⃗|sen(θ) (componente vertical)
+• î e ĵ são os vetores unitários
+
+Exemplo: Se v⃗ tem módulo 5 e faz ângulo de 37° com o eixo x:
+vₓ = 5·cos(37°) = 4
+vy = 5·sen(37°) = 3
+Então v⃗ = (4, 3)`
+          }
+        ]
+      }
     }
   ];
 
-  // Function to open PDF
-  const openPDF = (pdfPath, materialTitle) => {
-    try {
-      // Check if file exists by trying to open it
-      const link = document.createElement('a');
-      link.href = pdfPath;
-      link.target = '_blank';
-      link.rel = 'noopener noreferrer';
-      
-      // Try to open the PDF
-      link.click();
-      
-      // Optional: Add fallback if PDF doesn't exist
-      setTimeout(() => {
-        // You can add a toast notification here if needed
-        console.log(`Abrindo material: ${materialTitle}`);
-      }, 100);
-      
-    } catch (error) {
-      console.error('Erro ao abrir PDF:', error);
-      alert(`Não foi possível abrir o material: ${materialTitle}`);
-    }
+  // Function to open material sidebar
+  const openMaterial = (material) => {
+    setSelectedMaterial(material);
+    setShowMaterialSidebar(true);
+    document.body.style.overflow = 'hidden';
   };
+
+  // Function to close material sidebar
+  const closeMaterialSidebar = () => {
+    setShowMaterialSidebar(false);
+    setSelectedMaterial(null);
+    document.body.style.overflow = 'unset';
+  };
+
+  // Close sidebar on escape key
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === 'Escape' && showMaterialSidebar) {
+        closeMaterialSidebar();
+      }
+    };
+
+    if (showMaterialSidebar) {
+      document.addEventListener('keydown', handleEscape);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [showMaterialSidebar]);
 
   return (
     <div 
@@ -251,7 +399,8 @@ const handleHomeIndicatorClick = useCallback((index) => {
             linear-gradient(to right, rgba(211, 213, 218, 0.8) 1px, transparent 1px),
             linear-gradient(to bottom, rgba(211, 213, 218, 0.8) 1px, transparent 1px)
           `,
-        backgroundSize: '20px 20px'
+        backgroundSize: '20px 20px',
+        scrollBehavior: 'smooth'
       }}
     >
       {/* Incluir estilos da fonte */}
@@ -268,6 +417,82 @@ const handleHomeIndicatorClick = useCallback((index) => {
       
       {showCalculator && <Calculator onClose={() => setShowCalculator(false)} darkMode={darkMode} />}
       
+      {/* Material Sidebar */}
+      {showMaterialSidebar && selectedMaterial && (
+        <div className="fixed inset-0 z-50 flex">
+          {/* Backdrop */}
+          <div 
+            className="flex-1 bg-black/50 transition-opacity"
+            onClick={closeMaterialSidebar}
+          />
+          
+          {/* Sidebar Content */}
+          <div className={`
+            w-full max-w-2xl h-full overflow-auto
+            ${darkMode ? 'bg-gray-900' : 'bg-white'}
+            shadow-2xl transform transition-all
+            border-l ${darkMode ? 'border-gray-700' : 'border-gray-200'}
+          `}>
+            {/* Header */}
+            <div className={`
+              sticky top-0 z-10 p-6 border-b
+              ${darkMode ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-200'}
+            `}>
+              <div className="flex items-center justify-between">
+                <h2 
+                  className="text-2xl font-bold text-gray-600 dark:text-gray-200"
+                  style={{ fontFamily: "'Dancing Script', cursive" }}
+                >
+                  {selectedMaterial.title}
+                </h2>
+                <button
+                  onClick={closeMaterialSidebar}
+                  className={`
+                    p-2 rounded-full transition-colors hover:scale-110
+                    ${darkMode 
+                      ? 'bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white' 
+                      : 'bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-900'
+                    }
+                  `}
+                  aria-label="Fechar material"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+              <p className="text-gray-600 dark:text-gray-300 mt-2">
+                {selectedMaterial.description}
+              </p>
+            </div>
+            
+            {/* Content */}
+            <div className="p-6 space-y-8">
+              {selectedMaterial.content.sections.map((section, index) => (
+                <div key={index} className="space-y-4">
+                  <h3 
+                    className="text-xl font-semibold text-gray-700 dark:text-gray-200"
+                    style={{ fontFamily: "'Dancing Script', cursive" }}
+                  >
+                    {section.title}
+                  </h3>
+                  <div className="prose prose-gray dark:prose-invert max-w-none">
+                    {section.content.split('\n').map((paragraph, pIndex) => (
+                      paragraph.trim() && (
+                        <p 
+                          key={pIndex} 
+                          className="text-gray-600 dark:text-gray-300 leading-relaxed mb-4 whitespace-pre-line"
+                        >
+                          {paragraph}
+                        </p>
+                      )
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
     {/* Game Modal */}
       {showGameModal && selectedGameId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -466,6 +691,43 @@ const handleHomeIndicatorClick = useCallback((index) => {
                     </div>
                   </div>
                 </CarouselItem>
+                
+                {/* Card Teoria dos Conjuntos */}
+                <CarouselItem className="pl-4 basis-full">
+                  <div className="flex justify-center px-4">
+                    <div className="w-full max-w-sm">
+                      <div 
+                        onClick={() => openGameModal('setTheoryGame')}
+                        className={`
+                          bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden 
+                          border border-gray-200 dark:border-gray-700 transition-all 
+                          cursor-pointer hover:shadow-lg hover:scale-105 duration-300 h-full
+                          transform-gpu
+                        `}
+                      >
+                        <div className="h-32 md:h-40 bg-gray-50 dark:bg-gray-700/30 flex items-center justify-center transition-colors">
+                          <div 
+                            className="text-2xl md:text-3xl text-gray-600 dark:text-gray-200 font-bold transition-colors"
+                            style={{ fontFamily: "'Dancing Script', cursive" }}
+                          >
+                            A ∪ B ∩ C
+                          </div>
+                        </div>
+                        <div className="p-6">
+                          <h3 
+                            className="text-xl md:text-2xl font-bold text-gray-600 dark:text-gray-200 mb-3 transition-colors text-center"
+                            style={{ fontFamily: "'Dancing Script', cursive" }}
+                          >
+                            Teoria dos Conjuntos
+                          </h3>
+                          <p className="text-base text-gray-600 dark:text-gray-300 transition-colors text-center">
+                            Explore operações entre conjuntos e suas propriedades.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CarouselItem>
               </CarouselContent>
               
               {/* Navigation controls */}
@@ -503,7 +765,7 @@ const handleHomeIndicatorClick = useCallback((index) => {
             
             {/* Indicadores do carrossel */}
             <div className="flex justify-center mt-8 gap-3">
-              {[0, 1, 2].map((index) => (
+              {[0, 1, 2, 3].map((index) => (
                 <button
                   key={index}
                   onClick={() => handleHomeIndicatorClick(index)}
@@ -543,12 +805,12 @@ const handleHomeIndicatorClick = useCallback((index) => {
               {studyMaterials.map((material) => (
                 <div 
                   key={material.id}
-                  onClick={() => openPDF(material.pdfPath, material.title)}
+                  onClick={() => openMaterial(material)}
                   className={`
                     bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden 
                     border border-gray-200 dark:border-gray-700 transition-all 
                     hover:shadow-lg hover:scale-105 duration-300 cursor-pointer
-                    hover:border-blue-400 dark:hover:border-blue-500
+                    transform-gpu
                   `}
                 >
                   <div className="p-6">
@@ -566,9 +828,6 @@ const handleHomeIndicatorClick = useCallback((index) => {
                         <li key={index}>{topic}</li>
                       ))}
                     </ul>
-                    <div className="mt-4 text-xs text-blue-600 dark:text-blue-400 font-medium">
-                      Clique para abrir o material em PDF
-                    </div>
                   </div>
                 </div>
               ))}
