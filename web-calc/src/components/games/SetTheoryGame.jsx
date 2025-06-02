@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect,} from 'react';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { Progress } from "@/components/ui/progress";
@@ -193,7 +193,7 @@ const DroppableArea = ({ areaId, elements, onDrop, darkMode, areaStyle, label, s
   );
 };
 
-function SetTheoryGame({ darkMode, onClose }) {
+function SetTheoryGame({ darkMode }) {
   const [currentProblem, setCurrentProblem] = useState(null);
   const [availableElements, setAvailableElements] = useState([]);
   const [placedElements, setPlacedElements] = useState({
