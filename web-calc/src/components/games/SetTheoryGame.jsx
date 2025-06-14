@@ -1,7 +1,6 @@
 import React, { useState, useEffect,} from 'react';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { Progress } from "@/components/ui/progress";
 import { Play, Square, Check, RotateCcw, Trophy, Target, BookOpen } from 'lucide-react';
 import {
   AlertDialog,
@@ -113,11 +112,11 @@ const DroppableCircle = ({ setName, elements, onDrop, darkMode, color }) => {
   );
 };
 
-// Droppable Area Component for Venn Diagram sections
-const DroppableArea = ({ areaId, elements, onDrop, darkMode, areaStyle, label, setColor }) => {
+// Droppable Area Component for Venn Diagram sections (Visual Only)
+const DroppableArea = ({ areaId, onDrop, darkMode, areaStyle, label, setColor }) => {
   const [{ isOver, canDrop }, drop] = useDrop(() => ({
     accept: 'element',
-        drop: (item, monitor) => {
+    drop: (item, monitor) => {
       if (monitor.didDrop()) return; // Prevent multiple drops
       onDrop(item.element, areaId, item.originalSet);
     },
@@ -126,9 +125,6 @@ const DroppableArea = ({ areaId, elements, onDrop, darkMode, areaStyle, label, s
       canDrop: monitor.canDrop(),
     }),
   }), [areaId, onDrop]);
-
-  // Add safety check for elements
-  const safeElements = elements || [];
   
   // Set color mapping
   const getAreaColor = () => {
@@ -157,9 +153,9 @@ const DroppableArea = ({ areaId, elements, onDrop, darkMode, areaStyle, label, s
     <div
       ref={drop}
       className={`
-        absolute flex flex-wrap gap-1 items-center justify-center p-1 transition-all duration-300
+        absolute flex items-center justify-center transition-all duration-300
         ${isOver && canDrop ? 'scale-105' : 'scale-100'}
-        border-2 border-solid min-h-[40px]
+        border-2 border-dashed
       `}
       style={{
         ...areaStyle,
@@ -172,23 +168,89 @@ const DroppableArea = ({ areaId, elements, onDrop, darkMode, areaStyle, label, s
         pointerEvents: 'auto'
       }}
     >
-      {/* Area Label */}
-      {label && safeElements.length === 0 && (
-        <div className={`text-xs font-semibold ${darkMode ? 'text-gray-400' : 'text-gray-600'} pointer-events-none`}>
+      {/* Area Label - Only show when hovering */}
+      {label && (
+        <div className={`text-xs font-semibold ${darkMode ? 'text-gray-400' : 'text-gray-600'} pointer-events-none text-center opacity-70`}>
           {label}
         </div>
       )}
+    </div>
+  );
+};
+
+// Sidebar Classification Area Component
+const SidebarArea = ({ areaId, elements, onDrop, darkMode, label, setColor }) => {
+  const [{ isOver, canDrop }, drop] = useDrop(() => ({
+    accept: 'element',
+    drop: (item) => onDrop(item.element, areaId, item.originalSet),
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+      canDrop: monitor.canDrop(),
+    }),
+  }));
+
+  const safeElements = elements || [];
+  
+  const getAreaColor = () => {
+    if (setColor === 'A') return darkMode ? 'rgba(239, 68, 68, 0.15)' : 'rgba(239, 68, 68, 0.1)';
+    if (setColor === 'B') return darkMode ? 'rgba(34, 197, 94, 0.15)' : 'rgba(34, 197, 94, 0.1)';
+    if (setColor === 'C') return darkMode ? 'rgba(59, 130, 246, 0.15)' : 'rgba(59, 130, 246, 0.1)';
+    if (setColor === 'AB') return darkMode ? 'rgba(236, 133, 82, 0.15)' : 'rgba(236, 133, 82, 0.1)';
+    if (setColor === 'AC') return darkMode ? 'rgba(149, 99, 157, 0.15)' : 'rgba(149, 99, 157, 0.1)';
+    if (setColor === 'BC') return darkMode ? 'rgba(46, 164, 170, 0.15)' : 'rgba(46, 164, 170, 0.1)';
+    if (setColor === 'ABC') return darkMode ? 'rgba(150, 150, 150, 0.2)' : 'rgba(150, 150, 150, 0.15)';
+    return darkMode ? 'rgba(55, 65, 81, 0.1)' : 'rgba(243, 244, 246, 0.3)';
+  };
+  
+  const getBorderColor = () => {
+    if (setColor === 'A') return darkMode ? 'rgba(239, 68, 68, 0.6)' : 'rgba(239, 68, 68, 0.8)';
+    if (setColor === 'B') return darkMode ? 'rgba(34, 197, 94, 0.6)' : 'rgba(34, 197, 94, 0.8)';
+    if (setColor === 'C') return darkMode ? 'rgba(59, 130, 246, 0.6)' : 'rgba(59, 130, 246, 0.8)';
+    if (setColor === 'AB') return darkMode ? 'rgba(236, 133, 82, 0.6)' : 'rgba(236, 133, 82, 0.8)';
+    if (setColor === 'AC') return darkMode ? 'rgba(149, 99, 157, 0.6)' : 'rgba(149, 99, 157, 0.8)';
+    if (setColor === 'BC') return darkMode ? 'rgba(46, 164, 170, 0.6)' : 'rgba(46, 164, 170, 0.8)';
+    if (setColor === 'ABC') return darkMode ? 'rgba(150, 150, 150, 0.6)' : 'rgba(150, 150, 150, 0.8)';
+    return darkMode ? 'rgba(156, 163, 175, 0.6)' : 'rgba(156, 163, 175, 0.5)';
+  };
+
+  return (
+    <div
+      ref={drop}
+      className={`
+        flex flex-wrap gap-1 items-start p-3 min-h-[60px] rounded-lg border-2 border-dashed transition-all duration-300
+        ${isOver && canDrop ? 'scale-102' : 'scale-100'}
+      `}
+      style={{
+        backgroundColor: isOver && canDrop 
+          ? (darkMode ? `${getBorderColor().replace('0.6', '0.3')}` : `${getBorderColor().replace('0.8', '0.2')}`)
+          : getAreaColor(),
+        borderColor: isOver && canDrop 
+          ? getBorderColor()
+          : (darkMode ? `${getBorderColor().replace('0.6', '0.4')}` : `${getBorderColor().replace('0.8', '0.5')}`),
+      }}
+    >
+      <div className={`w-full mb-2 text-xs font-semibold ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+        {label} ({safeElements.length})
+      </div>
       
       {/* Elements in this area */}
-      {safeElements.map((element, index) => (
-        <DraggableElement
-          key={`${areaId}-${element}-${index}`}
-          element={element}
-          darkMode={darkMode}
-          isPlaced={false}
-          originalSet={areaId}
-        />
-      ))}
+      <div className="flex flex-wrap gap-1 w-full">
+        {safeElements.map((element, index) => (
+          <DraggableElement
+            key={`${areaId}-${element}-${index}`}
+            element={element}
+            darkMode={darkMode}
+            isPlaced={false}
+            originalSet={areaId}
+          />
+        ))}
+      </div>
+      
+      {safeElements.length === 0 && (
+        <div className={`text-center w-full py-2 text-xs ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+          Arraste elementos aqui
+        </div>
+      )}
     </div>
   );
 };
@@ -370,7 +432,7 @@ function SetTheoryGame({ darkMode }) {
         }
       }, 3000);
     } else {
-      setFeedback(`❌ Incorreto! Acurácia: ${accuracy.toFixed(1)}%. ${currentProblem.explanation}`);
+      setFeedback(`Incorreto! Acertou: ${accuracy.toFixed(1)}%. ${currentProblem.explanation}`);
     }
   };
 
@@ -399,11 +461,11 @@ function SetTheoryGame({ darkMode }) {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className={`min-h-screen p-2 md:p-4 ${darkMode ? 'bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950' : 'bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50'} transition-all duration-300`}>
+      <div className={`p-2 md:p-4 ${darkMode ? 'bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950' : 'bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50'} transition-all duration-300`}>
         <div className={`max-w-7xl mx-auto ${darkMode ? 'bg-gray-900/95 border border-gray-800/50' : 'bg-white/95 border border-gray-200/50'} rounded-xl shadow-2xl backdrop-blur-lg transition-all duration-300`}>
           
           {/* Header */}
-          <div className={`p-4 md:p-6 border-b ${darkMode ? 'border-gray-800/50' : 'border-gray-200/50'}`}>
+          <div className={`p-3 md:p-4 border-b ${darkMode ? 'border-gray-800/50' : 'border-gray-200/50'}`}>
             <div className="flex items-center justify-center mb-4">
               <div className={`p-2 rounded-full ${darkMode ? 'bg-gray-800/50' : 'bg-gray-100'} mr-3`}>
                 <BookOpen className={`h-6 w-6 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`} />
@@ -438,14 +500,14 @@ function SetTheoryGame({ darkMode }) {
           </div>
           
           {/* Game Area */}
-          <div className="p-4 md:p-6">
+          <div className="p-3 md:p-4">
             
             {/* Available Elements */}
-            <div className={`mb-6 p-4 rounded-lg ${darkMode ? 'bg-gradient-to-br from-gray-800/50 to-gray-900/30 border border-gray-700/30' : 'bg-gradient-to-br from-gray-50 to-gray-100/50 border border-gray-200'} backdrop-blur-sm`}>
-              <h3 className={`text-lg font-semibold mb-3 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+            <div className={`mb-4 p-3 rounded-lg ${darkMode ? 'bg-gradient-to-br from-gray-800/50 to-gray-900/30 border border-gray-700/30' : 'bg-gradient-to-br from-gray-50 to-gray-100/50 border border-gray-200'} backdrop-blur-sm`}>
+              <h3 className={`text-base font-semibold mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                 Elementos Disponíveis ({availableElements.length})
               </h3>
-              <div className="flex flex-wrap gap-2 min-h-[60px] p-2 border-2 border-dashed rounded-lg"
+              <div className="flex flex-wrap gap-2 min-h-[50px] p-2 border-2 border-dashed rounded-lg"
                 style={{
                   borderColor: darkMode ? 'rgba(75, 85, 99, 0.5)' : 'rgba(156, 163, 175, 0.5)',
                   backgroundColor: darkMode ? 'rgba(55, 65, 81, 0.2)' : 'rgba(243, 244, 246, 0.5)'
@@ -468,203 +530,266 @@ function SetTheoryGame({ darkMode }) {
               </div>
             </div>
             
-            {/* Venn Diagram */}
-            <div className="relative w-full h-[600px] mb-6 flex items-center justify-center rounded-lg" 
-              style={{
-                backgroundColor: darkMode ? 'rgba(17, 24, 39, 0.3)' : 'rgba(249, 250, 251, 0.5)'
-              }}
-            >
-              {/* SVG Venn Diagram Background */}
-              <svg
-                width="500"
-                height="500"
-                viewBox="0 0 500 500"
-                className="absolute inset-0 mx-auto pointer-events-none"
-                style={{ zIndex: 1 }}
+            {/* Main Game Area with Sidebar */}
+            <div className="flex gap-4 mb-4">
+              
+              {/* Venn Diagram */}
+              <div className="flex-1 relative h-[400px] flex items-center justify-center rounded-lg" 
+                style={{
+                  backgroundColor: darkMode ? 'rgba(17, 24, 39, 0.3)' : 'rgba(249, 250, 251, 0.5)'
+                }}
               >
-                {/* Circle A (Red) - Top Left */}
-                <circle
-                  cx="180"
-                  cy="180"
-                  r="120"
-                  fill={darkMode ? 'rgba(239, 68, 68, 0.05)' : 'rgba(239, 68, 68, 0.03)'}
-                  stroke={darkMode ? 'rgba(239, 68, 68, 0.6)' : 'rgba(239, 68, 68, 0.8)'}
-                  strokeWidth="2"
-                />
+                {/* SVG Venn Diagram Background */}
+                <svg
+                  width="400"
+                  height="400"
+                  viewBox="0 0 400 350"
+                  className="absolute inset-0 mx-auto pointer-events-none"
+                  style={{ zIndex: 1 }}
+                >
+                  {/* Circle A (Red) - Top Left */}
+                  <circle
+                    cx="125"
+                    cy="130"
+                    r="120"
+                    fill={darkMode ? 'rgba(239, 68, 68, 0.05)' : 'rgba(239, 68, 68, 0.03)'}
+                    stroke={darkMode ? 'rgba(239, 68, 68, 0.6)' : 'rgba(239, 68, 68, 0.8)'}
+                    strokeWidth="2"
+                  />
+                  
+                  {/* Circle B (Green) - Top Right */}
+                  <circle
+                    cx="275"
+                    cy="130"
+                    r="120"
+                    fill={darkMode ? 'rgba(34, 197, 94, 0.05)' : 'rgba(34, 197, 94, 0.03)'}
+                    stroke={darkMode ? 'rgba(34, 197, 94, 0.6)' : 'rgba(34, 197, 94, 0.8)'}
+                    strokeWidth="2"
+                  />
+                  
+                  {/* Circle C (Blue) - Bottom */}
+                  <circle
+                    cx="200"
+                    cy="240"
+                    r="120"
+                    fill={darkMode ? 'rgba(59, 130, 246, 0.05)' : 'rgba(59, 130, 246, 0.03)'}
+                    stroke={darkMode ? 'rgba(59, 130, 246, 0.6)' : 'rgba(59, 130, 246, 0.8)'}
+                    strokeWidth="2"
+                  />
+                  
+                  {/* Set Labels */}
+                  <text x="100" y="100" className={`text-lg font-bold ${darkMode ? 'fill-red-400' : 'fill-red-600'}`}>A</text>
+                  <text x="300" y="100" className={`text-lg font-bold ${darkMode ? 'fill-green-400' : 'fill-green-600'}`}>B</text>
+                  <text x="190" y="310" className={`text-lg font-bold ${darkMode ? 'fill-blue-400' : 'fill-blue-600'}`}>C</text>
+                </svg>
                 
-                {/* Circle B (Green) - Top Right */}
-                <circle
-                  cx="320"
-                  cy="180"
-                  r="120"
-                  fill={darkMode ? 'rgba(34, 197, 94, 0.05)' : 'rgba(34, 197, 94, 0.03)'}
-                  stroke={darkMode ? 'rgba(34, 197, 94, 0.6)' : 'rgba(34, 197, 94, 0.8)'}
-                  strokeWidth="2"
-                />
+                <div className="absolute inset-0" style={{ zIndex: 10 }}>
+                  <DroppableArea
+                    areaId="onlyA"
+                    onDrop={handleDrop}
+                    darkMode={darkMode}
+                    label="A"
+                    setColor="A"
+                    areaStyle={{ 
+                      top: '34px', 
+                      left: '258px', 
+                      width: '242px', 
+                      height: '242px',
+                      borderRadius: '50%'
+                    }}
+                  />
+                  
+                  <DroppableArea
+                    areaId="onlyB"
+                    onDrop={handleDrop}
+                    darkMode={darkMode}
+                    label="B"
+                    setColor="B"
+                    areaStyle={{ 
+                      top: '34px', 
+                      left: '408px', 
+                      width: '242px', 
+                      height: '242px',
+                      borderRadius: '50%'
+                    }}
+                  />
+                  
+                  <DroppableArea
+                    areaId="onlyC"
+                    onDrop={handleDrop}
+                    darkMode={darkMode}
+                    label="C"
+                    setColor="C"
+                    areaStyle={{ 
+                      top: '144px', 
+                      left: '333px', 
+                      width: '242px', 
+                      height: '242px',
+                      borderRadius: '50%'
+                    }}
+                  />
+                  
+                  <DroppableArea
+                    areaId="AB"
+                    onDrop={handleDrop}
+                    darkMode={darkMode}
+                    label="A∩B"
+                    setColor="AB"
+                    areaStyle={{ 
+                      top: '85px', 
+                      left: '170px', 
+                      width: '50px', 
+                      height: '50px',
+                      borderRadius: '50%'
+                    }}
+                  />
+                  
+                  <DroppableArea
+                    areaId="AC"
+                    onDrop={handleDrop}
+                    darkMode={darkMode}
+                    label="A∩C"
+                    setColor="AC"
+                    areaStyle={{ 
+                      top: '155px', 
+                      left: '135px', 
+                      width: '50px', 
+                      height: '50px',
+                      borderRadius: '50%'
+                    }}
+                  />
+                  
+                  <DroppableArea
+                    areaId="BC"
+                    onDrop={handleDrop}
+                    darkMode={darkMode}
+                    label="B∩C"
+                    setColor="BC"
+                    areaStyle={{ 
+                      top: '155px', 
+                      left: '207px', 
+                      width: '50px', 
+                      height: '50px',
+                      borderRadius: '50%'
+                    }}
+                  />
+                  
+                  <DroppableArea
+                    areaId="ABC"
+                    onDrop={handleDrop}
+                    darkMode={darkMode}
+                    label="A∩B∩C"
+                    setColor="ABC"
+                    areaStyle={{ 
+                      top: '140px', 
+                      left: '181px', 
+                      width: '30px', 
+                      height: '20px',
+                      borderRadius: '50%'
+                    }}
+                  />
+                  
+                  <DroppableArea
+                    areaId="outside"
+                    onDrop={handleDrop}
+                    darkMode={darkMode}
+                    label="Fora"
+                    setColor="outside"
+                    areaStyle={{ 
+                      top: '20px', 
+                      left: '20px', 
+                      width: '80px', 
+                      height: '40px',
+                      borderRadius: '10px'
+                    }}
+                  />
+                </div>
+              </div>
+              
+              {/* Sidebar with Classification Areas */}
+              <div className={`w-72 p-3 rounded-lg ${darkMode ? 'bg-gradient-to-br from-gray-800/50 to-gray-900/30 border border-gray-700/30' : 'bg-gradient-to-br from-gray-50 to-gray-100/50 border border-gray-200'} backdrop-blur-sm`}>
+                <h3 className={`text-base font-semibold mb-3 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Classificação
+                </h3>
                 
-                {/* Circle C (Blue) - Bottom */}
-                <circle
-                  cx="250"
-                  cy="290"
-                  r="120"
-                  fill={darkMode ? 'rgba(59, 130, 246, 0.05)' : 'rgba(59, 130, 246, 0.03)'}
-                  stroke={darkMode ? 'rgba(59, 130, 246, 0.6)' : 'rgba(59, 130, 246, 0.8)'}
-                  strokeWidth="2"
-                />
-                
-                {/* Set Labels */}
-                <text x="130" y="130" className={`text-xl font-bold ${darkMode ? 'fill-red-400' : 'fill-red-600'}`}>A</text>
-                <text x="370" y="130" className={`text-xl font-bold ${darkMode ? 'fill-green-400' : 'fill-green-600'}`}>B</text>
-                <text x="240" y="420" className={`text-xl font-bold ${darkMode ? 'fill-blue-400' : 'fill-blue-600'}`}>C</text>
-              </svg>
-              
-              {/* Only A (left part of A not overlapping with B or C) */}
-              <DroppableArea
-                areaId="onlyA"
-                elements={placedElements.onlyA}
-                onDrop={handleDrop}
-                darkMode={darkMode}
-                label="A"
-                setColor="A"
-                areaStyle={{ 
-                  top: '110px', 
-                  left: '70px', 
-                  width: '90px', 
-                  height: '90px',
-                  borderRadius: '50%',
-                  zIndex: 10
-                }}
-              />
-              
-              {/* Only B (right part of B not overlapping with A or C) */}
-              <DroppableArea
-                areaId="onlyB"
-                elements={placedElements.onlyB}
-                onDrop={handleDrop}
-                darkMode={darkMode}
-                label="B"
-                setColor="B"
-                areaStyle={{ 
-                  top: '110px', 
-                  left: '340px', 
-                  width: '90px', 
-                  height: '90px',
-                  borderRadius: '50%',
-                  zIndex: 10
-                }}
-              />
-              
-              {/* Only C (bottom part of C not overlapping with A or B) */}
-              <DroppableArea
-                areaId="onlyC"
-                elements={placedElements.onlyC}
-                onDrop={handleDrop}
-                darkMode={darkMode}
-                label="C"
-                setColor="C"
-                areaStyle={{ 
-                  top: '350px', 
-                  left: '205px', 
-                  width: '90px', 
-                  height: '90px',
-                  borderRadius: '50%',
-                  zIndex: 10
-                }}
-              />
-              
-              {/* A ∩ B (top intersection between A and B) */}
-              <DroppableArea
-                areaId="AB"
-                elements={placedElements.AB}
-                onDrop={handleDrop}
-                darkMode={darkMode}
-                label="A ∩ B"
-                setColor="AB"
-                areaStyle={{ 
-                  top: '130px', 
-                  left: '210px', 
-                  width: '80px', 
-                  height: '70px',
-                  borderRadius: '40%',
-                  zIndex: 15
-                }}
-              />
-              
-              {/* A ∩ C (bottom left intersection between A and C) */}
-              <DroppableArea
-                areaId="AC"
-                elements={placedElements.AC}
-                onDrop={handleDrop}
-                darkMode={darkMode}
-                label="A ∩ C"
-                setColor="AC"
-                areaStyle={{ 
-                  top: '230px', 
-                  left: '155px', 
-                  width: '80px', 
-                  height: '70px',
-                  borderRadius: '40%',
-                  zIndex: 15
-                }}
-              />
-              
-              {/* B ∩ C (bottom right intersection between B and C) */}
-              <DroppableArea
-                areaId="BC"
-                elements={placedElements.BC}
-                onDrop={handleDrop}
-                darkMode={darkMode}
-                label="B ∩ C"
-                setColor="BC"
-                areaStyle={{ 
-                  top: '230px', 
-                  left: '265px', 
-                  width: '80px', 
-                  height: '70px',
-                  borderRadius: '40%',
-                  zIndex: 15
-                }}
-              />
-              
-              {/* A ∩ B ∩ C (center intersection of all three) */}
-              <DroppableArea
-                areaId="ABC"
-                elements={placedElements.ABC}
-                onDrop={handleDrop}
-                darkMode={darkMode}
-                label="A∩B∩C"
-                setColor="ABC"
-                areaStyle={{ 
-                  top: '185px', 
-                  left: '215px', 
-                  width: '70px', 
-                  height: '60px',
-                  borderRadius: '40%',
-                  zIndex: 20
-                }}
-              />
-              
-              {/* Outside all sets */}
-              <DroppableArea
-                areaId="outside"
-                elements={placedElements.outside}
-                onDrop={handleDrop}
-                darkMode={darkMode}
-                label="Fora"
-                setColor="outside"
-                areaStyle={{ 
-                  top: '30px', 
-                  left: '30px', 
-                  width: '100px', 
-                  height: '60px',
-                  borderRadius: '10px',
-                  zIndex: 10
-                }}
-              />
+                <div className="space-y-3 max-h-[360px] overflow-y-auto">
+                  <SidebarArea
+                    areaId="onlyA"
+                    elements={placedElements.onlyA}
+                    onDrop={handleDrop}
+                    darkMode={darkMode}
+                    label="Apenas A"
+                    setColor="A"
+                  />
+                  
+                  <SidebarArea
+                    areaId="onlyB"
+                    elements={placedElements.onlyB}
+                    onDrop={handleDrop}
+                    darkMode={darkMode}
+                    label="Apenas B"
+                    setColor="B"
+                  />
+                  
+                  <SidebarArea
+                    areaId="onlyC"
+                    elements={placedElements.onlyC}
+                    onDrop={handleDrop}
+                    darkMode={darkMode}
+                    label="Apenas C"
+                    setColor="C"
+                  />
+                  
+                  <SidebarArea
+                    areaId="AB"
+                    elements={placedElements.AB}
+                    onDrop={handleDrop}
+                    darkMode={darkMode}
+                    label="A ∩ B"
+                    setColor="AB"
+                  />
+                  
+                  <SidebarArea
+                    areaId="AC"
+                    elements={placedElements.AC}
+                    onDrop={handleDrop}
+                    darkMode={darkMode}
+                    label="A ∩ C"
+                    setColor="AC"
+                  />
+                  
+                  <SidebarArea
+                    areaId="BC"
+                    elements={placedElements.BC}
+                    onDrop={handleDrop}
+                    darkMode={darkMode}
+                    label="B ∩ C"
+                    setColor="BC"
+                  />
+                  
+                  <SidebarArea
+                    areaId="ABC"
+                    elements={placedElements.ABC}
+                    onDrop={handleDrop}
+                    darkMode={darkMode}
+                    label="A ∩ B ∩ C"
+                    setColor="ABC"
+                  />
+                  
+                  <SidebarArea
+                    areaId="outside"
+                    elements={placedElements.outside}
+                    onDrop={handleDrop}
+                    darkMode={darkMode}
+                    label="Fora dos conjuntos"
+                    setColor="outside"
+                  />
+                </div>
+              </div>
             </div>
 
             {/* Control Buttons */}
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-2 mb-4">
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-2 mb-3">
               {!gameStarted ? (
                 <button
                   onClick={startGame}
@@ -755,7 +880,7 @@ function SetTheoryGame({ darkMode }) {
             
             {/* Feedback */}
             {feedback && (
-              <div className={`p-3 rounded-lg text-center text-sm font-medium backdrop-blur-sm transition-all duration-300 ${
+              <div className={`p-2 rounded-lg text-center text-xs font-medium backdrop-blur-sm transition-all duration-300 ${
                 feedback.includes('🎉') 
                   ? (darkMode ? 'bg-gradient-to-r from-green-900/50 to-green-800/30 text-green-200 border border-green-700/50' : 'bg-gradient-to-r from-green-100 to-green-200 text-green-800 border border-green-300')
                   : feedback.includes('❌')
@@ -785,7 +910,7 @@ function SetTheoryGame({ darkMode }) {
                 className={`
                   px-4 py-2 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105
                   ${darkMode 
-                    ? 'bg-gradient-to-r from-gray-700 to-gray-600 hover:from-gray-600 hover:to-gray-500 text-gray-100 shadow-lg' 
+                    ? 'bg-gradient-to-r from-gray-700 to-gray-600 hover:from_gray-600 hover:to-gray-500 text-gray-100 shadow-lg' 
                     : 'bg-gradient-to-r from-gray-700 to-gray-600 hover:from_gray-600 hover:to-gray-500 text-white shadow-lg'
                   }
                 `}
