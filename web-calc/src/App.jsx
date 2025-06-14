@@ -861,26 +861,112 @@ Então v⃗ = (4, 3)`
         id="about"
         className="min-h-screen flex items-center justify-center px-4 py-16 md:p-6 transition-colors"
       >
-        <div className="w-full max-w-2xl bg-white dark:bg-gray-800 p-4 md:p-8 rounded-lg shadow-lg transition-colors">
-          <h2 
-            className="text-3xl md:text-4xl font-bold mb-6 text-gray-600 dark:text-white transition-colors"
-            style={{ fontFamily: "'Dancing Script', cursive" }}
-          >
-            Sobre o Projeto
-          </h2>
-          <p className="mb-4 text-sm md:text-base text-gray-600 dark:text-gray-300 transition-colors">
-            Este projeto foi desenvolvido como parte do trabalho de Estruturas Matemáticas,
-            com o objetivo de criar ferramentas interativas para ensino e aprendizagem de
-            conceitos matemáticos.
-          </p>
-          <p className="mb-4 text-sm md:text-base text-gray-600 dark:text-gray-300 transition-colors">
-            Os jogos disponíveis exploram diferentes conceitos:
-          </p>
-          <ul className="list-disc pl-6 mb-4 text-sm md:text-base text-gray-600 dark:text-gray-300 transition-colors">
-            <li>Produto Cartesiano - Combinação de elementos de conjuntos</li>
-            <li>Descubra a Função - Relação entre equações e seus gráficos</li>
-            <li>Decomposição Vetorial - Operações e propriedades de vetores</li>
-          </ul>
+        <div className="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+          
+          {/* Project Info - Left Column */}
+          <div className="bg-white dark:bg-gray-800 p-4 md:p-8 rounded-lg shadow-lg transition-colors">
+            <h2 
+              className="text-3xl md:text-4xl font-bold mb-6 text-gray-600 dark:text-white transition-colors"
+              style={{ fontFamily: "'Dancing Script', cursive" }}
+            >
+              Sobre o Projeto
+            </h2>
+            <p className="mb-4 text-sm md:text-base text-gray-600 dark:text-gray-300 transition-colors">
+              Este projeto foi desenvolvido como parte do trabalho de Estruturas Matemáticas,
+              com o objetivo de criar ferramentas interativas para ensino e aprendizagem de
+              conceitos matemáticos. 
+            </p>
+            <p className="mb-4 text-sm md:text-base text-gray-600 dark:text-gray-300 transition-colors">
+              Os jogos disponíveis exploram diferentes conceitos:
+            </p>
+            <ul className="list-disc pl-6 mb-4 text-sm md:text-base text-gray-600 dark:text-gray-300 transition-colors">
+              <li>Produto Cartesiano - Combinação de elementos de conjuntos</li>
+              <li>Descubra a Função - Relação entre equações e seus gráficos</li>
+              <li>Decomposição Vetorial - Operações e propriedades de vetores</li>
+              <li>Teoria dos Conjuntos - Operações e classificação de elementos</li>
+            </ul>
+            <p className="text-sm md:text-base text-gray-600 dark:text-gray-300 transition-colors">
+              Cada jogo foi projetado para proporcionar uma experiência de aprendizado 
+              envolvente e interativa, permitindo aos usuários explorar conceitos matemáticos 
+              de forma prática e visual.
+            </p>
+          </div>
+
+          {/* Participants - Right Column */}
+          <div className="bg-white dark:bg-gray-800 p-4 md:p-8 rounded-lg shadow-lg transition-colors">
+            <h2 
+              className="text-3xl md:text-4xl font-bold mb-6 text-gray-600 dark:text-white transition-colors"
+              style={{ fontFamily: "'Dancing Script', cursive" }}
+            >
+              Participantes
+            </h2>
+            
+            <div className="space-y-6">
+              {/* Participant 1 */}
+              <div className="flex items-center space-x-4 p-4 rounded-lg bg-gray-50 dark:bg-gray-700/50 transition-colors">
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                  L
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-200">
+                    Luis Henrique
+                  </h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Desenvolvedor Principal
+                  </p>
+                </div>
+              </div>
+
+              {/* Participant 2 */}
+              <div className="flex items-center space-x-4 p-4 rounded-lg bg-gray-50 dark:bg-gray-700/50 transition-colors">
+                <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                  A
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-200">
+                    Ana Silva
+                  </h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Designer de Interface
+                  </p>
+                </div>
+              </div>
+
+              {/* Participant 3 */}
+              <div className="flex items-center space-x-4 p-4 rounded-lg bg-gray-50 dark:bg-gray-700/50 transition-colors">
+                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                  M
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-200">
+                    Maria Santos
+                  </h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Especialista em Matemática
+                  </p>
+                </div>
+              </div>
+
+              {/* Additional Info */}
+              <div className="mt-8 p-4 border-l-4 border-blue-500 bg-blue-50 dark:bg-blue-900/20 rounded-r-lg">
+                <h4 className="font-semibold text-gray-700 dark:text-gray-200 mb-2">
+                  🎓 Universidade
+                </h4>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Projeto desenvolvido na disciplina de Estruturas Matemáticas
+                </p>
+              </div>
+
+              <div className="p-4 border-l-4 border-green-500 bg-green-50 dark:bg-green-900/20 rounded-r-lg">
+                <h4 className="font-semibold text-gray-700 dark:text-gray-200 mb-2">
+                  🛠️ Tecnologias
+                </h4>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  React, JavaScript, Tailwind CSS, Lucide Icons
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
     </div>
