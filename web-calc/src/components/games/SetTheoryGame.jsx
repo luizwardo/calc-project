@@ -30,7 +30,7 @@ const DraggableElement = ({ element, darkMode, isPlaced, originalSet }) => {
         ${isDragging ? 'opacity-50 scale-95' : 'opacity-100 scale-100'}
         ${isPlaced
           ? (darkMode ? 'bg-gray-700 text-gray-400 border border-gray-600' : 'bg-gray-200 text-gray-500 border border-gray-300')
-          : (darkMode ? 'bg-gray-600 text-gray-100 border border-gray-500 hover:bg-gray-500' : 'bg-blue-500 text-white border border-blue-600 hover:bg-blue-600')
+          : (darkMode ? 'bg-gradient-to-br from-gray-600 via-gray-700 to-gray-800 hover:from-gray-500 hover:via-gray-600 hover:to-gray-700 text-gray-100 border border-gray-500 shadow-lg shadow-gray-900/30' : 'bg-gradient-to-br from-gray-300 via-gray-400 to-gray-500 hover:from-gray-200 hover:via-gray-300 hover:to-gray-400 text-gray-800 border border-gray-400 shadow-lg shadow-gray-600/30')
         }
         shadow-sm hover:shadow-md transform hover:scale-105
       `}
@@ -93,7 +93,7 @@ const DroppableCircle = ({ setName, elements, onDrop, darkMode, color }) => {
             key={index}
             className={`
               px-2 py-1 rounded text-xs font-semibold
-              ${darkMode ? 'bg-gray-800 text-gray-200 border border-gray-600' : 'bg-white text-gray-700 border border-gray-300'}
+              ${darkMode ? 'bg-gradient-to-br from-gray-700 via-gray-800 to-gray-900 text-gray-200 border border-gray-600' : 'bg-gradient-to-br from-gray-200 via-gray-300 to-gray-400 text-gray-700 border border-gray-300'}
               shadow-sm
             `}
           >
@@ -331,7 +331,6 @@ function SetTheoryGame({ darkMode }) {
     setGameStarted(true);
     setScore(0);
     loadProblem(0);
-    setFeedback('Jogo iniciado! Arraste os elementos para as áreas corretas do diagrama de Venn.');
   };
 
   const stopGame = () => {
@@ -371,18 +370,7 @@ function SetTheoryGame({ darkMode }) {
       [targetArea]: [...prev[targetArea], element]
     }));
 
-    const areaLabels = {
-      onlyA: 'Apenas A',
-      onlyB: 'Apenas B', 
-      onlyC: 'Apenas C',
-      AB: 'A ∩ B',
-      AC: 'A ∩ C',
-      BC: 'B ∩ C',
-      ABC: 'A ∩ B ∩ C',
-      outside: 'Fora dos conjuntos'
-    };
-
-    setFeedback(`Elemento "${element}" adicionado à área: ${areaLabels[targetArea]}`);
+    // Remove feedback when dropping elements
   };
 
   const checkAnswer = () => {
@@ -754,7 +742,7 @@ function SetTheoryGame({ darkMode }) {
                     col-span-1 sm:col-span-2 md:col-span-1 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center justify-center space-x-2
                     ${darkMode 
                       ? 'bg-gradient-to-r from-gray-700 to-gray-600 hover:from-gray-600 hover:to-gray-500 text-gray-100 shadow-lg shadow-gray-700/25' 
-                      : 'bg-gradient-to-r from-gray-700 to-gray-600 hover:from-gray-600 hover:to-gray-500 text-white shadow-lg shadow-gray-600/25'
+                      : 'bg-gradient-to-r from-gray-700 to-gray-600 hover:from_gray-600 hover:to-gray-500 text-white shadow-lg shadow-gray-600/25'
                     }
                   `}
                 >
