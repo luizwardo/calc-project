@@ -180,26 +180,41 @@ function VectorGame({ onClose, darkMode }) {
   };
 
   return (
-    <div className={`min-h-screen p-2 md:p-4 ${darkMode ? 'bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950' : 'bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50'} transition-all duration-300`}>
-      <div className={`max-w-7xl mx-auto ${darkMode ? 'bg-gray-900/95 border border-gray-800/50' : 'bg-white/95 border border-gray-200/50'} rounded-xl shadow-2xl backdrop-blur-lg transition-all duration-300`}>
+    <div className={`min-h-100 p-1 md:p-2 ${darkMode ? 'bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950' : 'bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50'} transition-all duration-300`}>
+      <div className={`w-full h-full ${darkMode ? 'bg-gray-900/95 border border-gray-800/50' : 'bg-white/95 border border-gray-200/50'} rounded-lg shadow-2xl backdrop-blur-lg transition-all duration-300`}>
         
         {/* Header Section */}
-        <div className={`p-4 md:p-6 border-b ${darkMode ? 'border-gray-800/50' : 'border-gray-200/50'}`}>
-          <div className="flex items-center justify-center mb-4">
-            <div className={`p-2 rounded-full ${darkMode ? 'bg-gray-800/50' : 'bg-gray-100'} mr-3`}>
-              <Navigation className={`h-6 w-6 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`} />
+        <div className={`p-2 border-b ${darkMode ? 'border-gray-800/50' : 'border-gray-200/50'} flex-shrink-0`}>
+          <div className="flex items-center justify-between mb-1">
+            <div className="flex items-center">
+              <div className={`p-1 rounded-full ${darkMode ? 'bg-gray-800/50' : 'bg-gray-100'} mr-2`}>
+                <Navigation className={`h-3 w-3 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`} />
+              </div>
+              <h1 
+                className={`text-base md:text-lg font-bold ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}
+                style={{ fontFamily: "'Dancing Script', cursive" }}
+              >
+                Missão Vetorial
+              </h1>
             </div>
-            <h1 
-              className={`text-2xl md:text-3xl font-bold text-center ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}
-              style={{ fontFamily: "'Dancing Script', cursive" }}
+            <button
+              onClick={onClose}
+              className={`
+                px-2 py-1 rounded text-xs font-semibold transition-all duration-200 hover:scale-105 relative overflow-hidden
+                ${darkMode 
+                  ? 'bg-gradient-to-br from-gray-600 via-gray-700 to-gray-800 hover:from-gray-500 hover:via-gray-600 hover:to-gray-700 text-gray-100 shadow-lg shadow-gray-900/50 border border-gray-500/30' 
+                  : 'bg-gradient-to-br from-gray-300 via-gray-400 to-gray-500 hover:from-gray-200 hover:via-gray-300 hover:to-gray-400 text-gray-800 shadow-lg shadow-gray-600/30 border border-gray-400/40'
+                }
+                before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700
+              `}
             >
-              Missão Vetorial
-            </h1>
+              ✕
+            </button>
           </div>
           
           {/* Vector Info Card */}
-          <div className={`p-4 rounded-lg ${darkMode ? 'bg-gradient-to-br from-gray-800/50 to-gray-900/30 border border-gray-700/30' : 'bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200'} backdrop-blur-sm`}>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className={`p-2 rounded-lg ${darkMode ? 'bg-gradient-to-br from-gray-800/50 to-gray-900/30 border border-gray-700/30' : 'bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200'} backdrop-blur-sm`}>
+            <div className="grid grid-cols-2 gap-4">
               <div className="text-center">
                 <p className={`text-xs font-medium ${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-1`}>Módulo</p>
                 <p className={`text-sm font-bold ${darkMode ? 'text-gray-200' : 'text-gray-800'}`}>
@@ -217,27 +232,27 @@ function VectorGame({ onClose, darkMode }) {
         </div>
 
         {/* Game Content */}
-        <div className="p-4 md:p-6">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div className="p-2 md:p-3 flex-1">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-3 h-full">
             
             {/* Plano Cartesiano */}
-            <div className="lg:col-span-2">
-              <div className={`relative w-full h-[300px] md:h-[350px] ${darkMode ? 'bg-gradient-to-br from-gray-900 to-gray-950 border border-gray-800/50' : 'bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200'} rounded-xl shadow-inner mb-4 overflow-hidden`}>
+            <div className="lg:col-span-4">
+              <div className={`relative w-full h-[400px] md:h-[500px] lg:h-[600px] ${darkMode ? 'bg-gradient-to-br from-gray-900 to-gray-950 border border-gray-800/50' : 'bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200'} rounded-lg shadow-inner overflow-hidden`}>
                 <Plot
                   ref={plotRef}
                   data={getPlotData()}
                   layout={{
                     autosize: true,
-                    margin: { l: 50, r: 50, b: 50, t: 50 },
+                    margin: { l: 30, r: 30, b: 30, t: 30 },
                     paper_bgcolor: 'transparent',
                     plot_bgcolor: 'transparent',
                     font: {
                       color: darkMode ? '#e5e7eb' : '#374151',
-                      size: 12,
+                      size: 10,
                       family: "'Inter', sans-serif"
                     },
                     xaxis: {
-                      title: { text: 'x', font: { size: 14, color: darkMode ? '#9ca3af' : '#6b7280' } },
+                      title: { text: 'x', font: { size: 11, color: darkMode ? '#9ca3af' : '#6b7280' } },
                       range: [-20, 20],
                       zeroline: true,
                       showgrid: true,
@@ -247,7 +262,7 @@ function VectorGame({ onClose, darkMode }) {
                       zerolinewidth: 2
                     },
                     yaxis: {
-                      title: { text: 'y', font: { size: 14, color: darkMode ? '#9ca3af' : '#6b7280' } },
+                      title: { text: 'y', font: { size: 11, color: darkMode ? '#9ca3af' : '#6b7280' } },
                       range: [-20, 20],
                       zeroline: true,
                       showgrid: true,
@@ -258,13 +273,7 @@ function VectorGame({ onClose, darkMode }) {
                       scaleanchor: 'x',
                       scaleratio: 1
                     },
-                    showlegend: true,
-                    legend: {
-                      x: 0,
-                      y: 1,
-                      orientation: 'h',
-                      font: { size: 10 }
-                    }
+                    showlegend: false
                   }}
                   config={{
                     displayModeBar: false,
@@ -274,7 +283,7 @@ function VectorGame({ onClose, darkMode }) {
                   style={{ 
                     width: '100%', 
                     height: '100%',
-                    borderRadius: '0.75rem'
+                    borderRadius: '0.5rem'
                   }}
                   useResizeHandler={true}
                 />
@@ -282,12 +291,12 @@ function VectorGame({ onClose, darkMode }) {
             </div>
 
             {/* Painel Lateral de Controles */}
-            <div className="lg:col-span-1 space-y-4">
+            <div className="lg:col-span-1 space-y-2 flex flex-col">
               
               {/* Sliders para Componentes */}
-              <div className="space-y-3">
-                <div className={`p-3 rounded-lg ${darkMode ? 'bg-gray-800/50 border border-gray-700/30' : 'bg-gray-100 border border-gray-200'}`}>
-                  <Label className={`mb-2 block text-sm font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+              <div className="space-y-2 flex-shrink-0">
+                <div className={`p-2 rounded-lg ${darkMode ? 'bg-gray-800/50 border border-gray-700/30' : 'bg-gray-100 border border-gray-200'}`}>
+                  <Label className={`mb-1 block text-xs font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                     Componente X: {round2Decimals(userComponents.x)}
                   </Label>
                   <Slider
@@ -300,8 +309,8 @@ function VectorGame({ onClose, darkMode }) {
                   />
                 </div>
                 
-                <div className={`p-3 rounded-lg ${darkMode ? 'bg-gray-800/50 border border-gray-700/30' : 'bg-gray-100 border border-gray-200'}`}>
-                  <Label className={`mb-2 block text-sm font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                <div className={`p-2 rounded-lg ${darkMode ? 'bg-gray-800/50 border border-gray-700/30' : 'bg-gray-100 border border-gray-200'}`}>
+                  <Label className={`mb-1 block text-xs font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                     Componente Y: {round2Decimals(userComponents.y)}
                   </Label>
                   <Slider
@@ -316,71 +325,60 @@ function VectorGame({ onClose, darkMode }) {
               </div>
 
               {/* Vetor Resultante Display */}
-              <div className={`p-3 rounded-lg text-center ${darkMode ? 'bg-gray-800/50 border border-gray-700' : 'bg-gray-100 border border-gray-200'}`}>
+              <div className={`p-2 rounded-lg text-center flex-shrink-0 ${darkMode ? 'bg-gray-800/50 border border-gray-700' : 'bg-gray-100 border border-gray-200'}`}>
                 <p className={`text-xs font-medium ${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-1`}>Vetor Resultante</p>
-                <p className={`text-sm font-bold ${darkMode ? 'text-gray-200' : 'text-gray-800'}`}>
+                <p className={`text-xs font-bold ${darkMode ? 'text-gray-200' : 'text-gray-800'}`}>
                   ({round2Decimals(userComponents.x)}, {round2Decimals(userComponents.y)})
                 </p>
               </div>
 
               {/* Action Buttons */}
-              <div className="grid grid-cols-1 gap-2">
+              <div className="grid grid-cols-1 gap-1.5 flex-1 content-start">
                 <button
                   onClick={() => generateLevel(level)}
                   className={`
-                    px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center justify-center space-x-2
+                    px-2 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center justify-center space-x-1 relative overflow-hidden
                     ${darkMode 
-                      ? 'bg-gradient-to-r from-gray-700 to-gray-600 hover:from-gray-600 hover:to-gray-500 text-gray-100 shadow-lg shadow-gray-700/25' 
-                      : 'bg-gradient-to-r from-gray-700 to-gray-600 hover:from-gray-600 hover:to-gray-500 text-white shadow-lg shadow-gray-600/25'
+                      ? 'bg-gradient-to-br from-gray-600 via-gray-700 to-gray-800 hover:from-gray-500 hover:via-gray-600 hover:to-gray-700 text-gray-100 shadow-lg shadow-gray-900/50 border border-gray-500/30' 
+                      : 'bg-gradient-to-br from-gray-300 via-gray-400 to-gray-500 hover:from-gray-200 hover:via-gray-300 hover:to-gray-400 text-gray-800 shadow-lg shadow-gray-600/30 border border-gray-400/40'
                     }
+                    before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700
                   `}
                 >
-                  <RotateCcw className="h-4 w-4" />
+                  <RotateCcw className="h-3 w-3" />
                   <span>Novo Problema</span>
                 </button>
                 
                 <button
                   onClick={checkAnswer}
                   className={`
-                    px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center justify-center space-x-2
+                    px-2 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center justify-center space-x-1 relative overflow-hidden
                     ${darkMode 
-                      ? 'bg-gradient-to-r from-gray-800 to-gray-700 hover:from-gray-700 hover:to-gray-600 text-gray-100 shadow-lg shadow-gray-700/25' 
-                      : 'bg-gradient-to-r from-gray-800 to-gray-700 hover:from-gray-700 hover:to-gray-600 text-white shadow-lg shadow-gray-700/25'
+                      ? 'bg-gradient-to-br from-gray-600 via-gray-700 to-gray-800 hover:from-gray-500 hover:via-gray-600 hover:to-gray-700 text-gray-100 shadow-lg shadow-gray-900/50 border border-gray-500/30' 
+                      : 'bg-gradient-to-br from-gray-300 via-gray-400 to-gray-500 hover:from-gray-200 hover:via-gray-300 hover:to-gray-400 text-gray-800 shadow-lg shadow-gray-600/30 border border-gray-400/40'
                     }
+                    before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700
                   `}
                 >
-                  <Check className="h-4 w-4" />
+                  <Check className="h-3 w-3" />
                   <span>Verificar</span>
                 </button>
-
-                <button
-                  onClick={onClose}
-                  className={`
-                    px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95
-                    ${darkMode 
-                      ? 'bg-gray-800 hover:bg-gray-700 text-gray-300 border border-gray-700' 
-                      : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300'
-                    }
-                  `}
-                >
-                  Voltar
-                </button>
               </div>
+
+              {/* Feedback Section */}
+              {feedback && (
+                <div className={`p-2 rounded-lg text-center text-xs font-medium backdrop-blur-sm transition-all duration-300 flex-shrink-0 ${
+                  feedback.includes('Parabéns') 
+                    ? (darkMode ? 'bg-gradient-to-r from-gray-800/70 to-gray-700/50 text-gray-200 border border-gray-600/50' : 'bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 border border-gray-300')
+                    : feedback.includes('Quase')
+                      ? (darkMode ? 'bg-gradient-to-r from-gray-800/70 to-gray-700/50 text-gray-300 border border-gray-600/50' : 'bg-gradient-to-r from_gray-100 to_gray-200 text-gray-700 border border-gray-300')
+                      : (darkMode ? 'bg-gradient-to-r from-gray-800/70 to-gray-700/50 text-gray-200 border border-gray-600/50' : 'bg-gradient-to-r from_gray-100 to_gray-200 text-gray-800 border border-gray-300')
+                } shadow-sm`}>
+                  {feedback}
+                </div>
+              )}
             </div>
           </div>
-
-          {/* Feedback Section */}
-          {feedback && (
-            <div className={`mt-4 p-3 rounded-lg text-center text-sm font-medium backdrop-blur-sm transition-all duration-300 ${
-              feedback.includes('Parabéns') 
-                ? (darkMode ? 'bg-gradient-to-r from-gray-800/70 to-gray-700/50 text-gray-200 border border-gray-600/50' : 'bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 border border-gray-300')
-                : feedback.includes('Quase')
-                  ? (darkMode ? 'bg-gradient-to-r from-gray-800/70 to-gray-700/50 text-gray-300 border border-gray-600/50' : 'bg-gradient-to-r from-gray-100 to_gray-200 text-gray-700 border border-gray-300')
-                  : (darkMode ? 'bg-gradient-to-r from-gray-800/70 to-gray-700/50 text-gray-200 border border-gray-600/50' : 'bg-gradient-to-r from_gray-100 to_gray-200 text-gray-800 border border-gray-300')
-            } shadow-sm`}>
-              {feedback}
-            </div>
-          )}
         </div>
       </div>
 
@@ -401,7 +399,7 @@ function VectorGame({ onClose, darkMode }) {
               className={`
                 px-4 py-2 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105
                 ${darkMode 
-                  ? 'bg-gradient-to-r from-gray-700 to-gray-600 hover:from-gray-600 hover:to-gray-500 text-gray-100 shadow-lg' 
+                  ? 'bg-gradient-to-r from-gray-700 to-gray-600 hover:from_gray-600 hover:to_gray-500 text_gray-100 shadow-lg' 
                   : 'bg-gradient-to-r from-gray-700 to_gray-600 hover:from_gray-600 hover:to_gray-500 text_white shadow-lg'
                 }
               `}
