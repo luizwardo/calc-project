@@ -535,12 +535,12 @@ function CartesianGame({ darkMode }) {
               </div>
               
               {/* Action Buttons - Compactos */}
-              <div className="grid grid-cols-1 gap-2">
+              <div className="grid grid-cols-1 gap-1">
                 {!gameStarted ? (
                   <button
                     onClick={startGame}
                     className={`
-                      px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center justify-center space-x-2 relative overflow-hidden
+                      px-2 py-1 rounded text-xs font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center justify-center space-x-1 relative overflow-hidden
                       ${darkMode 
                         ? 'bg-gradient-to-br from-gray-600 via-gray-700 to-gray-800 hover:from-gray-500 hover:via-gray-600 hover:to-gray-700 text-gray-100 shadow-lg shadow-gray-900/50 border border-gray-500/30' 
                         : 'bg-gradient-to-br from-gray-300 via-gray-400 to-gray-500 hover:from-gray-200 hover:via-gray-300 hover:to-gray-400 text-gray-800 shadow-lg shadow-gray-600/30 border border-gray-400/40'
@@ -548,14 +548,14 @@ function CartesianGame({ darkMode }) {
                       before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700
                     `}
                   >
-                    <Play className="h-4 w-4" />
+                    <Play className="h-3 w-3" />
                     <span>Iniciar</span>
                   </button>
                 ) : (
                   <button
                     onClick={endGame}
                     className={`
-                      px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center justify-center space-x-2 relative overflow-hidden
+                      px-2 py-1 rounded text-xs font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center justify-center space-x-1 relative overflow-hidden
                       ${darkMode 
                         ? 'bg-gradient-to-br from-gray-600 via-gray-700 to-gray-800 hover:from-gray-500 hover:via-gray-600 hover:to-gray-700 text-gray-100 shadow-lg shadow-gray-900/50 border border-gray-500/30' 
                         : 'bg-gradient-to-br from-gray-300 via-gray-400 to-gray-500 hover:from-gray-200 hover:via-gray-300 hover:to-gray-400 text-gray-800 shadow-lg shadow-gray-600/30 border border-gray-400/40'
@@ -563,7 +563,7 @@ function CartesianGame({ darkMode }) {
                       before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700
                     `}
                   >
-                    <Square className="h-4 w-4" />
+                    <Square className="h-3 w-3" />
                     <span>Encerrar</span>
                   </button>
                 )}
@@ -571,7 +571,7 @@ function CartesianGame({ darkMode }) {
                 <button
                   onClick={generateNewSets}
                   className={`
-                    px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center justify-center space-x-2 relative overflow-hidden
+                    px-2 py-1 rounded text-xs font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center justify-center space-x-1 relative overflow-hidden
                     ${darkMode 
                       ? 'bg-gradient-to-br from-gray-600 via-gray-700 to-gray-800 hover:from-gray-500 hover:via-gray-600 hover:to-gray-700 text-gray-100 shadow-lg shadow-gray-900/50 border border-gray-500/30' 
                       : 'bg-gradient-to-br from-gray-300 via-gray-400 to-gray-500 hover:from-gray-200 hover:via-gray-300 hover:to-gray-400 text-gray-800 shadow-lg shadow-gray-600/30 border border-gray-400/40'
@@ -579,7 +579,7 @@ function CartesianGame({ darkMode }) {
                     before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700
                   `}
                 >
-                  <RotateCcw className="h-4 w-4" />
+                  <RotateCcw className="h-3 w-3" />
                   <span>Novos Conjuntos</span>
                 </button>
               </div>
@@ -587,23 +587,23 @@ function CartesianGame({ darkMode }) {
           </div>
           
           {/* Selection Areas - Mais compactas */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-2">
             {/* Conjunto A */}
-            <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-800/50 border border-gray-700/30' : 'bg-gray-100 border border-gray-200'} backdrop-blur-sm`}>
-              <div className="flex items-center justify-between mb-3">
-                <h2 className={`text-lg font-bold ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+            <div className={`p-2 rounded-lg ${darkMode ? 'bg-gray-800/50 border border-gray-700/30' : 'bg-gray-100 border border-gray-200'} backdrop-blur-sm`}>
+              <div className="flex items-center justify-between mb-1">
+                <h2 className={`text-xs font-bold ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   Conjunto A
                 </h2>
-                <div className="w-12 h-12 flex items-center justify-center">
+                <div className="w-6 h-6 flex items-center justify-center">
                   {/* Empty space for symmetry */}
                 </div>
               </div>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-1">
                 {setA.map(a => (
                   <button
                     key={`a-${a}`}
                     className={`
-                      px-3 py-2 rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95 relative overflow-hidden
+                      px-1.5 py-0.5 rounded text-xs font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95 relative overflow-hidden
                       ${selectedA === a 
                         ? (darkMode 
                            ? 'bg-gradient-to-br from-gray-500 via-gray-600 to-gray-700 text-gray-100 shadow-lg shadow-gray-900/50 border border-gray-400/40 before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/15 before:to-transparent before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700' 
@@ -622,16 +622,16 @@ function CartesianGame({ darkMode }) {
             </div>
             
             {/* Conjunto B */}
-            <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-800/50 border border-gray-700/30' : 'bg-gray-100 border border-gray-200'} backdrop-blur-sm`}>
-              <div className="flex items-center justify-between mb-3">
-                <h2 className={`text-lg font-bold ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+            <div className={`p-2 rounded-lg ${darkMode ? 'bg-gray-800/50 border border-gray-700/30' : 'bg-gray-100 border border-gray-200'} backdrop-blur-sm`}>
+              <div className="flex items-center justify-between mb-1">
+                <h2 className={`text-xs font-bold ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   Conjunto B
                 </h2>
                 <button
                   onClick={checkAnswer}
                   disabled={!gameStarted || userPairs.length === 0}
                   className={`
-                    w-12 h-12 rounded-lg font-semibold transition-all duration-200 transform flex items-center justify-center relative overflow-hidden flex-shrink-0
+                    w-6 h-6 rounded font-semibold transition-all duration-200 transform flex items-center justify-center relative overflow-hidden flex-shrink-0
                     ${gameStarted && userPairs.length > 0
                       ? (darkMode 
                          ? 'bg-gradient-to-br from-gray-600 via-gray-700 to-gray-800 hover:from-gray-500 hover:via-gray-600 hover:to-gray-700 text-gray-100 shadow-lg shadow-gray-900/50 border border-gray-500/30 hover:scale-105 active:scale-95 before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700'
@@ -642,15 +642,15 @@ function CartesianGame({ darkMode }) {
                     }
                   `}
                 >
-                  <Check className="h-6 w-6" />
+                  <Check className="h-3 w-3" />
                 </button>
               </div>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-1">
                 {setB.map(b => (
                   <button
                     key={`b-${b}`}
                     className={`
-                      px-3 py-2 rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95 relative overflow-hidden
+                      px-1.5 py-0.5 rounded text-xs font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95 relative overflow-hidden
                       ${darkMode 
                         ? 'bg-gradient-to-br from-gray-600 via-gray-700 to-gray-800 hover:from-gray-500 hover:via-gray-600 hover:to-gray-700 text-gray-300 border border-gray-500/30 shadow-lg shadow-gray-900/30 before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700' 
                         : 'bg-gradient-to-br from-gray-300 via-gray-400 to-gray-500 hover:from-gray-200 hover:via-gray-300 hover:to-gray-400 text-gray-700 border border-gray-400/40 shadow-lg shadow-gray-500/20 before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700'
@@ -667,7 +667,7 @@ function CartesianGame({ darkMode }) {
           
           {/* Feedback Section - Compacto */}
           {feedback && (
-            <div className={`mt-4 p-3 rounded-lg text-center text-sm font-medium backdrop-blur-sm transition-all duration-300 ${
+            <div className={`mt-2 p-1.5 rounded text-center text-xs font-medium backdrop-blur-sm transition-all duration-300 ${
               feedback.includes('Correto') 
                 ? (darkMode ? 'bg-gradient-to-r from-gray-800/70 to-gray-700/50 text-gray-200 border border-gray-600/50' : 'bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 border border-gray-300')
                 : feedback.includes('Incorreto')
@@ -685,7 +685,7 @@ function CartesianGame({ darkMode }) {
         <AlertDialogContent className={`${darkMode ? 'bg-gray-900 text-gray-100 border border-gray-800' : 'bg-white border border-gray-200'} rounded-xl shadow-2xl backdrop-blur-lg`}>
           <AlertDialogHeader>
             <AlertDialogTitle className={`text-xl font-bold ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>
-              {alertType === 'gameOver' ? '🎮 Jogo Encerrado' : '🎉 Parabéns!'}
+              {alertType === 'gameOver' ? 'Jogo Encerrado' : 'Parabéns!'}
             </AlertDialogTitle>
             <AlertDialogDescription className={`text-base ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
               {alertType === 'gameOver' 
@@ -697,10 +697,10 @@ function CartesianGame({ darkMode }) {
             <AlertDialogAction 
               onClick={handleAlertClose}
               className={`
-                px-4 py-2 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105
+                px-4 py-2 rounded-md text-sm font-medium transition-all duration-200
                 ${darkMode 
-                  ? 'bg-gradient-to-r from-gray-700 to-gray-600 hover:from-gray-600 hover:to-gray-500 text-gray-100 shadow-lg' 
-                  : 'bg-gradient-to-r from-gray-700 to_gray-600 hover:from-gray-600 hover:to-gray-500 text-white shadow-lg'
+                  ? 'bg-gray-100 hover:bg-gray-200 text-gray-900' 
+                  : 'bg-gray-900 hover:bg-gray-800 text-white'
                 }
               `}
             >
@@ -710,7 +710,7 @@ function CartesianGame({ darkMode }) {
             <AlertDialogAction 
               onClick={handleAlertClose}
               className={`
-                px-4 py-2 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105
+                px-4 py-2 rounded-md text-sm font-medium transition-all duration-200
                 ${darkMode 
                   ? 'bg-gray-800 hover:bg-gray-700 text-gray-300 border border-gray-700' 
                   : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300'
