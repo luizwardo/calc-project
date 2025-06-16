@@ -354,42 +354,39 @@ function CartesianGame({ darkMode }) {
 
   return (
     <DndProvider backend={HTML5Backend}>
-    <div className={`min-h-screen p-2 md:p-4 ${darkMode ? 'bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950' : 'bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50'} transition-all duration-300`}>
-      <div className={`max-w-7xl mx-auto ${darkMode ? 'bg-gray-900/95 border border-gray-800/50' : 'bg-white/95 border border-gray-200/50'} rounded-xl shadow-2xl backdrop-blur-lg transition-all duration-300`}>
+    <div className={`min-h-100 p-1 md:p-2 ${darkMode ? 'bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950' : 'bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50'} transition-all duration-300`}>
+      <div className={`max-w-7xl mx-auto ${darkMode ? 'bg-gray-900/95 border border-gray-800/50' : 'bg-white/95 border border-gray-200/50'} rounded-lg shadow-2xl backdrop-blur-lg transition-all duration-300`}>
         
-        {/* Header Section - Compacto */}
-        <div className={`p-4 md:p-6 border-b ${darkMode ? 'border-gray-800/50' : 'border-gray-200/50'}`}>
-          <div className="flex items-center justify-center mb-4">
-            <div className={`p-2 rounded-full ${darkMode ? 'bg-gray-800/50' : 'bg-gray-100'} mr-3`}>
-              <Target className={`h-6 w-6 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`} />
+        {/* Header Section */}
+        <div className={`p-2 md:p-3 border-b ${darkMode ? 'border-gray-800/50' : 'border-gray-200/50'}`}>
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center">
+              <div className={`p-1.5 rounded-full ${darkMode ? 'bg-gray-800/50' : 'bg-gray-100'} mr-2`}>
+                <Target className={`h-4 w-4 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`} />
+              </div>
+              <h1 
+                className={`text-lg md:text-xl font-bold ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}
+                style={{ fontFamily: "'Dancing Script', cursive" }}
+              >
+                Produto Cartesiano: Capture a Bolinha!
+              </h1>
             </div>
-            <h1 
-              className={`text-2xl md:text-3xl font-bold text-center ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}
-              style={{ fontFamily: "'Dancing Script', cursive" }}
-            >
-              Produto Cartesiano: Capture a Bolinha!
-            </h1>
           </div>
           
-          {/* Game Info Cards - Compactas */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            <div className={`p-3 rounded-lg ${darkMode ? 'bg-gradient-to-br from-gray-800/50 to-gray-900/30 border border-gray-700/30' : 'bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200'} backdrop-blur-sm`}>
-              <p className={`text-xs font-medium ${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-1`}>Conjunto A</p>
-              <p className={`text-sm font-bold ${darkMode ? 'text-gray-200' : 'text-gray-800'}`}>{`{${setA.join(', ')}}`}</p>
-            </div>
-            
-            <div className={`p-3 rounded-lg ${darkMode ? 'bg-gradient-to-br from-gray-800/50 to-gray-900/30 border border-gray-700/30' : 'bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200'} backdrop-blur-sm`}>
-              <p className={`text-xs font-medium ${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-1`}>Conjunto B</p>
-              <p className={`text-sm font-bold ${darkMode ? 'text-gray-200' : 'text-gray-800'}`}>{`{${setB.join(', ')}}`}</p>
-            </div>
-            
-            <div className={`p-3 rounded-lg ${darkMode ? 'bg-gradient-to-br from-gray-800/50 to-gray-900/30 border border-gray-700/30' : 'bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200'} backdrop-blur-sm`}>
-              <div className="flex items-center">
-                <Trophy className={`h-4 w-4 ${darkMode ? 'text-gray-400' : 'text-gray-600'} mr-2`} />
-                <div>
-                  <p className={`text-xs font-medium ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Pontuação</p>
-                  <p className={`text-lg font-bold ${darkMode ? 'text-gray-200' : 'text-gray-800'}`}>{score}</p>
-                </div>
+          {/* Game Info Cards */}
+          <div className={`p-2 rounded-lg ${darkMode ? 'bg-gradient-to-br from-gray-800/50 to-gray-900/30 border border-gray-700/30' : 'bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200'} backdrop-blur-sm`}>
+            <div className="grid grid-cols-3 gap-4">
+              <div className="text-center">
+                <p className={`text-xs font-medium ${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-1`}>Conjunto A</p>
+                <p className={`text-sm font-bold ${darkMode ? 'text-gray-200' : 'text-gray-800'}`}>{`{${setA.join(', ')}}`}</p>
+              </div>
+              <div className="text-center">
+                <p className={`text-xs font-medium ${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-1`}>Conjunto B</p>
+                <p className={`text-sm font-bold ${darkMode ? 'text-gray-200' : 'text-gray-800'}`}>{`{${setB.join(', ')}}`}</p>
+              </div>
+              <div className="text-center">
+                <p className={`text-xs font-medium ${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-1`}>Pontuação</p>
+                <p className={`text-sm font-bold ${darkMode ? 'text-gray-200' : 'text-gray-800'}`}>{score}</p>
               </div>
             </div>
           </div>
@@ -401,7 +398,7 @@ function CartesianGame({ darkMode }) {
             
             {/* Plano Cartesiano - Mais compacto */}
             <div className="lg:col-span-2">
-              <div className={`relative w-full h-[300px] md:h-[350px] ${darkMode ? 'bg-gradient-to-br from-gray-900 to-gray-950 border border-gray-800/50' : 'bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200'} rounded-xl shadow-inner mb-4 overflow-hidden`}>
+              <div className={`relative w-full h-[300px] md:h-[350px] ${darkMode ? 'bg-gradient-to-br from-gray-900 to-gray-950 border border-gray-800/50' : 'bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200'} rounded-lg shadow-inner mb-4 overflow-hidden`}>
                 
                 <Plot
                   data={plotData.length > 0 ? plotData : [
@@ -415,18 +412,18 @@ function CartesianGame({ darkMode }) {
                   ]}
                   layout={{
                     autosize: true,
-                    margin: { l: 50, r: 50, b: 50, t: 50 },
+                    margin: { l: 30, r: 30, b: 30, t: 30 },
                     paper_bgcolor: 'transparent',
                     plot_bgcolor: 'transparent',
                     font: {
                       color: darkMode ? '#e5e7eb' : '#374151',
-                      size: 12,
+                      size: 10,
                       family: "'Inter', sans-serif"
                     },
                     xaxis: {
                       title: {
                         text: 'Conjunto A',
-                        font: { size: 14, color: darkMode ? '#9ca3af' : '#6b7280' }
+                        font: { size: 11, color: darkMode ? '#9ca3af' : '#6b7280' }
                       },
                       range: [Math.min(...setA) - 1, Math.max(...setA) + 1],
                       tickmode: 'array',
@@ -442,7 +439,7 @@ function CartesianGame({ darkMode }) {
                     yaxis: {
                       title: {
                         text: 'Conjunto B',
-                        font: { size: 14, color: darkMode ? '#9ca3af' : '#6b7280' }
+                        font: { size: 11, color: darkMode ? '#9ca3af' : '#6b7280' }
                       },
                       range: [0, setB.length + 1],
                       tickmode: 'array',
@@ -466,7 +463,7 @@ function CartesianGame({ darkMode }) {
                   style={{ 
                     width: '100%', 
                     height: '100%',
-                    borderRadius: '0.75rem'
+                    borderRadius: '0.5rem'
                   }}
                   useResizeHandler={true}
                 />
@@ -488,7 +485,7 @@ function CartesianGame({ darkMode }) {
               
               {/* Timer Progress Bar */}
               {gameStarted && (
-                <div className={`p-3 rounded-lg ${darkMode ? 'bg-gradient-to-br from-gray-800/50 to-gray-900/30 border border-gray-700/30' : 'bg-gradient-to-br from-gray-50 to-gray-100/50 border border-gray-200'} backdrop-blur-sm`}>
+                <div className={`p-3 rounded-lg ${darkMode ? 'bg-gray-800/50 border border-gray-700/30' : 'bg-gray-100 border border-gray-200'} backdrop-blur-sm`}>
                   <div className="flex justify-between items-center mb-2">
                     <span className={`text-sm font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                       Tempo: {timeLeft}s
@@ -503,7 +500,7 @@ function CartesianGame({ darkMode }) {
               )}
 
               {/* Selected Pairs Display */}
-              <div className={`p-3 rounded-lg ${darkMode ? 'bg-gradient-to-br from-gray-800/50 to-gray-900/30 border border-gray-700/30' : 'bg-gradient-to-br from-gray-50 to-gray-100/50 border border-gray-200'} backdrop-blur-sm`}>
+              <div className={`p-3 rounded-lg ${darkMode ? 'bg-gray-800/50 border border-gray-700/30' : 'bg-gray-100 border border-gray-200'} backdrop-blur-sm`}>
                 <h3 className={`text-sm font-semibold mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   Par Selecionado:
                 </h3>
@@ -543,11 +540,12 @@ function CartesianGame({ darkMode }) {
                   <button
                     onClick={startGame}
                     className={`
-                      px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center justify-center space-x-2
+                      px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center justify-center space-x-2 relative overflow-hidden
                       ${darkMode 
-                        ? 'bg-gradient-to-r from-gray-700 to-gray-600 hover:from-gray-600 hover:to-gray-500 text-gray-100 shadow-lg shadow-gray-700/25' 
-                        : 'bg-gradient-to-r from-gray-700 to-gray-600 hover:from-gray-600 hover:to-gray-500 text-white shadow-lg shadow-gray-600/25'
+                        ? 'bg-gradient-to-br from-gray-600 via-gray-700 to-gray-800 hover:from-gray-500 hover:via-gray-600 hover:to-gray-700 text-gray-100 shadow-lg shadow-gray-900/50 border border-gray-500/30' 
+                        : 'bg-gradient-to-br from-gray-300 via-gray-400 to-gray-500 hover:from-gray-200 hover:via-gray-300 hover:to-gray-400 text-gray-800 shadow-lg shadow-gray-600/30 border border-gray-400/40'
                       }
+                      before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700
                     `}
                   >
                     <Play className="h-4 w-4" />
@@ -557,11 +555,12 @@ function CartesianGame({ darkMode }) {
                   <button
                     onClick={endGame}
                     className={`
-                      px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center justify-center space-x-2
+                      px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center justify-center space-x-2 relative overflow-hidden
                       ${darkMode 
-                        ? 'bg-gradient-to-r from-gray-600 to-gray-500 hover:from-gray-500 hover:to-gray-400 text-gray-100 shadow-lg shadow-gray-600/25' 
-                        : 'bg-gradient-to-r from-gray-600 to-gray-500 hover:from-gray-500 hover:to-gray-400 text-white shadow-lg shadow-gray-500/25'
+                        ? 'bg-gradient-to-br from-gray-600 via-gray-700 to-gray-800 hover:from-gray-500 hover:via-gray-600 hover:to-gray-700 text-gray-100 shadow-lg shadow-gray-900/50 border border-gray-500/30' 
+                        : 'bg-gradient-to-br from-gray-300 via-gray-400 to-gray-500 hover:from-gray-200 hover:via-gray-300 hover:to-gray-400 text-gray-800 shadow-lg shadow-gray-600/30 border border-gray-400/40'
                       }
+                      before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700
                     `}
                   >
                     <Square className="h-4 w-4" />
@@ -570,32 +569,14 @@ function CartesianGame({ darkMode }) {
                 )}
                 
                 <button
-                  onClick={checkAnswer}
-                  disabled={!gameStarted || userPairs.length === 0}
-                  className={`
-                    px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 transform flex items-center justify-center space-x-2
-                    ${gameStarted && userPairs.length > 0
-                      ? (darkMode 
-                         ? 'bg-gradient-to-r from-gray-800 to-gray-700 hover:from-gray-700 hover:to-gray-600 text-gray-100 shadow-lg shadow-gray-700/25 hover:scale-105 active:scale-95'
-                         : 'bg-gradient-to-r from-gray-800 to-gray-700 hover:from-gray-700 hover:to-gray-600 text-white shadow-lg shadow-gray-700/25 hover:scale-105 active:scale-95')
-                      : (darkMode 
-                         ? 'bg-gray-800 text-gray-600 cursor-not-allowed border border-gray-700' 
-                         : 'bg-gray-200 text-gray-400 cursor-not-allowed border border-gray-300')
-                    }
-                  `}
-                >
-                  <Check className="h-4 w-4" />
-                  <span>Verificar</span>
-                </button>
-                
-                <button
                   onClick={generateNewSets}
                   className={`
-                    px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center justify-center space-x-2
+                    px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center justify-center space-x-2 relative overflow-hidden
                     ${darkMode 
-                      ? 'bg-gradient-to-r from-gray-700 to-gray-600 hover:from-gray-600 hover:to-gray-500 text-gray-100 shadow-lg shadow-gray-700/25' 
-                      : 'bg-gradient-to-r from-gray-700 to-gray-600 hover:from-gray-600 hover:to-gray-500 text-white shadow-lg shadow-gray-600/25'
+                      ? 'bg-gradient-to-br from-gray-600 via-gray-700 to-gray-800 hover:from-gray-500 hover:via-gray-600 hover:to-gray-700 text-gray-100 shadow-lg shadow-gray-900/50 border border-gray-500/30' 
+                      : 'bg-gradient-to-br from-gray-300 via-gray-400 to-gray-500 hover:from-gray-200 hover:via-gray-300 hover:to-gray-400 text-gray-800 shadow-lg shadow-gray-600/30 border border-gray-400/40'
                     }
+                    before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700
                   `}
                 >
                   <RotateCcw className="h-4 w-4" />
@@ -608,23 +589,28 @@ function CartesianGame({ darkMode }) {
           {/* Selection Areas - Mais compactas */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
             {/* Conjunto A */}
-            <div className={`p-4 rounded-lg ${darkMode ? 'bg-gradient-to-br from-gray-800/50 to-gray-900/30 border border-gray-700/30' : 'bg-gradient-to-br from-gray-50 to-gray-100/50 border border-gray-200'} backdrop-blur-sm`}>
-              <h2 className={`text-lg font-bold mb-3 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Conjunto A
-              </h2>
+            <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-800/50 border border-gray-700/30' : 'bg-gray-100 border border-gray-200'} backdrop-blur-sm`}>
+              <div className="flex items-center justify-between mb-3">
+                <h2 className={`text-lg font-bold ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Conjunto A
+                </h2>
+                <div className="w-12 h-12 flex items-center justify-center">
+                  {/* Empty space for symmetry */}
+                </div>
+              </div>
               <div className="flex flex-wrap gap-2">
                 {setA.map(a => (
                   <button
                     key={`a-${a}`}
                     className={`
-                      px-3 py-2 rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95
+                      px-3 py-2 rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95 relative overflow-hidden
                       ${selectedA === a 
                         ? (darkMode 
-                           ? 'bg-gray-600 text-gray-100 shadow-lg shadow-gray-600/25 border border-gray-500' 
-                           : 'bg-gray-700 text-white shadow-lg shadow-gray-700/25 border border-gray-600')
+                           ? 'bg-gradient-to-br from-gray-500 via-gray-600 to-gray-700 text-gray-100 shadow-lg shadow-gray-900/50 border border-gray-400/40 before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/15 before:to-transparent before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700' 
+                           : 'bg-gradient-to-br from-gray-200 via-gray-300 to-gray-400 text-gray-800 shadow-lg shadow-gray-600/30 border border-gray-300/50 before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/15 before:to-transparent before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700')
                         : (darkMode 
-                           ? 'bg-gray-800/50 text-gray-300 border border-gray-700/50 hover:bg-gray-700/50 hover:border-gray-600' 
-                           : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:border-gray-400 shadow-sm')
+                           ? 'bg-gradient-to-br from-gray-600 via-gray-700 to-gray-800 hover:from-gray-500 hover:via-gray-600 hover:to-gray-700 text-gray-300 border border-gray-500/30 shadow-lg shadow-gray-900/30 before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700' 
+                           : 'bg-gradient-to-br from-gray-300 via-gray-400 to-gray-500 hover:from-gray-200 hover:via-gray-300 hover:to-gray-400 text-gray-700 border border-gray-400/40 shadow-lg shadow-gray-500/20 before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700')
                       }
                     `}
                     onClick={() => handleClickA(a)}
@@ -636,19 +622,38 @@ function CartesianGame({ darkMode }) {
             </div>
             
             {/* Conjunto B */}
-            <div className={`p-4 rounded-lg ${darkMode ? 'bg-gradient-to-br from-gray-800/50 to-gray-900/30 border border-gray-700/30' : 'bg-gradient-to-br from-gray-50 to-gray-100/50 border border-gray-200'} backdrop-blur-sm`}>
-              <h2 className={`text-lg font-bold mb-3 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Conjunto B
-              </h2>
+            <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-800/50 border border-gray-700/30' : 'bg-gray-100 border border-gray-200'} backdrop-blur-sm`}>
+              <div className="flex items-center justify-between mb-3">
+                <h2 className={`text-lg font-bold ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Conjunto B
+                </h2>
+                <button
+                  onClick={checkAnswer}
+                  disabled={!gameStarted || userPairs.length === 0}
+                  className={`
+                    w-12 h-12 rounded-lg font-semibold transition-all duration-200 transform flex items-center justify-center relative overflow-hidden flex-shrink-0
+                    ${gameStarted && userPairs.length > 0
+                      ? (darkMode 
+                         ? 'bg-gradient-to-br from-gray-600 via-gray-700 to-gray-800 hover:from-gray-500 hover:via-gray-600 hover:to-gray-700 text-gray-100 shadow-lg shadow-gray-900/50 border border-gray-500/30 hover:scale-105 active:scale-95 before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700'
+                         : 'bg-gradient-to-br from-gray-300 via-gray-400 to-gray-500 hover:from-gray-200 hover:via-gray-300 hover:to-gray-400 text-gray-800 shadow-lg shadow-gray-600/30 border border-gray-400/40 hover:scale-105 active:scale-95 before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700')
+                      : (darkMode 
+                         ? 'bg-gradient-to-br from-gray-700 via-gray-800 to-gray-900 text-gray-500 cursor-not-allowed border border-gray-600/30 shadow-inner' 
+                         : 'bg-gradient-to-br from-gray-200 via-gray-300 to-gray-400 text-gray-500 cursor-not-allowed border border-gray-300/40 shadow-inner')
+                    }
+                  `}
+                >
+                  <Check className="h-6 w-6" />
+                </button>
+              </div>
               <div className="flex flex-wrap gap-2">
                 {setB.map(b => (
                   <button
                     key={`b-${b}`}
                     className={`
-                      px-3 py-2 rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95
+                      px-3 py-2 rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95 relative overflow-hidden
                       ${darkMode 
-                        ? 'bg-gray-800/50 text-gray-300 border border-gray-700/50 hover:bg-gray-700/50 hover:border-gray-600' 
-                        : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:border-gray-400 shadow-sm'
+                        ? 'bg-gradient-to-br from-gray-600 via-gray-700 to-gray-800 hover:from-gray-500 hover:via-gray-600 hover:to-gray-700 text-gray-300 border border-gray-500/30 shadow-lg shadow-gray-900/30 before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700' 
+                        : 'bg-gradient-to-br from-gray-300 via-gray-400 to-gray-500 hover:from-gray-200 hover:via-gray-300 hover:to-gray-400 text-gray-700 border border-gray-400/40 shadow-lg shadow-gray-500/20 before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700'
                       }
                     `}
                     onClick={() => handleClickB(b)}
@@ -666,8 +671,8 @@ function CartesianGame({ darkMode }) {
               feedback.includes('Correto') 
                 ? (darkMode ? 'bg-gradient-to-r from-gray-800/70 to-gray-700/50 text-gray-200 border border-gray-600/50' : 'bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 border border-gray-300')
                 : feedback.includes('Incorreto')
-                  ? (darkMode ? 'bg-gradient-to-r from-gray-800/70 to-gray-700/50 text-gray-300 border border-gray-600/50' : 'bg-gradient-to-r from-gray-100 to_gray-200 text-gray-700 border border-gray-300')
-                  : (darkMode ? 'bg-gradient-to-r from-gray-800/70 to-gray-700/50 text-gray-200 border border-gray-600/50' : 'bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 border border-gray-300')
+                  ? (darkMode ? 'bg-gradient-to-r from-gray-800/70 to-gray-700/50 text-gray-300 border border-gray-600/50' : 'bg-gradient-to-r from_gray-100 to_gray-200 text-gray-700 border border-gray-300')
+                  : (darkMode ? 'bg-gradient-to-r from-gray-800/70 to_gray-700/50 text-gray-200 border border-gray-600/50' : 'bg-gradient-to-r from_gray-100 to_gray-200 text-gray-800 border border-gray-300')
             } shadow-sm`}>
               {feedback}
             </div>
@@ -695,7 +700,7 @@ function CartesianGame({ darkMode }) {
                 px-4 py-2 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105
                 ${darkMode 
                   ? 'bg-gradient-to-r from-gray-700 to-gray-600 hover:from-gray-600 hover:to-gray-500 text-gray-100 shadow-lg' 
-                  : 'bg-gradient-to-r from-gray-700 to-gray-600 hover:from-gray-600 hover:to-gray-500 text-white shadow-lg'
+                  : 'bg-gradient-to-r from-gray-700 to_gray-600 hover:from-gray-600 hover:to-gray-500 text-white shadow-lg'
                 }
               `}
             >
