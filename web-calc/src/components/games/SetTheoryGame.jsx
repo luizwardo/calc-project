@@ -155,7 +155,7 @@ const DroppableArea = ({ areaId, onDrop, darkMode, areaStyle, label, setColor })
       className={`
         absolute flex items-center justify-center transition-all duration-300
         ${isOver && canDrop ? 'scale-105' : 'scale-100'}
-        border-2 border-dashed
+        border-2
       `}
       style={{
         ...areaStyle,
@@ -217,7 +217,7 @@ const SidebarArea = ({ areaId, elements, onDrop, darkMode, label, setColor }) =>
     <div
       ref={drop}
       className={`
-        flex flex-wrap gap-1 items-start p-3 min-h-[60px] rounded-lg border-2 border-dashed transition-all duration-300
+        flex flex-wrap gap-1 items-start p-3 min-h-[60px] rounded-lg border-2 transition-all duration-300
         ${isOver && canDrop ? 'scale-102' : 'scale-100'}
       `}
       style={{
@@ -311,7 +311,8 @@ function SetTheoryGame({ darkMode }) {
     if (problems.length > 0) {
       loadProblem(0);
     }
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [problems.length]);
 
   const loadProblem = (index) => {
     const problem = problems[index % problems.length];
@@ -421,7 +422,7 @@ function SetTheoryGame({ darkMode }) {
 
     if (correct) {
       setScore(prev => prev + points);
-      setFeedback(`🎉 Correto! +${points} pontos. ${currentProblem.explanation}`);
+      setFeedback(` Correto! +${points} pontos. ${currentProblem.explanation}`);
       
       setTimeout(() => {
         if (problemIndex < problems.length - 1) {
@@ -531,59 +532,15 @@ function SetTheoryGame({ darkMode }) {
             </div>
             
             {/* Main Game Area with Sidebar */}
-            <div className="flex gap-4 mb-4">
+            <div className="flex flex-col lg:flex-row gap-4 mb-4">
               
               {/* Venn Diagram */}
-              <div className="flex-1 relative h-[400px] flex items-center justify-center rounded-lg" 
+              <div className="flex-1 relative h-[300px] md:h-[400px] lg:h-[400px] flex items-center justify-center rounded-lg overflow-hidden" 
                 style={{
                   backgroundColor: darkMode ? 'rgba(17, 24, 39, 0.3)' : 'rgba(249, 250, 251, 0.5)'
                 }}
-              >
-                {/* SVG Venn Diagram Background */}
-                <svg
-                  width="400"
-                  height="400"
-                  viewBox="0 0 400 350"
-                  className="absolute inset-0 mx-auto pointer-events-none"
-                  style={{ zIndex: 1 }}
-                >
-                  {/* Circle A (Red) - Top Left */}
-                  <circle
-                    cx="125"
-                    cy="130"
-                    r="120"
-                    fill={darkMode ? 'rgba(239, 68, 68, 0.05)' : 'rgba(239, 68, 68, 0.03)'}
-                    stroke={darkMode ? 'rgba(239, 68, 68, 0.6)' : 'rgba(239, 68, 68, 0.8)'}
-                    strokeWidth="2"
-                  />
-                  
-                  {/* Circle B (Green) - Top Right */}
-                  <circle
-                    cx="275"
-                    cy="130"
-                    r="120"
-                    fill={darkMode ? 'rgba(34, 197, 94, 0.05)' : 'rgba(34, 197, 94, 0.03)'}
-                    stroke={darkMode ? 'rgba(34, 197, 94, 0.6)' : 'rgba(34, 197, 94, 0.8)'}
-                    strokeWidth="2"
-                  />
-                  
-                  {/* Circle C (Blue) - Bottom */}
-                  <circle
-                    cx="200"
-                    cy="240"
-                    r="120"
-                    fill={darkMode ? 'rgba(59, 130, 246, 0.05)' : 'rgba(59, 130, 246, 0.03)'}
-                    stroke={darkMode ? 'rgba(59, 130, 246, 0.6)' : 'rgba(59, 130, 246, 0.8)'}
-                    strokeWidth="2"
-                  />
-                  
-                  {/* Set Labels */}
-                  <text x="100" y="100" className={`text-lg font-bold ${darkMode ? 'fill-red-400' : 'fill-red-600'}`}>A</text>
-                  <text x="300" y="100" className={`text-lg font-bold ${darkMode ? 'fill-green-400' : 'fill-green-600'}`}>B</text>
-                  <text x="190" y="310" className={`text-lg font-bold ${darkMode ? 'fill-blue-400' : 'fill-blue-600'}`}>C</text>
-                </svg>
-                
-                <div className="absolute inset-0" style={{ zIndex: 10 }}>
+              >                
+                <div className="absolute inset-0 scale-75 md:scale-90 lg:scale-100 origin-center" style={{ zIndex: 10 }}>
                   <DroppableArea
                     areaId="onlyA"
                     onDrop={handleDrop}
@@ -637,9 +594,9 @@ function SetTheoryGame({ darkMode }) {
                     setColor="AB"
                     areaStyle={{ 
                       top: '85px', 
-                      left: '170px', 
-                      width: '50px', 
-                      height: '50px',
+                      left: '425px', 
+                      width: '60px', 
+                      height: '60px',
                       borderRadius: '50%'
                     }}
                   />
@@ -651,10 +608,10 @@ function SetTheoryGame({ darkMode }) {
                     label="A∩C"
                     setColor="AC"
                     areaStyle={{ 
-                      top: '155px', 
-                      left: '135px', 
-                      width: '50px', 
-                      height: '50px',
+                      top: '195px', 
+                      left: '355px', 
+                      width: '60px', 
+                      height: '60px',
                       borderRadius: '50%'
                     }}
                   />
@@ -666,10 +623,10 @@ function SetTheoryGame({ darkMode }) {
                     label="B∩C"
                     setColor="BC"
                     areaStyle={{ 
-                      top: '155px', 
-                      left: '207px', 
-                      width: '50px', 
-                      height: '50px',
+                      top: '195px', 
+                      left: '495px', 
+                      width: '60px', 
+                      height: '60px',
                       borderRadius: '50%'
                     }}
                   />
@@ -681,10 +638,10 @@ function SetTheoryGame({ darkMode }) {
                     label="A∩B∩C"
                     setColor="ABC"
                     areaStyle={{ 
-                      top: '140px', 
-                      left: '181px', 
-                      width: '30px', 
-                      height: '20px',
+                      top: '165px', 
+                      left: '427px', 
+                      width: '55px', 
+                      height: '55px',
                       borderRadius: '50%'
                     }}
                   />
@@ -707,12 +664,12 @@ function SetTheoryGame({ darkMode }) {
               </div>
               
               {/* Sidebar with Classification Areas */}
-              <div className={`w-72 p-3 rounded-lg ${darkMode ? 'bg-gradient-to-br from-gray-800/50 to-gray-900/30 border border-gray-700/30' : 'bg-gradient-to-br from-gray-50 to-gray-100/50 border border-gray-200'} backdrop-blur-sm`}>
+              <div className={`w-full lg:w-72 p-3 rounded-lg ${darkMode ? 'bg-gradient-to-br from-gray-800/50 to-gray-900/30 border border-gray-700/30' : 'bg-gradient-to-br from-gray-50 to-gray-100/50 border border-gray-200'} backdrop-blur-sm`}>
                 <h3 className={`text-base font-semibold mb-3 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   Classificação
                 </h3>
                 
-                <div className="space-y-3 max-h-[360px] overflow-y-auto">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3 max-h-[300px] lg:max-h-[360px] overflow-y-auto">
                   <SidebarArea
                     areaId="onlyA"
                     elements={placedElements.onlyA}
@@ -789,15 +746,15 @@ function SetTheoryGame({ darkMode }) {
             </div>
 
             {/* Control Buttons */}
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-2 mb-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-2 mb-3">
               {!gameStarted ? (
                 <button
                   onClick={startGame}
                   className={`
-                    col-span-2 md:col-span-1 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center justify-center space-x-2
+                    col-span-1 sm:col-span-2 md:col-span-1 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center justify-center space-x-2
                     ${darkMode 
                       ? 'bg-gradient-to-r from-gray-700 to-gray-600 hover:from-gray-600 hover:to-gray-500 text-gray-100 shadow-lg shadow-gray-700/25' 
-                      : 'bg-gradient-to-r from-gray-700 to-gray-600 hover:from.gray-600 hover:to-gray-500 text-white shadow-lg shadow-gray-600/25'
+                      : 'bg-gradient-to-r from-gray-700 to-gray-600 hover:from-gray-600 hover:to-gray-500 text-white shadow-lg shadow-gray-600/25'
                     }
                   `}
                 >
@@ -808,7 +765,7 @@ function SetTheoryGame({ darkMode }) {
                 <button
                   onClick={stopGame}
                   className={`
-                    col-span-2 md:col-span-1 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center justify-center space-x-2
+                    col-span-1 sm:col-span-2 md:col-span-1 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center justify-center space-x-2
                     ${darkMode 
                       ? 'bg-gradient-to-r from-gray-600 to-gray-500 hover:from_gray-500 hover:to-gray-400 text-gray-100 shadow-lg shadow-gray-600/25' 
                       : 'bg-gradient-to-r from-gray-600 to-gray-500 hover:from_gray-500 hover:to-gray-400 text-white shadow-lg shadow-gray-500/25'
@@ -824,11 +781,11 @@ function SetTheoryGame({ darkMode }) {
                 onClick={checkAnswer}
                 disabled={!gameStarted || availableElements.length > 0}
                 className={`
-                  col-span-2 md:col-span-1 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 transform flex items-center justify-center space-x-2
+                  col-span-1 md:col-span-1 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 transform flex items-center justify-center space-x-2
                   ${gameStarted && availableElements.length === 0
                     ? (darkMode 
                        ? 'bg-gradient-to-r from-gray-800 to-gray-700 hover:from-gray-700 hover:to-gray-600 text-gray-100 shadow-lg shadow-gray-700/25 hover:scale-105 active:scale-95'
-                       : 'bg-gradient-to-r from-gray-800 to-gray-700 hover:from-gray-700 hover:to-gray-600 text-white shadow-lg shadow-gray-700/25 hover:scale-105 active:scale-95')
+                       : 'bg-gradient-to-r from-gray-800 to-gray-700 hover:from_gray-700 hover:to-gray-600 text-white shadow-lg shadow-gray-700/25 hover:scale-105 active:scale-95')
                     : (darkMode 
                        ? 'bg-gray-800 text-gray-600 cursor-not-allowed border border-gray-700' 
                        : 'bg-gray-200 text-gray-400 cursor-not-allowed border border-gray-300')
@@ -836,14 +793,14 @@ function SetTheoryGame({ darkMode }) {
                 `}
               >
                 <Check className="h-4 w-4" />
-                <span>Verificar</span>
+                <span className="hidden sm:inline">Verificar</span>
               </button>
               
               <button
                 onClick={resetCurrentProblem}
                 disabled={!gameStarted}
                 className={`
-                  col-span-2 md:col-span-1 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center justify-center space-x-2
+                  col-span-1 md:col-span-1 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center justify-center space-x-2
                   ${gameStarted
                     ? (darkMode 
                        ? 'bg-gradient-to-r from-gray-700 to-gray-600 hover:from_gray-600 hover:to-gray-500 text-gray-100 shadow-lg shadow-gray-700/25' 
@@ -855,14 +812,14 @@ function SetTheoryGame({ darkMode }) {
                 `}
               >
                 <RotateCcw className="h-4 w-4" />
-                <span>Resetar</span>
+                <span className="hidden sm:inline">Resetar</span>
               </button>
               
               <button
                 onClick={nextProblem}
                 disabled={!gameStarted}
                 className={`
-                  col-span-2 md:col-span-1 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center justify-center space-x-2
+                  col-span-1 md:col-span-1 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center justify-center space-x-2
                   ${gameStarted
                     ? (darkMode 
                        ? 'bg-gradient-to-r from-gray-700 to-gray-600 hover:from_gray-600 hover:to-gray-500 text-gray-100 shadow-lg shadow-gray-700/25' 
@@ -874,7 +831,7 @@ function SetTheoryGame({ darkMode }) {
                 `}
               >
                 <Target className="h-4 w-4" />
-                <span>Próximo</span>
+                <span className="hidden sm:inline">Próximo</span>
               </button>
             </div>
             
@@ -908,10 +865,10 @@ function SetTheoryGame({ darkMode }) {
               <AlertDialogAction 
                 onClick={handleAlertClose}
                 className={`
-                  px-4 py-2 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105
+                  px-4 py-2 rounded-md text-sm font-medium transition-all duration-200
                   ${darkMode 
-                    ? 'bg-gradient-to-r from-gray-700 to-gray-600 hover:from_gray-600 hover:to-gray-500 text-gray-100 shadow-lg' 
-                    : 'bg-gradient-to-r from-gray-700 to-gray-600 hover:from_gray-600 hover:to-gray-500 text-white shadow-lg'
+                    ? 'bg-gray-100 hover:bg-gray-200 text-gray-900' 
+                    : 'bg-gray-900 hover:bg-gray-800 text-white'
                   }
                 `}
               >
