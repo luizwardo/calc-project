@@ -397,10 +397,10 @@ function VectorGame({ onClose, darkMode }) {
             <AlertDialogAction 
               onClick={() => { handleAlertClose(); generateLevel(level); }}
               className={`
-                px-4 py-2 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105
+                px-4 py-2 rounded-md text-sm font-medium transition-all duration-200
                 ${darkMode 
-                  ? 'bg-gradient-to-r from-gray-700 to-gray-600 hover:from_gray-600 hover:to_gray-500 text_gray-100 shadow-lg' 
-                  : 'bg-gradient-to-r from-gray-700 to_gray-600 hover:from_gray-600 hover:to_gray-500 text_white shadow-lg'
+                  ? 'bg-gray-100 hover:bg-gray-200 text-gray-900' 
+                  : 'bg-gray-900 hover:bg-gray-800 text-white'
                 }
               `}
             >
@@ -410,7 +410,7 @@ function VectorGame({ onClose, darkMode }) {
             <AlertDialogAction 
               onClick={handleAlertClose}
               className={`
-                px-4 py-2 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105
+                px-4 py-2 rounded-md text-sm font-medium transition-all duration-200
                 ${darkMode 
                   ? 'bg-gray-800 hover:bg-gray-700 text-gray-300 border border-gray-700' 
                   : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300'
