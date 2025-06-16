@@ -387,7 +387,7 @@ Então v⃗ = (4, 3)`
 
   return (
     <div 
-      className={`App ${darkMode ? 'dark' : ''}`}
+      className={`App ${darkMode ? 'dark' : ''} min-h-screen w-full`}
       style={{
         backgroundColor: darkMode ? '#1f2937' : 'rgba(227, 228, 233, 0.8)',
         backgroundImage: darkMode 
@@ -400,12 +400,46 @@ Então v⃗ = (4, 3)`
             linear-gradient(to bottom, rgba(211, 213, 218, 0.8) 1px, transparent 1px)
           `,
         backgroundSize: '20px 20px',
-        scrollBehavior: 'smooth'
+        scrollBehavior: 'smooth',
+        backgroundAttachment: 'fixed'
       }}
     >
       {/* Incluir estilos da fonte */}
       <style>{fontStyles}</style>
       
+      {/* Add body background fix */}
+      <style>{`
+        body {
+          background-color: ${darkMode ? '#1f2937' : 'rgba(227, 228, 233, 0.8)'} !important;
+          background-image: ${darkMode 
+            ? `
+              linear-gradient(to right, rgba(75, 85, 99, 0.2) 1px, transparent 1px),
+              linear-gradient(to bottom, rgba(75, 85, 99, 0.2) 1px, transparent 1px)
+            `
+            : `
+              linear-gradient(to right, rgba(211, 213, 218, 0.8) 1px, transparent 1px),
+              linear-gradient(to bottom, rgba(211, 213, 218, 0.8) 1px, transparent 1px)
+            `} !important;
+          background-size: 20px 20px !important;
+          background-attachment: fixed !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          width: 100% !important;
+          overflow-x: hidden !important;
+        }
+        
+        html {
+          background-color: ${darkMode ? '#1f2937' : 'rgba(227, 228, 233, 0.8)'} !important;
+          width: 100% !important;
+          overflow-x: hidden !important;
+        }
+        
+        #root {
+          width: 100% !important;
+          min-height: 100vh !important;
+        }
+      `}</style>
+
       <Hotbar 
         onNavigate={scrollToSection} 
         showCalculator={showCalculator} 
@@ -565,21 +599,21 @@ Então v⃗ = (4, 3)`
       <section 
         ref={homeRef} 
         id="home"
-        className="min-h-screen flex items-center justify-center px-4 py-12 md:p-6 transition-colors"
+        className="min-h-screen flex items-center justify-center px-4 py-12 md:p-6 transition-colors w-full"
       >
         <div className="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
           
           {/* Home Section - Left Side */}
           <div className="max-w-sm flex flex-col justify-center">
             <h1 
-              className="text-3xl md:text-5xl font-bold text-center mb-10 text-gray-600 dark:text-gray-200 transition-colors"
+              className="text-3xl md:text-4xl font-bold text-center mb-10 text-gray-600 dark:text-gray-200 transition-colors"
               style={{ fontFamily: "'Dancing Script', cursive" }}
             >
-              Explorando Matemática Interativa
+              Matemática Interativa
             </h1>
             
             <h2 
-              className="text-xl md:text-3xl font-semibold text-center mb-8 text-gray-600 dark:text-gray-300 transition-colors"
+              className="text-xl md:text-2xl font-semibold text-center mb-8 text-gray-600 dark:text-gray-300 transition-colors"
               style={{ fontFamily: "'Dancing Script', cursive" }}
             >
               Nossos Jogos
@@ -617,7 +651,7 @@ Então v⃗ = (4, 3)`
                             className="text-4xl md:text-5xl text-gray-600 dark:text-gray-200 font-bold"
                             style={{ fontFamily: "'Dancing Script', cursive" }}
                           >
-                            A×B
+                            X×Y
                           </div>
                         </div>
                         <div className="p-6">
@@ -625,7 +659,7 @@ Então v⃗ = (4, 3)`
                             className="text-xl md:text-2xl font-bold text-gray-600 dark:text-gray-200 mb-3 transition-colors text-center"
                             style={{ fontFamily: "'Dancing Script', cursive" }}
                           >
-                            Produto Cartesiano
+                            Corrida Cartesiana
                           </h3>
                           <p className="text-base text-gray-600 dark:text-gray-300 transition-colors text-center">
                             Explore e colete os pares ordenados no plano cartesiano.
@@ -662,10 +696,10 @@ Então v⃗ = (4, 3)`
                             className="text-xl md:text-2xl font-bold text-gray-600 dark:text-gray-200 mb-3 transition-colors text-center"
                             style={{ fontFamily: "'Dancing Script', cursive" }}
                           >
-                            Descubra a Função
+                            Memória Matemática
                           </h3>
                           <p className="text-base text-gray-600 dark:text-gray-300 transition-colors text-center">
-                            Deduza a função matemática a partir do seu gráfico.
+                             Ache os pares entre gráficos e expressões 
                           </p>
                         </div>
                       </div>
@@ -700,7 +734,7 @@ Então v⃗ = (4, 3)`
                             className="text-xl md:text-2xl font-bold text-gray-600 dark:text-gray-200 mb-3 transition-colors text-center"
                             style={{ fontFamily: "'Dancing Script', cursive" }}
                           >
-                            Decomposição Vetorial
+                            Caça ao Vetor
                           </h3>
                           <p className="text-base text-gray-600 dark:text-gray-300 transition-colors text-center">
                             Decompor vetores em seus componentes no plano cartesiano.
@@ -737,7 +771,7 @@ Então v⃗ = (4, 3)`
                             className="text-xl md:text-2xl font-bold text-gray-600 dark:text-gray-200 mb-3 transition-colors text-center"
                             style={{ fontFamily: "'Dancing Script', cursive" }}
                           >
-                            Teoria dos Conjuntos
+                            Desafio dos Conjuntos
                           </h3>
                           <p className="text-base text-gray-600 dark:text-gray-300 transition-colors text-center">
                             Explore operações entre conjuntos e suas propriedades.
@@ -814,7 +848,7 @@ Então v⃗ = (4, 3)`
           {/* Materias Section - Right Side */}
           <div ref={materiasRef} id="materias" className="flex flex-col justify-center">
             <h2 
-              className="text-3xl md:text-5xl font-bold text-center mb-10 text-gray-600 dark:text-gray-200 transition-colors"
+              className="text-3xl md:text-4xl font-bold text-center mb-10 text-gray-600 dark:text-gray-200 transition-colors"
               style={{ fontFamily: "'Dancing Script', cursive" }}
             >
               Materiais de Estudo
@@ -859,7 +893,7 @@ Então v⃗ = (4, 3)`
       <section 
         ref={aboutRef} 
         id="about"
-        className="min-h-screen flex items-center justify-center px-4 py-16 md:p-6 transition-colors"
+        className="min-h-screen flex items-center justify-center px-4 py-16 md:p-6 transition-colors w-full"
       >
         <div className="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
           
@@ -880,16 +914,28 @@ Então v⃗ = (4, 3)`
               Os jogos disponíveis exploram diferentes conceitos:
             </p>
             <ul className="list-disc pl-6 mb-4 text-sm md:text-base text-gray-600 dark:text-gray-300 transition-colors">
-              <li>Produto Cartesiano - Combinação de elementos de conjuntos</li>
-              <li>Descubra a Função - Relação entre equações e seus gráficos</li>
-              <li>Decomposição Vetorial - Operações e propriedades de vetores</li>
-              <li>Teoria dos Conjuntos - Operações e classificação de elementos</li>
+              <li>Corrida Cartesiana - Combinação de elementos de conjuntos</li>
+              <li>Memória Matemática - Relação entre equações e seus gráficos</li>
+              <li>Caça Ao Vetor - Operações e propriedades de vetores</li>
+              <li>Desafio dos Conjuntos - Operações e classificação de elementos</li>
             </ul>
             <p className="text-sm md:text-base text-gray-600 dark:text-gray-300 transition-colors">
               Cada jogo foi projetado para proporcionar uma experiência de aprendizado 
               envolvente e interativa, permitindo aos usuários explorar conceitos matemáticos 
               de forma prática e visual.
             </p>
+
+            
+
+              <div className="my-10 p-4 border-l-4 border-green-500 bg-green-50 dark:bg-green-900/20 rounded-r-lg">
+                <h4 className="font-semibold text-gray-700 dark:text-gray-200 mb-2">
+                  🛠️ Tecnologias
+                </h4>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  React, Vite, JSX, Tailwind CSS, Lucide Icons
+                </p>
+              </div>
+
           </div>
 
           {/* Participants - Right Column */}
@@ -905,66 +951,68 @@ Então v⃗ = (4, 3)`
               {/* Participant 1 */}
               <div className="flex items-center space-x-4 p-4 rounded-lg bg-gray-50 dark:bg-gray-700/50 transition-colors">
                 <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                  L
+                  J
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-200">
-                    Luis Henrique
+                    João Vitor da Silva Araújo
                   </h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    Desenvolvedor Principal
-                  </p>
+                  
                 </div>
               </div>
 
               {/* Participant 2 */}
               <div className="flex items-center space-x-4 p-4 rounded-lg bg-gray-50 dark:bg-gray-700/50 transition-colors">
                 <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                  A
+                  J
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-200">
-                    Ana Silva
+                    Juan
                   </h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    Designer de Interface
-                  </p>
+                  
                 </div>
               </div>
 
               {/* Participant 3 */}
               <div className="flex items-center space-x-4 p-4 rounded-lg bg-gray-50 dark:bg-gray-700/50 transition-colors">
                 <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                  M
+                  L
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-200">
-                    Maria Santos
+                    Luiz Eduardo Varela
                   </h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    Especialista em Matemática
-                  </p>
+                  
                 </div>
               </div>
 
-              {/* Additional Info */}
-              <div className="mt-8 p-4 border-l-4 border-blue-500 bg-blue-50 dark:bg-blue-900/20 rounded-r-lg">
-                <h4 className="font-semibold text-gray-700 dark:text-gray-200 mb-2">
-                  🎓 Universidade
-                </h4>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Projeto desenvolvido na disciplina de Estruturas Matemáticas
-                </p>
+              {/* Participant 4 */}
+              <div className="flex items-center space-x-4 p-4 rounded-lg bg-gray-50 dark:bg-gray-700/50 transition-colors">
+                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                  G
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-200">
+                    Gustavo Maykot
+                  </h3>
+                  
+                </div>
               </div>
 
-              <div className="p-4 border-l-4 border-green-500 bg-green-50 dark:bg-green-900/20 rounded-r-lg">
-                <h4 className="font-semibold text-gray-700 dark:text-gray-200 mb-2">
-                  🛠️ Tecnologias
-                </h4>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  React, JavaScript, Tailwind CSS, Lucide Icons
-                </p>
+              {/* Participant 5 */}
+              <div className="flex items-center space-x-4 p-4 rounded-lg bg-gray-50 dark:bg-gray-700/50 transition-colors">
+                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                  T
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-200">
+                    Thiago Marchi
+                  </h3>
+                  
+                </div>
               </div>
+             
             </div>
           </div>
         </div>
