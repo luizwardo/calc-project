@@ -968,7 +968,7 @@ Então v⃗ = (4, 3)`
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-200">
-                    Juan
+                    Juan Corrêa
                   </h3>
                   
                 </div>
